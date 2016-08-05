@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>384c5272-e40d-4849-93c8-e489912b7d1b</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>Targets</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory).props" />
+    <None Include="$(MSBuildThisFileDirectory).targets" />
+    <None Include="$(MSBuildThisFileDirectory)nuget.config" />
+    <None Include="$(MSBuildThisFileDirectory)readme.md" />
+    <None Include="$(MSBuildThisFileDirectory)txt\.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\sln.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\killUsual.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\testsRun.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\androidPackageInstall.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\androidEmulatorLaunch.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\env.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\env.lnk" />
+    <None Include="$(MSBuildThisFileDirectory)txt\env\vcvarsallShim.bat" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Android.Support.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Forms.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\NUnit.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\WPtoolkit.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Android.Support.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Forms.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.TestCloud.Agent.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.UITest.props" />
+    <None Include="$(MSBuildThisFileDirectory)txt\packages.config" />
+    <None Include="$(MSBuildThisFileDirectory)txt\targets\nugetTest.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\targets\common.targets" />
+    <None Include="$(MSBuildThisFileDirectory)txt\targets\nugetPack.targets" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)txt\env\alias.txt" />
+  </ItemGroup>
+</Project>

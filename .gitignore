@@ -1,0 +1,13 @@
+dls
+bin
+tst
+drp
+.vs
+*.userprefs
+*.user
+*.bak
+*.log
+*.warning
+*.error
+*.summary
+*.diag

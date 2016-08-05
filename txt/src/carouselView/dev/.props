@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., .props))\.props" />
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <DevDir>$(MSBuildThisFileDirectory)</DevDir>
+    <DefineConstants>$(DefineConstants);DEV</DefineConstants>
+  </PropertyGroup>
+
+  <!--import Xamarin.Forms nuget package-->
+  <Import Project="$(NugetPackagePropsDir)Xamarin.Forms.props" />
+
+</Project>

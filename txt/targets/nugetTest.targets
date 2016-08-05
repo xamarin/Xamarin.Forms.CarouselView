@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NugetTestVerbosity>high</NugetTestVerbosity>
+    <NugetTestExecVerbosity>normal</NugetTestExecVerbosity>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <NugetTestDir>$(TestDir)nugetTest\</NugetTestDir>
+    <NugetTestBeforeDir>$(NugetTestDir)before\</NugetTestBeforeDir>
+    <NugetTestAfterDir>$(NugetTestDir)after\</NugetTestAfterDir>
+    <NugetTestAfterLogDir>$(NugetTestAfterDir)log\</NugetTestAfterLogDir>
+  </PropertyGroup>
+
+  <!--clean-->
+  <Target Name="_NugetTestClean" >
+    <RemoveDir Directories="$(NugetTestDir)" />
+  </Target>
+
+  <!--copy-->
+  <Target
+    Name="_NugetTestCopy" 
+    DependsOnTargets="_NugetTestClean" >
+    
+    <ItemGroup>
+      <NugetTestSolutionFiles Include="sln\**\*" />
+    </ItemGroup>
+
+    <!--before-->
+    <MakeDir Directories="$(NugetTestBeforeDir)" />
+    <Copy SourceFiles="@(NugetTestSolutionFiles)" DestinationFolder="$(NugetTestBeforeDir)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+
+    <!--after-->
+    <MakeDir Directories="$(NugetTestAfterDir)" />
+    <MakeDir Directories="$(NugetTestAfterLogDir)" />
+    <Copy SourceFiles="@(NugetTestSolutionFiles)" DestinationFolder="$(NugetTestAfterDir)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+
+    <Message Importance="high" Text="Nuget Before/After -&gt; $(NugetTestDir)" />
+  </Target>
+
+  <!--restore-->
+  <Target 
+    Name="_NugetTestRestore" 
+    DependsOnTargets="_NugetTestCopy" >
+    
+    <PropertyGroup>
+      <NugetRestoreCommand>$(NugetExe) restore NugetUpdate.sln </NugetRestoreCommand>
+      <NugetRestoreCommand>$(NugetRestoreCommand)-Source $(NugetTestProductSource) </NugetRestoreCommand>
+      <NugetRestoreCommand>$(NugetRestoreCommand)-Source $(NugetSource) </NugetRestoreCommand>
+      <NugetRestoreCommand>$(NugetRestoreCommand)-Verbosity $(NugetTestExecVerbosity) </NugetRestoreCommand>
+      <NugetRestoreCommand>$(NugetRestoreCommand)-NoCache </NugetRestoreCommand>
+
+      <NugetRestoreLog>$(NugetTestAfterLogDir)nuget_restore.log</NugetRestoreLog>
+    </PropertyGroup>
+
+    <!--restore-->
+    <Exec 
+      Command="$(NugetRestoreCommand) &gt; $(NugetRestoreLog)" 
+      WorkingDirectory="$(NugetTestAfterDir)" 
+    />
+    <Message Importance="high" Text="Nuget Restore -&gt; $(NugetRestoreLog)" />
+  </Target>
+
+  <!--update-->
+  <Target 
+    Name="_NugetTestUpdate"
+    DependsOnTargets="_NugetTestRestore" >
+    
+    <PropertyGroup>
+      <NugetUpdateCommand>$(NugetExe) update NugetUpdate.sln </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-id Xamarin.Forms.CarouselView </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-RepositoryPath packages </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-Source $(NugetTestProductSource) </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-Source $(NugetSource) </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-Verbosity $(NugetTestExecVerbosity) </NugetUpdateCommand>
+      <NugetUpdateCommand>$(NugetUpdateCommand)-Prerelease </NugetUpdateCommand>
+
+      <NugetUpdateLog>$(NugetTestAfterLogDir)nuget_restore.log</NugetUpdateLog>
+    </PropertyGroup>
+
+    <!--update-->
+    <Exec 
+      Command="$(NugetUpdateCommand) &gt; $(NugetTestAfterLogDir)nuget_update.log"
+      WorkingDirectory="$(NugetTestAfterDir) "
+    />
+    <Message Importance="high" Text="Nuget Update -&gt; $(NugetRestoreLog)" />
+  </Target>
+  
+  <!--build-->
+  <Target 
+    Name="_NugetTestBuild" 
+    AfterTargets="CoreCompile"
+    DependsOnTargets="_NugetTestUpdate" >
+
+    <PropertyGroup>
+      <_LogFileType>build</_LogFileType>
+
+      <_CommandLine>msbuild $(NugetTestAfterDir)NugetUpdate.sln</_CommandLine>
+      <_CommandLine>$(_CommandLine) /t:Build</_CommandLine>
+      <_CommandLine>$(_CommandLine) /p:Platform=AnyCPU</_CommandLine>
+      <_CommandLine>$(_CommandLine) /p:Configuration=$(Configuration)</_CommandLine>
+      <_CommandLine>$(_CommandLine) /m</_CommandLine>
+      <_CommandLine>$(_CommandLine) $(Args)</_CommandLine>
+      <_CommandLine>$(_CommandLine) $(DefaultArgs.Replace("$(BuildLogFileType)", "$(_LogFileType)"))</_CommandLine>
+
+    </PropertyGroup>
+
+    <Message Importance="high" Text="Update -> $(NugetTestAfterDir)" />
+    <Exec Command="$(_CommandLine)" WorkingDirectory="$(NugetTestAfterDir)" />
+  </Target>
+  
+  <Target
+    Name="NugetTest"
+    DependsOnTargets="_NugetTestBuild">
+
+    <Message Importance="high" Text="TODO: Run tests after nuget upgrade"/>
+  </Target>
+
+  <PropertyGroup>
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+  </PropertyGroup>
+  <Import Project="$(TargetsDir)common.targets" />
+</Project>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+
+  <!--inject .post.props and .targets-->
+  <PropertyGroup>
+    <CustomBeforeMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\.., .post.props))\.post.props</CustomBeforeMicrosoftCommonTargets>
+    <CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\.., .targets))\.targets</CustomAfterMicrosoftCommonTargets>
+  </PropertyGroup>
+
+  <!--absolute root paths-->
+  <PropertyGroup>
+    <RootDir>$(MSBuildThisFileDirectory)</RootDir>
+    <DlsDir>$(RootDir)dls\</DlsDir>
+    <BinDir>$(RootDir)bin\</BinDir>
+    <TestDir>$(RootDir)tst\</TestDir>
+    <DropDir>$(RootDir)drp\</DropDir>
+  </PropertyGroup>
+
+  <!--tools-->
+  <PropertyGroup>
+    <ToolsDir>$(DlsDir)tools\</ToolsDir>
+  </PropertyGroup>
+
+  <!--nuget-->
+  <PropertyGroup>
+    <NugetExeVersion>v3.4.4</NugetExeVersion>
+    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
+    <NugetPackagesDir>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory), $(NugetPackagesDirAbsolute)))</NugetPackagesDir>
+    <NugetExe>$(ToolsDir)nuget.exe</NugetExe>
+
+    <!--restore-->
+    <NugetExeUrl>https://dist.nuget.org/win-x86-commandline/$(NugetExeVersion)/NuGet.exe</NugetExeUrl>
+    <NugetV2Source>https://www.nuget.org/api/v2</NugetV2Source>
+    <NugetV3Source>https://api.nuget.org/v3/index.json</NugetV3Source>
+    <NugetSource>$(NugetV3Source)</NugetSource>
+
+    <!--packageing-->
+    <NuspecAuthors>Xamarin, Inc.</NuspecAuthors>
+    <NuspecOwners>Xamarin, Inc.</NuspecOwners>
+    <NuspecRequireLicenseAcceptance>false</NuspecRequireLicenseAcceptance>
+    <NuspecCopyright>Copyright 2013-2016</NuspecCopyright>
+    <NuspecLicenseUrl>http://download.xamarin.com/content/licenses/Xamarin.Forms.rtf</NuspecLicenseUrl>
+    <NuspecIconUrl>http://xamarin.com/content/images/nuget/xamarin.png</NuspecIconUrl>
+  </PropertyGroup>
+  
+</Project>

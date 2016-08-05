@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- The goal of Common.targets is to insert a project in the poset of ProjectReferences. For example,
+  a target that builds a nuget package needs to wait for the projects which build the binaries to complete. 
+  To do that the target can add a PackageReference to those targts. It's not that simple however because some
+  project types cannot be referenced by other project types (e.g. an iOS project cannot reference an Android project).
+  Common.targets is constructed so it can reference any project and hence can wait for iOS, Android, Windows, etc.
+  projects to complete before executing its build task.
+  
+  Most project files import a project specific targets when in turn imports Microsoft.Common.CurrentVersion.targets. For
+  example, a C# project will import Microsoft.CSharp.targets which then imports Microsoft.Common.CurrentVersion.targets.
+  Microsoft.Common.CurrentVersion.targets has the logic which ensures packageReference projects are built before
+  the project while Microsoft.CSharp.targets prevents some types of project from being referenced. Common.targets,
+  by referencing Microsoft.Common.CurrentVersion.targets directly, bypasses these checks and so can reference anything.
+  -->
+  
+  <!-- Targets required by Microsoft.Common.CurrentVersion.targets to exist.-->
+  <Target Name="Build"/>
+  <Target Name="Clean" >
+    <RemoveDir Directories="$(OutputPath)" />
+  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  <Target Name="CreateManifestResourceNames" />
+  <Target Name="CoreCompile" />
+
+  <PropertyGroup>
+    <!-- The project is responsible for binplacement of its output. -->
+    <!--<CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>-->
+  </PropertyGroup>
+  
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.CurrentVersion.targets" />
+
+  <!-- This was generating warnings so we disabled it. As we do not 
+        actually compile anything we don't need to resolve any assembly references. -->
+  <Target Name="ResolveAssemblyReferences" />
+</Project>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TaskRootNamespace>Xamarin.Forms.Build.</TaskRootNamespace>
+    <TaskAssemblyPath>$(BuildDir)build\dev\Build\Xamarin.Forms.Build.dll</TaskAssemblyPath>
+  </PropertyGroup>
+
+  <UsingTask TaskName="$(TaskRootNamespace)PublishValue" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="$(TaskRootNamespace)CreateNuspec" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="$(TaskRootNamespace)DumpTaskItems" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="$(TaskRootNamespace)WebCopy" AssemblyFile="$(TaskAssemblyPath)" />
+  <UsingTask TaskName="$(TaskRootNamespace)GenAssemblyInfoFile" AssemblyFile="$(TaskAssemblyPath)" /> 
+</Project>

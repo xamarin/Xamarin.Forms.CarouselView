@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <AndroidProject>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</AndroidProject>
+    <IOSProject>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</IOSProject>
+    <IOSProjectClassic>{6BC8ED88-2882-458C-8E55-DFD12B67127B};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</IOSProjectClassic>
+    <UWPProject>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</UWPProject>
+    <WinRTPhoneProject>{76F1466A-8B6D-4E39-A767-685A06062A39};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</WinRTPhoneProject>
+    <WinRTTabletProject>{BC8A1FFA-BEE3-4634-8014-F334798102B3};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</WinRTTabletProject>
+    <WP8Project>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</WP8Project>
+    <CSPortableProject>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</CSPortableProject>
+  </PropertyGroup>
+
+  <!--c# portable project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(CSPortableProject)'">
+    <ProjectTypeName>CSPortable</ProjectTypeName>
+  </PropertyGroup>
+
+  <!--android project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(AndroidProject)'">
+    <ProjectTypeName>Android</ProjectTypeName>
+    <MobilePlatform>Android</MobilePlatform>
+    <RuntimePlatform>Mono</RuntimePlatform>
+  </PropertyGroup>
+
+  <!--IOS project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(IOSProject)'">
+    <ProjectTypeName>iOS</ProjectTypeName>
+    <MobilePlatform>iOS</MobilePlatform>
+    <RuntimePlatform>Mono</RuntimePlatform>
+  </PropertyGroup>
+
+  <!--IOSClassic project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(IOSProjectClassic)'">
+    <ProjectTypeName>iOS.Classic</ProjectTypeName>
+    <MobilePlatform>iOS</MobilePlatform>
+    <RuntimePlatform>Mono</RuntimePlatform>
+  </PropertyGroup>
+
+  <!--UWP project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(UWPProject)'">
+    <ProjectTypeName>Uwp</ProjectTypeName>
+    <MobilePlatform>Windows</MobilePlatform>
+    <MobileWindowsPlatform>UWP</MobileWindowsPlatform>
+    <RuntimePlatform>CoreClr</RuntimePlatform>
+    <DefineConstants>$(DefineConstants);WINDOWS_UWP</DefineConstants>
+  </PropertyGroup>
+
+  <!--winRTPhone project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WinRTPhoneProject)'">
+    <ProjectTypeName>WinRT.Phone</ProjectTypeName>
+    <MobilePlatform>Windows</MobilePlatform>
+    <MobileWindowsPlatform>Phone</MobileWindowsPlatform>
+    <RuntimePlatform>CoreClr</RuntimePlatform>
+    <DefineConstants>$(DefineConstants);WINDOWS_PHONE_APP</DefineConstants>
+  </PropertyGroup>
+
+  <!--winRTTablet project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WinRTTabletProject)'">
+    <ProjectTypeName>WinRT.Tablet</ProjectTypeName>
+    <MobilePlatform>Windows</MobilePlatform>
+    <MobileWindowsPlatform>Tablet</MobileWindowsPlatform>
+    <RuntimePlatform>CoreClr</RuntimePlatform>
+    <DefineConstants>$(DefineConstants);WINDOWS_APP</DefineConstants>
+  </PropertyGroup>
+
+  <!--WP8 project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WP8Project)'">
+    <ProjectTypeName>WP8</ProjectTypeName>
+    <MobilePlatform>Windows</MobilePlatform>
+    <RuntimePlatform>Silverlight</RuntimePlatform>
+    <DefineConstants>$(DefineConstants);WINDOWS_PHONE</DefineConstants>
+  </PropertyGroup>
+
+
+  <!--android platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' != ''">
+    <DefineConstants>$(DefineConstants);MOBILE</DefineConstants>
+  </PropertyGroup>
+
+  <!--android platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'android'">
+    <DefineConstants>$(DefineConstants);ANDROID</DefineConstants>
+  </PropertyGroup>
+
+  <!--IOS platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'IOS'">
+    <DefineConstants>$(DefineConstants);IOS</DefineConstants>
+  </PropertyGroup>
+
+  <!--Windows platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'Windows'">
+    <!--must be defined but we don't have enough context here to assign-->
+    <!--a default of $(platform) works from VS but on the command line /p:platform may not be passed-->
+    <PlatformTarget>BadPlatformTarget</PlatformTarget>
+    <DefineConstants>$(DefineConstants);WIN</DefineConstants>
+  </PropertyGroup>
+  
+  <!--Mono-->
+  <PropertyGroup Condition="'$(RuntimePlatform)' == 'Mono'">
+    <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+  </PropertyGroup>
+
+  
+  <!--CoreClr-->
+  <PropertyGroup Condition="'$(RuntimePlatform)' == 'CoreClr'">
+    <DefineConstants>$(DefineConstants);NETFX_CORE</DefineConstants>
+  </PropertyGroup>
+
+  <!--Silverlight-->
+  <PropertyGroup Condition="'$(RuntimePlatform)' == 'Silverlight'">
+    <DefineConstants>$(DefineConstants);SILVERLIGHT</DefineConstants>
+  </PropertyGroup>
+
+</Project>

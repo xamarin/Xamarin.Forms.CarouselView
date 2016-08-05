@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NugetWPtoolkitVersion>4.2013.08.16</NugetWPtoolkitVersion>
+    <NugetWPtoolkitTargetFramework>wp8</NugetWPtoolkitTargetFramework>
+    <NugetWPtoolkitDir>$(NugetPackagesDir)WPtoolkit.$(NugetWPtoolkitVersion)\</NugetWPtoolkitDir>
+    <NugetWPtoolkitLibDir>$(NugetWPtoolkitDir)\lib\</NugetWPtoolkitLibDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NugetReference Include="Microsoft.Phone.Controls.Toolkit, Version=8.0.1.0, Culture=neutral, PublicKeyToken=b772ad94eb9ca604, processorArchitecture=MSIL">
+      <Package>WPtoolkit</Package>
+      <Version>$(NugetWPtoolkitVersion)</Version>
+      <TargetFramework>$(NugetWPtoolkitTargetFramework)</TargetFramework>
+      <HintPath>$(NugetWPtoolkitLibDir)wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+  </ItemGroup>
+
+</Project>

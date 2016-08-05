@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., .props))\.props" />
+  <Import Project=".csprojType.props" />
+
+  <!--root paths; used to as part of temp|out dir by forming relative path to project-->
+  <PropertyGroup>
+    <SrcDir>$(MSBuildThisFileDirectory)</SrcDir>
+  </PropertyGroup>
+
+
+  <!--build files-->
+  <PropertyGroup>
+    <BuildLogFileType>[LOG_TYPE]</BuildLogFileType>
+  </PropertyGroup>
+
+  <!--default msbuild args-->
+  <PropertyGroup>
+    <BuildLogDir>$(MSBuildStartupDirectory)\</BuildLogDir>
+    <BuildLogFile>$(BuildLogDir)build$(BuildLogFileType).log</BuildLogFile>
+    <BuildSummaryFile>$(BuildLogDir)build$(BuildLogFileType).summary</BuildSummaryFile>
+    <BuildWarningFile>$(BuildLogDir)build$(BuildLogFileType).warning</BuildWarningFile>
+    <BuildErrorFile>$(BuildLogDir)build$(BuildLogFileType).error</BuildErrorFile>
+
+    <!--prevent recursion-->
+    <DefaultArgs>/p:DefaultsApplied=true</DefaultArgs>
+
+    <!--minimal console logging-->
+    <DefaultArgs>$(DefaultArgs) /nologo</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /clp:v=m</DefaultArgs>
+
+    <!--exit msbuild after build compleated to unlock files-->
+    <DefaultArgs>$(DefaultArgs) /nodeReuse:false</DefaultArgs>
+
+    <!--logfiles-->
+    <DefaultArgs>$(DefaultArgs) /flp:v=m;logfile=$(BuildSummaryFile);showeventId</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /flp1:v=d;logfile=$(BuildLogFile);showeventId;summary;performanceSummary</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /flp2:v=d;logfile=$(BuildWarningFile);showeventId;warningsonly</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /flp3:v=d;logfile=$(BuildErrorFile);showeventId;errorsonly</DefaultArgs>
+  </PropertyGroup>
+  
+  <!--default msbuild args (ios server)-->
+  <PropertyGroup Condition="'$(iosServerAddress)'!='' AND '$(iosServerUser)'!='' AND '$(iosServerPassword)'!=''">
+    <DefaultArgs>$(DefaultArgs) /p:serverAddress=$(iosServerAddress)</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /p:serverUser=$(iosServerUser)</DefaultArgs>
+    <DefaultArgs>$(DefaultArgs) /p:serverPassword=$(iosServerPassword)</DefaultArgs>
+  </PropertyGroup>
+
+  <!--shared .csproj file properties-->
+  <PropertyGroup>
+    <!--assemblyName and namespace are functions of project name-->
+    <AssemblyName>Xamarin.Forms.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+    
+    <!--warnings as errors-->
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    
+    <!--debug-->
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+    
+    <!--copyLocal; disable by default as excessive copying slows the build-->
+    <PrivateReference>False</PrivateReference>
+    
+    <!--misc-->
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <FileAlignment>512</FileAlignment>
+
+    <!--default configuration|platform-->
+    <Configuration Condition="'$(Configuration)'==''">debug</Configuration>
+    <Platform Condition="'$(Platform)'==''">AnyCPU</Platform>
+  </PropertyGroup>
+
+  <!--build-->
+  <PropertyGroup>
+
+    <!--buildDir-->
+    <BuildDirName>bld</BuildDirName>
+    <BuildDir>$(BinDir)$(BuildDirName)\$(Configuration)\</BuildDir>
+
+    <!--bin dir-->
+    <OutDirAbsolute>$(BuildDir)$([MSBuild]::MakeRelative($(SrcDir), $(MSBuildProjectDirectory)))\</OutDirAbsolute>
+    <OutDirAbsolute>$([System.IO.Path]::GetFullPath('$(OutDirAbsolute)'))</OutDirAbsolute>
+    <OutDir>$([MSBuild]::MakeRelative($(MSBuildProjectDirectory), $(OutDirAbsolute)))</OutDir>
+
+    <!--todo: support xs-->
+    <!--hack: xbuild + xs doesn't normalize slashes (maybe if windows does, they should all be reversed)-->
+    <!--<OutDir Condition="'$(UsingXBuild)'=='true'">$(BuildDirName)/$(Configuration)/</OutDir>-->
+
+    <!--C# targets files say OutDir should be used over OutputPath but build fails if OutputPath is not set-->
+    <OutputPath>$(OutDir)</OutputPath>
+
+    <!--remove trainig wheels; default is true if an outDir is specified-->
+    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
+
+    <!--obj dir-->
+    <TempDirName>tmp</TempDirName>
+    <TempDir>$(BuildDir.Replace('$(BuildDirName)','$(TempDirName)'))</TempDir>
+    <IntermediateOutputPath>$(OutDir.Replace('$(BuildDirName)','$(TempDirName)'))</IntermediateOutputPath>
+    <IntermediateOutputPathAbsolute>$(OutDirAbsolute.Replace('$(BuildDirName)','$(TempDirName)'))</IntermediateOutputPathAbsolute>
+
+    <!--force all windows output to OutDir-->
+    <AppxPackageDir>$(OutDir)</AppxPackageDir>
+  </PropertyGroup>
+  <ItemGroup>
+    <BuildNumberFile Include="$(BuildDir)build.number" />
+    <BuildGitStatusFile Include="$(BuildDir)build.git.status" />
+    <BuildGitHashFile Include="$(BuildDir)build.git.hash" />
+    <BuildGitBranchFile Include="$(BuildDir)build.git.branch" />
+    <BuildGitUrlFile Include="$(BuildDir)build.git.url" />
+  </ItemGroup>
+  
+  <!--tasks-->
+  <Import Project=".tasks" Condition="'$(IsBuildProj)'==''" />
+
+  <!--test-->
+  <PropertyGroup Condition="'$(IsTest)'=='true'">
+    <!--only copy local when building test-->
+    <PrivateReference>True</PrivateReference>
+
+    <!--only touch the iOS server when building an .ipa-->
+    <ServerAddress>$(iOSServerAddress)</ServerAddress>
+    <ServerUser>$(iOSServerUser)</ServerUser>
+    <ServerPassword>$(iOSServerPassword)</ServerPassword>
+  </PropertyGroup>
+  
+  <!--debug-->
+  <PropertyGroup Condition="'$(Configuration)'=='debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants);TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+
+  <!--release-->
+  <PropertyGroup Condition="'$(Configuration)'=='release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <!--c# portable project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(CSPortableProject)'">
+  </PropertyGroup>
+
+  <!--android project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(AndroidProject)'">
+  </PropertyGroup>
+
+  <!--ios project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(IOSProject)'">
+  </PropertyGroup>
+
+  <!--iosClassic project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(IOSProjectClassic)'">
+  </PropertyGroup>
+
+  <!--uwp project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(UWPProject)'">
+    <UseDotNetNativeToolchain Condition="'$(Configuration)' == 'Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <!--winRT.Phone project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WinRTPhoneProject)'">
+  </PropertyGroup>
+
+  <!--winRT.Tablet project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WinRTTabletProject)'">
+  </PropertyGroup>
+
+  <!--wp8 project-->
+  <PropertyGroup Condition="'$(ProjectTypeGuids)' == '$(WP8Project)'">
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+  </PropertyGroup>
+
+  <!--android platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'android'">
+    <!--Xamarin Android projects properties fail to respond to properties defined outside the .csproj-->
+  </PropertyGroup>
+
+  <!--ios platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'ios'">
+    <!--Xamarin iOS projects properties fail to respond to properties defined outside the .csproj-->
+  </PropertyGroup>
+
+  <!--windows platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == 'windows'">
+    <Platform Condition="'$(Platform)'=='AnyCPU' AND '$(OutputType)'=='AppContainerExe'">x86</Platform>
+    <PlatformTarget>$(Platform)</PlatformTarget>
+    <Prefer32Bit Condition="'$(OutputType)'=='AppContainerExe'">true</Prefer32Bit>
+  </PropertyGroup>
+
+</Project>

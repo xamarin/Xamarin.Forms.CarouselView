@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., .props))\.props" />
+
+  <!--import CarsouelView.Shared.[MobilePlatform] (shared source)-->
+  <Import Project="$(DevDir)Shared.$(MobilePlatform)\CarouselView.Shared.$(MobilePlatform).projitems"/>
+
+  <!--Import CarouselView.Shared (shared source)-->
+  <Import 
+    Condition="'$(PortableBuild)'==''"
+    Project="$(DevDir)Shared\CarouselView.Shared.projitems" 
+    Label="Shared" 
+  />
+  
+  <PropertyGroup>
+    <RootNamespace>$(RootNamespace)</RootNamespace>
+  </PropertyGroup>
+
+  <Choose>
+    
+    <!-- build core and platform abstrctions together into a single library -->
+    <When Condition="'$(PortableBuild)'==''">
+      <PropertyGroup>
+        <AssemblyName>Xamarin.Forms.CarouselView</AssemblyName>
+        <DefineConstants>$(DefineConstants);SHARED</DefineConstants>
+      </PropertyGroup>
+    </When>
+    
+    <!-- build core and platform abstrctions together separately to verify platform 
+         abstraction do not access internals of core abstractions -->
+    <Otherwise>
+      <PropertyGroup>
+        <DefineConstants>$(DefineConstants);PORTABLE</DefineConstants>
+        <AssemblyName>Xamarin.Forms.CarouselView.Platform</AssemblyName>
+      </PropertyGroup>
+
+      <!--Hide buildonly output-->
+      <PropertyGroup>
+        <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+        <OutDir>$(IntermediateOutputPath)portable\bin\</OutDir>
+        <OutputPath>$(OutDir)</OutputPath>
+        <AppxPackageDir>$(OutputPath)</AppxPackageDir>
+        <IntermediateOutputPath>$(IntermediateOutputPath)portable\obj\</IntermediateOutputPath>
+      </PropertyGroup>
+
+      <!--Import CarouselView (portable library)-->
+      <!--Todo: Change to file reference will prevent rebuild-->
+      <ItemGroup>
+        <ProjectReference Include="$(LibDir)dotnet\CarouselView.csproj">
+          <Project>{67f9d3a8-f71e-4428-913f-c37ae82cdb24}</Project>
+          <Name>Xamarin.Forms.CarouselView</Name>
+        </ProjectReference>
+      </ItemGroup>
+    </Otherwise>
+  </Choose>
+
+</Project>

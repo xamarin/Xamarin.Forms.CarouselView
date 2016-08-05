@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!--diagnostic-->
+  <Target Name="BeforeBuild" Condition="'$(MSBuildProjectName)'=='CarouselView.Android' AND false">
+    <Message Text="  MSBuildProjectFullPath: $(MSBuildProjectFullPath)" Importance="high" />
+    <Message Text="    RootNamespace: $(RootNamespace)" Importance="high" />
+    <Message Text="    MSBuildProjectDirectory: $(MSBuildProjectDirectory)" Importance="high" />
+    <Message Text="    OutDirAbsolute: $(OutDirAbsolute)" Importance="high" />
+    <Message Text="    OutDir: $(OutDir)" Importance="high" />
+    <Message Text="    BuildDir: $(BuildDir)" Importance="high" />
+    <Message Text="    TempDir: $(TempDir)" Importance="high" />
+    <Message Text="    IntermediateOutputPath: $(IntermediateOutputPath)" Importance="high" />
+    <Message Text="    Configuration: $(Configuration)" Importance="high" />
+    <Message Text="    Platform: $(Platform)" Importance="high" />
+    <Message Text="    NugetImports: '$(NugetImports)'" Importance="high" />
+    <Message Text="    NugetImportCount: '$(NugetImportCount)'" Importance="high" />
+    <Message Text="    NugetXamarinAndroidSupportImport: $(NugetXamarinAndroidSupportImport)" Importance="high" />
+  </Target>
+
+</Project>

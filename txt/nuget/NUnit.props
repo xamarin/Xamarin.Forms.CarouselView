@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NugetNunitVersion>2.6.4</NugetNunitVersion>
+    <NugetNunitTargetFramework>net452</NugetNunitTargetFramework>
+    <NugetNUnitDir>$(NugetPackagesDir)NUnit.$(NugetNunitVersion)\</NugetNUnitDir>
+    <NugetNUnitLibDir>$(NugetNUnitDir)\lib\</NugetNUnitLibDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NugetReference Include="nunit.framework, Version=$(NugetNunitVersion).14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <Package>NUnit</Package>
+      <Version>$(NugetNunitVersion)</Version>
+      <TargetFramework>$(NugetNunitTargetFramework)</TargetFramework>
+      <HintPath>$(NugetNUnitLibDir)nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </NugetReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <NugetPackage Include="NUnit.Runners">
+      <Version>$(NugetNunitVersion)</Version>
+      <TargetFramework>$(NugetNunitTargetFramework)</TargetFramework>
+      <Package>$(NugetNunitPackage)</Package>
+    </NugetPackage>
+  </ItemGroup>
+
+</Project>
