@@ -1,8 +1,0 @@
-﻿<Application
-    x:Class="CarouselGallery.UWP.App"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="using:CarouselGallery.UWP"
-    xmlns:uwp="using:Xamarin.Forms.Platform"
-	RequestedTheme="Light">
-</Application>

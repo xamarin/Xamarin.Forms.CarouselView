@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--package-->
+  <PropertyGroup>
+    <PackDir>$(OutDirAbsolute)</PackDir>
+    <NuspecFileName>$(MSBuildProjectName).nuspec</NuspecFileName>
+    <NuspecPath>$(PackDir)$(NuspecFileName)</NuspecPath>
+    
+    <NugetPackageName>$(NuspecId).$(NuspecVersion)</NugetPackageName>
+    <NugetPackageExt>.nupkg</NugetPackageExt>
+    <NugetPackageFileName>$(NugetPackageName)$(NugetPackageExt)</NugetPackageFileName>
+    <NugetPackagePath>$(PackDir)$(NugetPackageFileName)</NugetPackagePath>
+    
+    <PackVerbosity>normal</PackVerbosity>
+  </PropertyGroup>
+
+  <!--unpackage-->
+  <PropertyGroup>
+    <UnpackDir>$(OutDirAbsolute)</UnpackDir>
+    <UnpackBeforeDir>$(UnpackDir)before\</UnpackBeforeDir>
+    <UnpackAfterDir>$(UnpackDir)after\</UnpackAfterDir>
+    <UnpackAfterLogDir>$(UnpackAfterDir)log\</UnpackAfterLogDir>
+    
+    <UnpackVerbosity>normal</UnpackVerbosity>
+    <UnpackExecVerbosity>normal</UnpackExecVerbosity>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ExtDir)nuget.post.props"/>
+
+  <!--portable-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(PortableProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--desktop-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(DesktopProjectId)'">
+    <TargetsFile>$(MSBuildToolsPath)\Microsoft.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--pack-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(PackProjectId)'">
+    <TargetsFile>$(ExtDir)nuget.pack.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--unpack-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(UnpackProjectId)'">
+    <TargetsFile>$(ExtDir)nuget.unpack.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--android-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(AndroidProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--ios unified-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(IosUnifiedProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--ios classic-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(IosClassicProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--windows universal-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(WindowsUniversalProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--windows phone-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(WindowsPhoneProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+  <!--windows tablet-->
+  <PropertyGroup Condition="'$(TargetProject)' == '$(WindowsTabletProjectId)'">
+    <TargetsFile>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</TargetsFile>
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    
+    _BuildTaskProject
+      build task assembly before anything else
+  -->
+  <Target
+    Name="_BuildTaskProject"
+    Condition="'$(BuildingInsideVisualStudio)'!='true' " >
+    <!--Unexpected: Build.csproj gets touched when solutions is loaded in VS-->
+
+    <MSBuild
+      Projects="$(SrcDir)build\dev\Build\Build.csproj"
+      Properties="OutSubDir=AnyCPU;Platform=AnyCPU;Configuration=Debug"
+      Targets="Build"
+    />
+    <MSBuild
+      Projects="$(SrcDir)build\dev\Build\Build.csproj"
+      Properties="OutSubDir=AnyCPU;Platform=AnyCPU;Configuration=Release"
+      Targets="Build"
+    />
+  </Target>
+
+  <!--
+    
+    Rebuild
+  -->
+  <Target Name="Rebuild">
+    <MSBuild
+      Projects="$(ProjFile)"
+      Properties="IsCleaning=true"
+      Targets="clean"
+    />
+
+    <MSBuild
+      Projects="$(ProjFile)"
+      Properties="IsBuilding=true"
+      Targets="build"
+    />
+  </Target>
+
+  <!--
+    
+    DryRun
+  -->
+  <PropertyGroup>
+    <DryRunDependsOn />
+  </PropertyGroup>
+  <Target
+    Name="DryRun"
+    DependsOnTargets="$(DryRunDependsOn)"
+    Returns="@(DryRunReturns)"
+  >
+    <ItemGroup>
+      <DryRunReturns
+        Condition="'$(IsLeafPlatform)'=='true'"
+        Include="(path to $(ProjName) result [$(Configuration)|$(Plat)|$(MetaPlatform)])"
+      />
+      <DryRunReturns
+        Condition="'$(IsLeafPlatform)'!='true'"
+        Include="@(TargetResult)"
+      />
+    </ItemGroup>
+  </Target>
+  
+  <!--
+  
+    _BeforeTarget
+      A target that runs before Build, Clean, Install, NugetRestore, or DryRun.
+      The property WellKnownTargetName will be inscope for any targets injected to _BeforeTargtDependsOn
+      see also: https://github.com/Microsoft/msbuild/issues/851
+  -->
+
+  <!--capture target name-->
+  <Target Name="_SetTargetNameBuild">
+    <PropertyGroup>
+      <WellKnownTargetName>Build</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameClean">
+    <PropertyGroup>
+      <WellKnownTargetName>Clean</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameInstall">
+    <PropertyGroup>
+      <WellKnownTargetName>Install</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameNugetRestore">
+    <PropertyGroup>
+      <WellKnownTargetName>NugetRestore</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameDryRun">
+    <PropertyGroup>
+      <WellKnownTargetName>DryRun</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameCompile">
+    <PropertyGroup>
+      <WellKnownTargetName>Compile</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNamePackage">
+    <PropertyGroup>
+      <WellKnownTargetName>Package</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameSign">
+    <PropertyGroup>
+      <WellKnownTargetName>Sign</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+  <Target Name="_SetTargetNameGetTargetPath">
+    <PropertyGroup>
+      <WellKnownTargetName>GetTargetPath</WellKnownTargetName>
+    </PropertyGroup>
+  </Target>
+
+  <!--_BeforeTarget-->
+  <Target Name="_BeforeTarget" />
+
+  <!--inject _BeforeTarget before well known targets but after capturing target name-->
+  <PropertyGroup>
+    <BuildDependsOn>_SetTargetNameBuild;_BeforeTarget;$(BuildDependsOn)</BuildDependsOn>
+    <CleanDependsOn>_SetTargetNameClean;_BeforeTarget;$(CleanDependsOn)</CleanDependsOn>
+    <InstallDependsOn>_SetTargetNameInstall;_BeforeTarget;$(InstallDependsOn)</InstallDependsOn>
+    <NugetRestoreDependsOn>_SetTargetNameNugetRestore;_BeforeTarget;$(NugetRestoreDependsOn)</NugetRestoreDependsOn>
+    <DryRunDependsOn>_SetTargetNameDryRun;_BeforeTarget;$(DryRunDependsOn)</DryRunDependsOn>
+    <CompileDependsOn>_SetTargetNameCompile;_BeforeTarget;$(CompileDependsOn)</CompileDependsOn>
+    <GetTargetPathDependsOn>_SetTargetNameGetTargetPath;_BeforeTarget;$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
+    <PackageDependsOn>_SetTargetNamePackage;_BeforeTarget;$(PackageDependsOn)</PackageDependsOn>
+    <SignDependsOn>_SetTargetNameSign;_BeforeTarget;$(SignDependsOn)</SignDependsOn>
+  </PropertyGroup>
+
+  <!--
+  
+    ResolveMetaProjectReferences
+      Invokes msbuild on all types of project references before the well known target
+  -->
+  <ItemDefinitionGroup>
+    <_ChildProjectReference>
+      <ReferenceSource/>
+      <AdditionalProperties/>
+      <IncludeInResult/>
+      <TargetFramework/>
+      <IsPartPlatform/>
+    </_ChildProjectReference>
+  </ItemDefinitionGroup>
+  <Target 
+    Name="ResolveMetaProjectReferences"
+    BeforeTargets="_BeforeTarget"
+  >
+    <Error
+      Condition="'$(IsLeafPlatform)'!='true' AND '@(ChildPlatforms)|$(LeafPlatform)'==''"
+      Text="Platform '$(Plat)' is not recognized."
+    />
+    <Error
+      Condition="'$(IsAppPlatform)'=='true' AND '$(IsAppProject)'!='true'"
+      Text="Platform '$(Plat)' is an application platform and can only be used to build an application."
+    />
+    <Error
+      Condition="'$(IsLibraryPlatform)'=='true' AND '$(IsLibraryProject)'!='true'"
+      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
+    />
+    <Error
+      Condition="'$(IsUiTestPlatform)'=='true' AND '$(IsUiTestProject)'!='true'"
+      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
+    />
+    <Error
+      Condition="'$(WellKnownTargetName)'=='Compile' AND '$(IsInVS)'!='true'"
+      Text="Platform 'Compile' is only supported when building in VS during intellisesne loading."
+    />
+    
+    <ItemGroup>
+      <!--if (ChildPlatforms has value) then Platform-->
+      <_ChildProjectReference 
+        Condition="'@(ChildPlatforms)'!=''" 
+        Include="$(ProjFile)"
+      >
+        <ReferenceSource>ChildPlatform</ReferenceSource>
+        <AdditionalProperties>Platform=%(ChildPlatforms.Identity)</AdditionalProperties>
+      </_ChildProjectReference>
+      
+      <!--if (LeafPlatform has value) then Platform + MetaPlatform-->
+      <_ChildProjectReference 
+        Condition="'$(LeafPlatform)'!=''" 
+        Include="$(ProjFile)"
+      >
+        <ReferenceSource>LeafPlatform</ReferenceSource>
+        <AdditionalProperties>Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <TargetFramework Condition="'$(IsLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
+      </_ChildProjectReference>
+
+      <!--if (IsLeafPlatform) then ProjectReference -> Reference-->
+      <_ChildProjectReference 
+        Condition="'$(IsLeafPlatform)'=='true' AND '@(ProjectReference)'!=''" 
+        Include="@(ProjectReference->'$(ProjDir)%(Identity)')" 
+      >
+        <ReferenceSource>ProjectReference</ReferenceSource>
+        <AdditionalProperties>$(ClearRecursiveFrame)platform=$(LibraryPlatform)</AdditionalProperties>
+        <IncludeInReference>true</IncludeInReference>
+        <!--<Name>%(Name)</Name>-->
+      </_ChildProjectReference>
+
+      <!--if (IsLeafPlatform) then SelfReference -> Reference-->
+      <_ChildProjectReference 
+        Condition="'$(IsLeafPlatform)'=='true' AND '@(SelfReference)'!=''" 
+        Include="$(ProjFile)" 
+      >
+        <ReferenceSource>SelfReference</ReferenceSource>
+        <AdditionalProperties>$(ClearRecursiveFrame)Platform=%(SelfReference.Identity)</AdditionalProperties>
+        <IncludeInReference>true</IncludeInReference>
+        <Name>$(AssemblyName)</Name>
+      </_ChildProjectReference>
+    </ItemGroup>
+
+    <!--MS.Common.targets logic: if "compile" leaf in VS then assume reference already compiled by VS intellisesne engine.
+        Incidentally, this is also why there is no intellisense for unloaded projects.
+    -->
+    <PropertyGroup>
+      <_Targets>$(WellKnownTargetName)</_Targets>
+      <_Targets 
+        Condition="
+          '$(IsLeafPlatform)'=='true' AND 
+          '$(WellKnownTargetName)'=='Compile' AND
+          '$(IsInVs)' == 'true'
+        "
+      >GetTargetPath</_Targets>
+    </PropertyGroup>
+
+    <!--pre log-->
+    <Message
+      Text="MetaProjectReferences: @(_ChildProjectReference->Count())"
+      Importance="$(PlatformVerbosity)" 
+    />
+    <Message
+      Text="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(WellKnownTargetName) /+p:%(AdditionalProperties)"
+      Condition="'@(_ChildProjectReference)'!=''"
+      Importance="$(PlatformVerbosity)"
+    />
+    <!--<WriteLineToFile
+      File="f:\vs.log"
+      Line="MetaProjectReferences: @(_ChildProjectReference->Count())"
+      Condition="'@(_ChildProjectReference)'!=''"
+    />
+    <WriteLineToFile
+      File="f:\vs.log"
+      Line="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(WellKnownTargetName) /+p:%(AdditionalProperties)"
+      Condition="'@(_ChildProjectReference)'!=''"
+    />-->
+
+    <!--batch configurations-->
+    <ItemGroup>
+      <_Configurations Include="$(Configuration)" />
+    </ItemGroup>
+
+    <!--build-->
+    <MSBuild
+      Projects="@(_ChildProjectReference)"
+      Properties="Configuration=%(_Configurations.Identity)"
+      Targets="$(_Targets)"
+      ContinueOnError="true"
+      BuildInParallel="true"
+      RemoveProperties=""
+    >
+      <Output ItemName="EveryResult" TaskParameter="TargetOutputs" />
+    </MSBuild>
+
+    <!--tag results-->
+    <ItemGroup>
+      <EveryResult Condition="true">
+        <IsPartPlatform Condition="'$(IsPartPlatform)'=='true'">true</IsPartPlatform>
+      </EveryResult>
+    </ItemGroup>
+
+    <!--select results-->
+    <ItemGroup>
+      <TargetResult Include="@(EveryResult)"/>
+      <TargetResult 
+        Condition="'$(IsPartPlatform)'=='' AND '%(TargetResult.IsPartPlatform)'=='true'" 
+        Remove="%(Identity)"
+      />
+    </ItemGroup>
+    <Message
+      Text="%(ReferenceSource): $(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;- %(TargetResult.Identity)"
+      Condition="'%(Identity)'!=''"
+      Importance="$(PlatformVerbosity)" 
+    />
+
+    <!--ProjectReference and SelfReference -> Reference-->
+    <ItemGroup>
+      <ProjectReference Remove="@(ProjectReference)" />
+      <IncludeInReference Include="@(EveryResult->WithMetadataValue('IncludeInReference', 'true')->'%(Name)')" >
+        <HintPath>%(Identity)</HintPath>
+      </IncludeInReference>
+      <Reference Include="@(IncludeInReference->'%(Name)')" />
+    </ItemGroup>
+    <Message 
+      Text="  %(ReferenceSource): Reference += %(IncludeInReference.Identity) -> %(HintPath)"
+      Condition="'@(IncludeInReference)'!=''"
+      Importance="$(PlatformVerbosity)" 
+    />
+  </Target>
+
+  <!--
+  
+    _DumpFrame
+  -->
+  <Target
+    Name="_DumpFrame"
+    BeforeTargets="ResolveMetaProjectReferences"
+    Condition="'$(WellKnownTargetName)'=='DryRun' OR '$(Verbosity)'=='high'"
+  >
+
+    <PropertyGroup>
+      <Tag>BUILD</Tag>
+      <Tag Condition="'$(IsLeafPlatform)'!='true'">RECURSE</Tag>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <_Property Include="WellKnownTargetName" />
+      <_Property Include="ProjFile" />
+      <_Property Include="IsLeafPlatform" />
+      <_Property Include="IsMetaPlatform" />
+      <_Property Include="IsLibraryPlatform" />
+      <_Property Include="IsPartPlatform" />
+      <_Property Include="MobilePlatform" />
+      <_Property Include="MobileSubPlatform" />
+      <_Property Include="LibraryPlatform" />
+      <_Property Include="DefineConstants" />
+      <_Property Include="TargetProject" />
+      <_Property Include="TargetsFile" />
+      <_Property Include="CommonTargetsPath" />
+      <_Property Include="CSharpCoreTargetsPath" />
+      <_Property Include="BuildingInsideVisualStudio" />
+    </ItemGroup>
+    <ItemGroup Condition="'$(IsLeafPlatform)'=='true'">
+      <_Property Include="OutDirAbsolute" />
+      <_Property Include="IntermediateOutputPathAbsolute" />
+      <_Property Include="TargetsFile" />
+    </ItemGroup>
+
+    <Message 
+      Importance="high" 
+      Text="$(Tag) [$(Configuration)|$(Plat)|$(MetaPlatform)]: $(AssemblyName) -> { @(ChildPlatforms)$(LeafPlatform) }"
+    />
+    <Message
+      Importance="high"
+      Text="  %(_Property.Identity) -> $(%(Identity))"
+      Condition="'$(%(Identity))'!=''"
+    />
+    
+    <!--VS load logging-->
+    <!--<WriteLineToFile
+      File="f:\vs.log"
+      Line="$(Tag) [$(Configuration)|$(Plat)|$(MetaPlatform)]: $(AssemblyName) -> { @(ChildPlatforms)$(LeafPlatform) }"
+    />-->
+    <!--<WriteLineToFile
+      File="f:\vs.log"
+      Line="  %(_Property.Identity) -> $(%(Identity))"
+      Condition="'$(%(Identity))'!=''"
+    />-->
+
+    <!--<Message
+      Importance="high"
+      Text="    NugetReference: %(NugetReference.Identity)"
+      Condition="'@(NugetReference)'!=''"
+    />-->
+    <!--<Message
+      Importance="high"
+      Text="    Compile: %(Compile.Identity) -> %(FullPath)"
+      Condition="'@(Compile)'!=''"
+    />-->
+    <!--<Message
+      Importance="high"
+      Text="    None: %(None.Identity) -> %(FullPath)"
+      Condition="'@(None)'!=''"
+    />-->
+    <Message
+      Importance="high"
+      Text="    ProjectReference: %(ProjectReference.Identity) -> %(FullPath)"
+      Condition="'@(ProjectReference)'!=''"
+    />
+    <Message
+      Importance="high"
+      Text="    @(ExtractedJarImports): %(ExtractedJarImports.Identity) -> %(FullPath)"
+      Condition="'@(ExtractedJarImports)'!=''"
+    />
+  </Target>
+  
+</Project>

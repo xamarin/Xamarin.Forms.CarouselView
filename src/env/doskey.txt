@@ -1,0 +1,82 @@
+;= alias
+fa=doskey /macros | findstr /i $1
+la=doskey /macros
+re=doskey /macrofile=%doskey%
+
+;= notepad
+n=notepad $1
+
+;= dos commands
+sb=dir /s/b $*
+findh=%envDir%find.bat . $1 $2
+findv=findstr /slinp /C:"$*" *
+find=findstr /slimp /C:"$*" *
+kill=taskkill /f /im $*
+
+;= root dirs
+c=pushd c:\
+f=pushd f:\
+
+;= pushd
+pd=pushd $*
+.=pushd ..
+..=pushd ..\..
+...=pushd ..\..\..
+....=pushd ..\..\..\..
+.....=pushd ..\..\..\..\..
+
+;= popd
+p=popd
+pp=popd && popd
+ppp=popd && popd && popd
+pppp=popd && popd && popd && popd
+ppppp=popd && popd && popd && popd && popd
+
+;= git
+gs=git status
+ga=git add .
+gc=git commit -m $*
+gl=git log -1 $1
+nuke=git clean -fdXq
+scorch=git clean -fdXq -e !dls
+
+;= build
+shim=msbuild %srcDir%.csproj /nologo /t:dumpProjects /v:m /p:ShimVerbosity=high
+restore=msbuild %srcDir%.csproj /t:restore /v:m
+build=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="debug" /p:OtherProperties="$*"
+clean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="debug" /p:OtherProperties="$*"
+rbuild=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="release" /p:OtherProperties="$*"
+rclean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="release" /p:OtherProperties="$*"
+abuild=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
+aclean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
+
+;= link
+linkdir=mklink /j $1 $2
+diruse=subst $1 $2
+
+;= go
+r=go rootDir
+src=go srcDir
+env=go envDir
+bin=go buildBinDir
+tmp=go tempDir
+bld=go buildDir
+dls=go dlsDir
+
+;= carouselView
+cv=pushd %srcDir%carouselView
+lib=pushd %srcDir%carouselView\lib
+app=pushd %srcDir%carouselView\app
+aut=pushd %srcDir%carouselView\aut
+after=pushd %tstDir%nugetTest\after
+sln=call sln.bat
+
+;= tools
+diff=p4merge -C utf8 $1 $2
+bc="C:\Program Files\Beyond Compare 4\BCompare.exe" $1 $2
+ts=touch %srcDir%*.sln
+
+;= todo
+todo=echo $* >> f:\todo.txt
+ltodo=type f:\todo.txt
+ntodo=notepad f:\todo.txt

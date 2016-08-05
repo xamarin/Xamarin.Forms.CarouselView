@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    
+    PreProps
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
+  <!--
+    
+    Props
+  -->
+  <PropertyGroup>
+    <MetaProject>xf.app</MetaProject>
+    <MetaPlatform>monodroid.app</MetaPlatform>
+    <OutRelDir>$(MSBuildProjectDirectory)\..\</OutRelDir>
+  </PropertyGroup>
+  <Import Project="$(ExtDir)xf\xf.proj.app.props" />
+  <!--
+    
+    Configurations
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|monoDroid.app' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|monoDroid.app' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|[none]' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|[none]' " />
+  <PropertyGroup>
+    <AssemblyName>CarouselView.App</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <!--
+    
+    Targets
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Target Name="Build">
+    <MSBuild
+      Projects="..\CarouselView.App.csproj"
+      Targets="Package;Sign"
+      Properties="Platform=$(MetaPlatform)"
+    />
+  </Target>
+  <Target Name="Install">
+    <MSBuild 
+      Projects="..\CarouselView.App.csproj" 
+      Targets="Install" 
+      Properties="Platform=$(MetaPlatform)"
+    />
+  </Target>
+</Project>

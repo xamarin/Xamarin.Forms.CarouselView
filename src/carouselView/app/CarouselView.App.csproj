@@ -1,0 +1,301 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
+    <!--VS project type is a function of the first ProjectTypeGuids found in the text of the project file-->
+  </PropertyGroup>
+  <!--
+
+    Properties
+  -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
+  <Import Project="$(ExtDir)xf\xf.proj.app.props" />
+  <!--
+
+    Universal
+  -->
+  <PropertyGroup Condition=" '$(Platform)' == '[none]' " />
+  <PropertyGroup>
+    <ProjectGuid>{C52084E5-8F52-4786-AF47-F7075FFD7794}</ProjectGuid>
+    <NuGetPackageImportStamp />
+    <RootNamespace>CarouselViewApp</RootNamespace>
+    <AssemblyName>CarouselView.App</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\lib\CarouselView.csproj">
+      <Project>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</Project>
+      <Name>Xamarin.Forms.CarouselView</Name>
+      <!--ios-->
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="shared\App.cs" />
+    <Compile Include="shared\CarouselViewGalleryLaunchPage.cs" />
+    <Compile Include="shared\CarouselViewGalleryPage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.ObjectModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <Import Project="$(NugetPackagePropsDir)Xamarin.Forms.props" />
+  <!--
+
+    Android
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|monoDroid.app' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|monoDroid.app' " />
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <OutputType>Library</OutputType>
+    <ProjectGuid>{C52084E5-8F52-4786-AF47-F7075FFD7794}</ProjectGuid>
+    <!--TODO: Ask android team to enable moving resources dir: resources\** -> android\resource\**-->
+    <!--<AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>-->
+    <AndroidManifest>android\Properties\AndroidManifest.xml</AndroidManifest>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+  </PropertyGroup>
+  <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <Import Project="$(NugetPackagePropsDir)Xamarin.Android.Support.props" />
+  </ImportGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <!--references-->
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+    <!--source-->
+    <Compile Include="android\MainActivity.cs" />
+    <!--manifest-->
+    <None Include="android\Properties\AndroidManifest.xml" />
+    <!--resources-->
+    <AndroidResource Include="Resources\drawable\icon.png" />
+    <AndroidResource Include="Resources\drawable-hdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xhdpi\icon.png" />
+    <AndroidResource Include="Resources\drawable-xxhdpi\icon.png" />
+  </ItemGroup>
+  <!--
+
+    Ios
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|xamarin.ios.sim' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|xamarin.ios.phone' " />
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)'">
+    <OutputType>Exe</OutputType>
+    <Foo>Bar</Foo>
+  </PropertyGroup>
+  <ImportGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
+    <Import Project="$(NugetPackagePropsDir)Xamarin.TestCloud.Agent.props" />
+  </ImportGroup>
+  <PropertyGroup Condition=" '$(Plat)' == 'iPhoneSimulator' ">
+    <MtouchArch>i386, x86_64</MtouchArch>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Plat)' == 'iPhone' ">
+    <MtouchArch>ARMv7, ARM64</MtouchArch>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <MtouchLink>Full</MtouchLink>
+    <MtouchDebug>True</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Plat)' == 'debug|iPhoneSimulator' ">
+    <BuildIpa>True</BuildIpa>
+    <IpaIncludeArtwork>False</IpaIncludeArtwork>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Plat)' == 'release|iPhoneSimulator' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Plat)' == 'debug|iPhone' ">
+    <DeviceSpecificBuild>False</DeviceSpecificBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Plat)' == 'release|iPhone' " />
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
+    <!--references-->
+    <Reference Include="Xamarin.iOS" />
+    <!--source-->
+    <Compile Include="ios\Main.cs" />
+    <Compile Include="ios\AppDelegate.cs" />
+    <!--resources-->
+    <ITunesArtwork Include="ios\iTunesArtwork" />
+    <ITunesArtwork Include="ios\iTunesArtwork@2x" />
+    <BundleResource Include="ios\Resources\Default-568h%402x.png" />
+    <BundleResource Include="ios\Resources\Default-Portrait.png" />
+    <BundleResource Include="ios\Resources\Default-Portrait%402x.png" />
+    <BundleResource Include="ios\Resources\Default.png" />
+    <BundleResource Include="ios\Resources\Default%402x.png" />
+    <BundleResource Include="ios\Resources\Icon-60%402x.png" />
+    <BundleResource Include="ios\Resources\Icon-60%403x.png" />
+    <BundleResource Include="ios\Resources\Icon-76.png" />
+    <BundleResource Include="ios\Resources\Icon-76%402x.png" />
+    <BundleResource Include="ios\Resources\Icon-Small-40.png" />
+    <BundleResource Include="ios\Resources\Icon-Small-40%402x.png" />
+    <BundleResource Include="ios\Resources\Icon-Small-40%403x.png" />
+    <BundleResource Include="ios\Resources\Icon-Small.png" />
+    <BundleResource Include="ios\Resources\Icon-Small%402x.png" />
+    <BundleResource Include="ios\Resources\Icon-Small%403x.png" />
+    <!--interfaceDefinition-->
+    <InterfaceDefinition Include="ios\Resources\LaunchScreen.storyboard" />
+    <!--none-->
+    <None Include="Info.plist" />
+    <None Include="Entitlements.plist" />
+  </ItemGroup>
+  <!--
+
+    Windows
+  -->
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <OutputType>AppContainerExe</OutputType>
+    <PackageCertificateKeyFile>windows\Windows_TemporaryKey.pfx</PackageCertificateKeyFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
+    <!--applicationDefinition-->
+    <ApplicationDefinition Include="windows\App.xaml">
+      <SubType>Designer</SubType>
+      <!--Without Link element XamlCompiler issues the following error:
+            XamlCompiler warning WMC1008: Application main file must be named App.xaml
+      -->
+      <Link>App.xaml</Link>
+    </ApplicationDefinition>
+    <!--compile-->
+    <Compile Include="windows\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <!--none-->
+    <None Include="windows\Windows_TemporaryKey.pfx" />
+  </ItemGroup>
+  <!--
+
+    Windows Tablet
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|win.32' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|win.32' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|win.64' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|win.64' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|win.arm' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|win.arm' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
+    <Language>CSharp</Language>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
+    <!--appxManifest-->
+    <AppxManifest Include="windows\tablet\Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <!--compile-->
+    <Compile Include="windows\tablet\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <!--page-->
+    <Page Include="windows\tablet\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <!--content-->
+    <Content Include="windows\tablet\Assets\Logo.scale-100.png" />
+    <Content Include="windows\tablet\Assets\SmallLogo.scale-100.png" />
+    <Content Include="windows\tablet\Assets\SplashScreen.scale-100.png" />
+    <Content Include="windows\tablet\Assets\StoreLogo.scale-100.png" />
+  </ItemGroup>
+  <!--
+
+    Windows Phone
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|wpa.32' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|wpa.32' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
+    <!--appxManifest-->
+    <AppxManifest Include="windows\phone\Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <!--compile-->
+    <Compile Include="windows\phone\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <!--page-->
+    <Page Include="windows\phone\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <!--content-->
+    <Content Include="windows\phone\Assets\Logo.scale-240.png" />
+    <Content Include="windows\phone\Assets\SmallLogo.scale-240.png" />
+    <Content Include="windows\phone\Assets\SplashScreen.scale-240.png" />
+    <Content Include="windows\phone\Assets\Square71x71Logo.scale-240.png" />
+    <Content Include="windows\phone\Assets\StoreLogo.scale-240.png" />
+    <Content Include="windows\phone\Assets\WideLogo.scale-240.png" />
+  </ItemGroup>
+  <!--
+
+    Windows Universal
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|uap.32' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|uap.32' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <VisualStudioVersion>14.0</VisualStudioVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
+    <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
+    <ProjectLockFile>windows\project.lock.json</ProjectLockFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
+    <!--appxManifest-->
+    <AppxManifest Include="windows\universal\Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </AppxManifest>
+    <!--compile-->
+    <Compile Include="windows\universal\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <!--page-->
+    <Page Include="windows\universal\MainPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <!--content-->
+    <Content Include="windows\universal\Properties\Default.rd.xml" />
+    <Content Include="windows\universal\Assets\LockScreenLogo.scale-200.png" />
+    <Content Include="windows\universal\Assets\SplashScreen.scale-200.png" />
+    <Content Include="windows\universal\Assets\Square150x150Logo.scale-200.png" />
+    <Content Include="windows\universal\Assets\Square44x44Logo.scale-200.png" />
+    <Content Include="windows\universal\Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
+    <Content Include="windows\universal\Assets\StoreLogo.png" />
+    <Content Include="windows\universal\Assets\Wide310x150Logo.scale-200.png" />
+    <!--none-->
+  </ItemGroup>
+  <!--
+
+    Targets
+  -->
+  <Import Project="$(ExtDir)xf\xf.proj.app.targets" />
+  <!--
+
+    Force android projects to package and sign during build instead of deploy
+  -->
+  <!--<Target 
+    Name="_AndroidPackageAndSign" 
+    AfterTargets="Build"
+    Condition="'$(MobilePlatform)'=='$(AndroidMobilePlatformId)'">
+    
+    <PropertyGroup>
+      <ApkPath>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\$(OutDir)'))$(projectName)</ApkPath>
+    </PropertyGroup>
+    
+    <Message Text="$(ProjectName).apk -&gt; $(ApkPath).apk" Importance="high" />
+    <CallTarget Targets="Package" />
+    
+    <Message Text="$(ProjectName)-Signed.apk -&gt; $(ApkPath)-Signed.apk" Importance="high" />
+    <CallTarget Targets="Sign" />
+  </Target>-->
+</Project>

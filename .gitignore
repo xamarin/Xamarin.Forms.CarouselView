@@ -1,13 +1,9 @@
 dls
-bin
-tst
+bld
 drp
 .vs
 *.userprefs
 *.user
 *.bak
-*.log
-*.warning
-*.error
-*.summary
-*.diag
+*.~*
+cmd.bat

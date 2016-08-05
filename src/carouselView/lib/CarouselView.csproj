@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  DefaultTargets="Build" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  >
+  
+  <PropertyGroup>
+    <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
+    <!--VS project type is a function of the first ProjectTypeGuids found in the text of the project file-->
+  </PropertyGroup>
+  <!--
+  
+    Properties
+  -->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
+  <Import Project="$(ExtDir)xf\xf.proj.lib.props"/>
+  <Import Project="nuspec.props"/>
+  <!--
+  
+    Universal
+  -->
+  <PropertyGroup Condition=" '$(Platform)' == '[none]' "/>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <LibDir>$(MSBuildThisFileDirectory)lib\</LibDir>
+    <ProjectGuid>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</ProjectGuid>
+    <AssemblyName>Xamarin.Forms.CarouselView</AssemblyName>
+    <PortableAssemblyName>Xamarin.Forms.CarouselView.Portable</PortableAssemblyName>
+    <RootNamespace>Xamarin.Forms</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
+    <None Include="nuspec.props" />
+  </ItemGroup>
+  <Import Project="$(NugetPackagePropsDir)Xamarin.Forms.props" />
+  <!--
+  
+    Nuget Pack
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|pack' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|pack' " />
+  <PropertyGroup Condition=" '$(Plat)' == '$(PackLeafPlatformId)' " />
+  <!--
+
+    Nuget Unpack
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|unpack' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|unpack' " />
+  <PropertyGroup Condition=" '$(Plat)' == '$(UnpackLeafPlatformId)' "/>
+  <!--
+  
+    Portable
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|dotnet' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|dotnet' " />
+  <PropertyGroup Condition=" '$(LibraryPlatform)' == '$(PortableLibraryPlatformId)' ">
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Profile259</TargetFrameworkProfile>
+    <TargetFrameworkIdentifier>.NETPortable</TargetFrameworkIdentifier>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <!--This assembly is only referenced and never executed so there is no need for symbols-->
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+    <IsPortablePlatform>true</IsPortablePlatform>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(IsPartPlatform)' != 'true' ">
+    <Compile Include="portable\AssemblyInfo.cs" />
+    <Compile Include="portable\CarouselView.cs" />
+    <Compile Include="portable\CarouselViewLibrary.cs" />
+    <Compile Include="portable\EnumerableExtensions.cs" />
+    <Compile Include="portable\ICarouselViewController.cs" />
+    <Compile Include="portable\SimpleItemsView.cs" />
+  </ItemGroup>
+  <!--
+  
+    Part ([platform].part)
+  -->
+  <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
+    <AssemblyName>$(PortableAssemblyName)</AssemblyName>
+    <IsPortablePlatform>true</IsPortablePlatform>
+  </PropertyGroup>
+  <PropertyGroup>
+    <DefineConstants Condition=" '$(IsPortablePlatform)' == 'true' ">$(DefineConstants)PORTABLE;</DefineConstants>
+    <DefineConstants Condition=" '$(IsPortablePlatform)' != 'true' ">$(DefineConstants)COMPOSITE;</DefineConstants>
+  </PropertyGroup>
+  <!--This assembly is only referenced and never executed so there is no need for symbols-->
+  <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+  </PropertyGroup>
+  <!--hide build output-->
+  <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <!--TODO: if CopyBuildOutputToOutputDirectory why is the following necessary?-->
+    <OutDir>$(IntermediateOutputPath)portable\bin\</OutDir>
+    <OutputPath>$(OutDir)</OutputPath>
+    <AppxPackageDir>$(OutputPath)</AppxPackageDir>
+    <IntermediateOutputPath>$(IntermediateOutputPath)portable\obj\</IntermediateOutputPath>
+  </PropertyGroup>
+  <!--
+  
+    Android
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|monoDroid' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|monoDroid' " />
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <Compile Include="android\CarouselViewRenderer.cs" />
+  </ItemGroup>
+  <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' " >
+    <Import Project="$(NugetPackagePropsDir)Xamarin.Android.Support.props"/>
+  </ImportGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
+    <Reference Include="Mono.Android" />
+    <Reference Include="mscorlib" />
+  </ItemGroup>
+  <!--
+  
+    iOS
+  -->
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
+    <Compile Include="ios\CarouselViewRenderer.cs" />
+  </ItemGroup>
+  <!--
+  
+    iOS Universal
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|xamarin.ios' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|xamarin.ios' " />
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(IosUnifiedMobileSubPlatformId)' ">
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <!--
+  
+    iOS Classic
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|monoTouch' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|monoTouch' " />
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(IosClassicMobileSubPlatformId)' ">
+    <Reference Include="monotouch" />
+  </ItemGroup>
+  <!--
+  
+    Windows
+  -->
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <!--<AppxPrependPriInitialPath>false</AppxPrependPriInitialPath>-->
+    <!--<AppxPriInitialPath>bar</AppxPriInitialPath>-->
+    <!--force all windows output to OutDir-->
+    <AppxPackageDir>$(OutDir)</AppxPackageDir>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
+    <Compile Include="windows\CarouselViewRenderer.cs" />
+    <Compile Include="windows\CarouselViewLibrary.cs" />
+    <Page Include="windows\Resources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <!--
+  
+    Windows Phone
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|wpa' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|wpa' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
+  </PropertyGroup>
+  <!--
+
+    Windows Tablet
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|win' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|win' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
+    <TargetPlatformVersion>8.1</TargetPlatformVersion>
+    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <!--
+
+    Windows Universal
+  -->
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|uap' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|uap' " />
+  <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
+    <UseProjectJson>true</UseProjectJson>
+    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
+    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
+    <ProjectLockFile>windows\project.lock.json</ProjectLockFile>
+  </PropertyGroup>
+  <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)'">
+    <None Include="windows\project.json" />
+    <None Include="windows\project.lock.json" />
+  </ItemGroup>
+  <!--
+
+    Targets
+  -->
+  <Import Project="$(ExtDir)xf\xf.proj.lib.targets" />
+</Project>

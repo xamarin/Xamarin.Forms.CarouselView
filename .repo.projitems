@@ -10,37 +10,110 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\.props" />
     <None Include="$(MSBuildThisFileDirectory).props" />
+    <None Include="$(MSBuildThisFileDirectory).pre.props" />
     <None Include="$(MSBuildThisFileDirectory).targets" />
     <None Include="$(MSBuildThisFileDirectory)nuget.config" />
     <None Include="$(MSBuildThisFileDirectory)readme.md" />
-    <None Include="$(MSBuildThisFileDirectory)txt\.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\.post.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\sln.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\killUsual.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\testsRun.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\androidPackageInstall.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\androidEmulatorLaunch.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\env.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\env.lnk" />
-    <None Include="$(MSBuildThisFileDirectory)txt\env\vcvarsallShim.bat" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Android.Support.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Forms.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\NUnit.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\WPtoolkit.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Android.Support.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.Forms.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.TestCloud.Agent.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\nuget\Xamarin.UITest.props" />
-    <None Include="$(MSBuildThisFileDirectory)txt\packages.config" />
-    <None Include="$(MSBuildThisFileDirectory)txt\targets\nugetTest.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\targets\common.targets" />
-    <None Include="$(MSBuildThisFileDirectory)txt\targets\nugetPack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\CarouselView.App.Android.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\CarouselView.App.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Entitlements.plist" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Info.plist" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.pack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.unpack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\NUnit.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\WPtoolkit.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.Android.Support.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.Android.Support.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.Forms.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.Forms.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.TestCloud.Agent.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\nuget\Xamarin.UITest.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\vs.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselView.Test.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\go.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\find.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\killUsual.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\testsRun.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\androidPackageInstall.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\androidEmulatorLaunch.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\env.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\env.lnk" />
+    <None Include="$(MSBuildThisFileDirectory)src\env\vcvarsallShim.bat" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\empty.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.common.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.aut.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.aut.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.leaf.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.app.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.app.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.lib.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.lib.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)txt\env\alias.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.json" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.lock.json" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\project.json" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\project.lock.json" />
+    <Content Include="$(MSBuildThisFileDirectory)src\env\doskey.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\App.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\phone\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\tablet\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\MainPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\phone\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\tablet\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\phone\Package.appxmanifest" />
+    <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\tablet\Package.appxmanifest" />
+    <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\Package.appxmanifest" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)src\carouselView\app\shared\" />
   </ItemGroup>
 </Project>

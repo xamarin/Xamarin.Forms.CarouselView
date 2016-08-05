@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+  ToolsVersion="12.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+  <PropertyGroup>
+    <MetaProject>xf.lib</MetaProject>
+  </PropertyGroup>
+  <Import Project="$(ExtDir)xf\xf.pre.props"/>
+  <Import Project="$(ExtDir)xf\xf.props" />
+
+  <!--declare self-references outside of .csproj to prevent VS solution explorer from creating artifacts-->
+  
+  <!--
+
+    Nuget Pack
+  -->
+  <ItemGroup Condition=" '$(Plat)' == '$(PackLeafPlatformId)' ">
+    <SelfReference Include="$(MobilePlatformId)" />
+  </ItemGroup>
+  <!--
+
+    Nuget Unpack
+  -->
+  <ItemGroup Condition=" '$(Plat)' == '$(UnpackLeafPlatformId)' ">
+    <SelfReference Include="$(PackLeafPlatformId)" />
+  </ItemGroup>
+  <!--
+  
+    Part ([platform].part)
+  -->
+  <ItemGroup Condition=" '$(IsPartPlatform)' == 'true' ">
+    <SelfReference Include="$(PortableLibraryPlatformId)" />
+  </ItemGroup>
+</Project>

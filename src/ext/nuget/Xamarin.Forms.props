@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NugetXamarinFormsPackage>Xamarin.Forms</NugetXamarinFormsPackage>
+    <NugetXamarinFormsVersion>2.3.1.110-pre1</NugetXamarinFormsVersion>
+    <NugetXamarinFormsSubDir>Xamarin.Forms.$(NugetXamarinFormsVersion)\</NugetXamarinFormsSubDir>
+
+    <NugetXamarinFormsImport>$(NugetPackagesDirAbsolute)$(NugetXamarinFormsSubDir)build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\Xamarin.Forms.targets</NugetXamarinFormsImport>
+    <NugetImports>Xamarin.Forms.targets;$(NugetImports)</NugetImports>
+  </PropertyGroup>
+
+  <!--the nuget TFM that's part of the path to the xamarin.forms assembly in the packages dir-->
+  <!--e.g. packages\Xamarin.Forms\1.2.3\lib\[XamarinFormsTFM]-->
+  <PropertyGroup>
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(PortableLibraryPlatformId)'">portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10</XamarinFormsTFM>
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(AndroidLibraryPlatformId)'">MonoAndroid10</XamarinFormsTFM>
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(IosUnifiedLibraryPlatformId)'">Xamarin.iOS10</XamarinFormsTFM>
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(IosClassicLibraryPlatformId)'">MonoTouch10</XamarinFormsTFM>
+    <!--<XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(WindowsUniversalLibraryPlatformId)'">uap10.0</XamarinFormsTFM>-->
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(WindowsPhoneLibraryPlatformId)'">wpa81</XamarinFormsTFM>
+    <XamarinFormsTFM Condition="'$(LibraryPlatform)' == '$(WindowsTabletLibraryPlatformId)'">win81</XamarinFormsTFM>
+  </PropertyGroup>
+
+  <!--the project relative path into the packages dir for the project type-->
+  <PropertyGroup>
+    <NugetXamarinFormsLibDir>$(NugetPackagesDir)$(NugetXamarinFormsSubDir)lib\$(XamarinFormsTFM)\</NugetXamarinFormsLibDir>
+  </PropertyGroup>
+
+  <!--the suffix applied to the assembly names for each package (can remove if forwarders replaced by bait-and-switch)-->
+  <!--e.g. Xamarin.Forms.Platform.[XamarinFormsPlatform].dll-->
+  <PropertyGroup>
+    <!--<XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(PortableLibraryPlatformId)'">n/a</XamarinFormsPlatform>-->
+    <XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(AndroidLibraryPlatformId)'">Android</XamarinFormsPlatform>
+    <XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(IosUnifiedLibraryPlatformId)'">iOS</XamarinFormsPlatform>
+    <XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(IosClassicLibraryPlatformId)'">iOS.Classic</XamarinFormsPlatform>
+    <!--<XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(WindowsUniversalLibraryPlatformId)'">n/a</XamarinFormsPlatform>-->
+    <XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(WindowsPhoneLibraryPlatformId)'">WinRT</XamarinFormsPlatform>
+    <XamarinFormsPlatform Condition="'$(LibraryPlatform)' == '$(WindowsTabletLibraryPlatformId)'">WinRT</XamarinFormsPlatform>
+  </PropertyGroup>
+
+  <Choose>
+    <!--TODO: When VS loads platform is AnyCPU so LibraryPlatform is empty so VS creates bad reference artifacts; 
+        Revisit VS reference artifact support. See if we can't get some nuget references to show up.-->
+    <When Condition="'$(LibraryPlatform)'!='' AND '$(LibraryPlatform)' != '$(WindowsUniversalLibraryPlatformId)'">
+      <ItemGroup>
+        <NugetReference Include="Xamarin.Forms.Core">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Core.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+        <NugetReference Include="Xamarin.Forms.Xaml">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Xaml.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+        <NugetReference Include="Xamarin.Forms.Platform">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Platform.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+      </ItemGroup>
+      
+      <ItemGroup Condition="'$(LibraryPlatform)' == '$(AndroidLibraryPlatformId)'">
+        <NugetReference Include="FormsViewGroup">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)FormsViewGroup.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+      </ItemGroup>
+      
+      <ItemGroup Condition="'$(LibraryPlatform)' == '$(WindowsTabletLibraryPlatformId)'">
+        <NugetReference Include="Xamarin.Forms.Platform.WinRT.Tablet">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Platform.WinRT.Tablet.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+      </ItemGroup>
+      
+      <ItemGroup Condition="'$(LibraryPlatform)' == '$(WindowsPhoneLibraryPlatformId)'">
+        <NugetReference Include="Xamarin.Forms.Platform.WinRT.Phone">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Platform.WinRT.Phone.dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+      </ItemGroup>
+
+      <ItemGroup Condition="'$(LibraryPlatform)' != '$(PortableLibraryPlatformId)'">
+        <NugetReference Include="Xamarin.Forms.Platform.$(XamarinFormsPlatform)">
+          <Package>$(NugetXamarinFormsPackage)</Package>
+          <Version>$(NugetXamarinFormsVersion)</Version>
+          <HintPath>$(NugetXamarinFormsLibDir)Xamarin.Forms.Platform.$(XamarinFormsPlatform).dll</HintPath>
+          <Private>$(PrivateReference)</Private>
+        </NugetReference>
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>

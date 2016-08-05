@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., .props))\.props" />
+
+  <!--nuget-->
+  <PropertyGroup>
+
+    <!--restore-->
+    <NugetExeUrl>https://dist.nuget.org/win-x86-commandline/$(NugetExeVersion)/NuGet.exe</NugetExeUrl>
+    <NugetV2Feed>https://www.nuget.org/api/v2</NugetV2Feed>
+    <NugetV3Feed>https://api.nuget.org/v3/index.json</NugetV3Feed>
+    <NugetFeed>$(NugetV3Feed)</NugetFeed>
+
+    <!--packageing-->
+    <NuspecAuthors>Xamarin, Inc.</NuspecAuthors>
+    <NuspecOwners>Xamarin, Inc.</NuspecOwners>
+    <NuspecRequireLicenseAcceptance>false</NuspecRequireLicenseAcceptance>
+    <NuspecCopyright>Copyright 2013-2016</NuspecCopyright>
+    <NuspecLicenseUrl>http://download.xamarin.com/content/licenses/Xamarin.Forms.rtf</NuspecLicenseUrl>
+    <NuspecIconUrl>http://xamarin.com/content/images/nuget/xamarin.png</NuspecIconUrl>
+  </PropertyGroup>
+  
+  <!--shared-->
+  <PropertyGroup>
+    <!--assemblyName and namespace are functions of project name-->
+    <AssemblyName>Xamarin.Forms.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>$(AssemblyName)</RootNamespace>
+
+    <!--warnings as errors-->
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <!--debug-->
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+
+    <!--copyLocal; disable by default as excessive copying slows the build-->
+    <PrivateReference>False</PrivateReference>
+
+    <!--misc-->
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  
+  <!--debug-->
+  <PropertyGroup Condition="'$(Configuration)'=='debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants)TRACE;DEBUG;</DefineConstants>
+  </PropertyGroup>
+
+  <!--release-->
+  <PropertyGroup Condition="'$(Configuration)'=='release'">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
+  </PropertyGroup>
+
+  <!--portable-->
+  <PropertyGroup Condition="'$(LibraryPlatform)' == '$(PortableLibraryPlatformId)'">
+  </PropertyGroup>
+
+  <!--android-->
+  <Choose>
+    <When Condition="'$(LibraryPlatform)' == '$(AndroidLibraryPlatformId)'">
+      <PropertyGroup>
+        <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+        <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+        <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+        <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+      </PropertyGroup>
+      
+      <!--android app-->
+      <Choose>
+        <When Condition="'$(IsAppProject)'=='true'">
+          <PropertyGroup>
+            <AndroidApplication>true</AndroidApplication>
+            <AndroidStoreUncompressedFileExtensions />
+            <MandroidI18n />
+            <JavaOptions />
+            <AndroidLinkSkip />
+            <Debugger>Xamarin</Debugger>
+            <AndroidUseLatestPlatformSdk>True</AndroidUseLatestPlatformSdk>
+            <TargetFrameworkVersion>v6.0</TargetFrameworkVersion>
+            <AndroidUseSharedRuntime>False</AndroidUseSharedRuntime>
+            <EmbedAssembliesIntoApk>True</EmbedAssembliesIntoApk>
+            <BundleAssemblies>False</BundleAssemblies>
+            <JavaMaximumHeapSize>1G</JavaMaximumHeapSize>
+            <AndroidEnableMultiDex>False</AndroidEnableMultiDex>
+            <AndroidCreatePackagePerAbi>False</AndroidCreatePackagePerAbi>
+          </PropertyGroup>
+
+          <Choose>
+            <!--debug-->
+            <When Condition="'$(Configuration)'=='Debug'">
+              <PropertyGroup>
+                <AndroidLinkMode>None</AndroidLinkMode>
+                <AndroidSupportedAbis>armeabi,armeabi-v7a,x86</AndroidSupportedAbis>
+              </PropertyGroup>
+            </When>
+            
+            <!--release-->
+            <When Condition="'$(Configuration)'=='Release'">
+              <PropertyGroup>
+                <AndroidLinkMode>Full</AndroidLinkMode>
+                <AndroidSupportedAbis>armeabi-v7a,x86</AndroidSupportedAbis>
+                <AotAssemblies>False</AotAssemblies>
+                <EnableLLVM>False</EnableLLVM>
+                <EnableProguard>False</EnableProguard>
+                <DebugSymbols>False</DebugSymbols>
+              </PropertyGroup>
+            </When>
+          </Choose>
+        </When>
+      </Choose>
+    </When>
+  </Choose>
+
+  <!--ios-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(AndroidMobilePlatformId)'">
+  </PropertyGroup>
+
+  <!--ios app-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosMobilePlatformId)' AND '$(IsAppProject)'=='true'">
+    <OutputType>Exe</OutputType>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <MtouchSdkVersion>9.3</MtouchSdkVersion>
+    <ConsolePause>false</ConsolePause>
+    <OptimizePNGs>True</OptimizePNGs>
+    <MtouchFloat32>False</MtouchFloat32>
+    <MtouchProfiling>False</MtouchProfiling>
+    <MtouchFastDev>False</MtouchFastDev>
+    <MtouchUseLlvm>False</MtouchUseLlvm>
+    <MtouchUseThumb>False</MtouchUseThumb>
+    <MtouchUseSGen>False</MtouchUseSGen>
+    <MtouchUseRefCounting>False</MtouchUseRefCounting>
+    <MtouchI18n />
+  </PropertyGroup>
+
+  <!--ios unified-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosUnifiedMobileSubPlatformId)'">
+  </PropertyGroup>
+
+  <!--ios classic-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(IosClassicMobileSubPlatformId)'">
+  </PropertyGroup>
+
+  <!--windows universal-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)'">
+    <UseDotNetNativeToolchain Condition="'$(Configuration)' == 'Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <!--windows phone-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)'">
+  </PropertyGroup>
+
+  <!--windows tablet-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)'">
+  </PropertyGroup>
+
+  <!--windows platform-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(WindowsMobilePlatformId)'">
+    <!--TODO: Remove setting platform; find better/newer way to set platform-->
+    <Platform Condition="'$(Plat)'=='AnyCPU' AND '$(IsAppProject)'=='true'">x86</Platform>
+    <PlatformTarget>$(Plat)</PlatformTarget>
+    <Prefer32Bit Condition="'$(IsAppProject)'=='true'">true</Prefer32Bit>
+  </PropertyGroup>
+
+</Project>

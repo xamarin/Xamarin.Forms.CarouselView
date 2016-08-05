@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import Project="nuget.props" />
+  <Import Project="empty.targets" />
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      _PackCreate;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+  </PropertyGroup>
+  
+  <Target
+    Name="_PackCreate"
+    DependsOnTargets="
+      _PackCreateNuspec;
+      _PackCreateIfNecessary
+    "
+  >
+    <Message Importance="High" Text="$(MSBuildProjectName) -> $(NugetPackagePath)" />
+  </Target>
+
+  <!--exec-->
+  <Target
+    Name="_PackCreateIfNecessary"
+    Inputs="$(NuspecPath)"
+    Outputs="$(NugetPackagePath)"
+    DependsOnTargets="_PackCreateNuspec"
+  >
+    <MakeDir Directories="$(PackDir)" />
+
+    <PropertyGroup>
+      <_Command>$(NugetExe)</_Command>
+      <_Command>$(_Command) pack $(NuspecPath)</_Command>
+      <_Command>$(_Command) -OutputDirectory $(PackDir)</_Command>
+    </PropertyGroup>
+    <Exec Command="$(_Command) >NUL" />
+  </Target>
+
+  <Target 
+    Name="_PackCreateNuspec"
+    DependsOnTargets="_PackCreateNuspecIfNecessary"
+  >
+    <Message Importance="$(PackVerbosity)" Text="$(MSBuildProjectName) -> $(NuspecPath)" />
+  </Target>
+  
+  <!--nuspec-->
+  <Target
+    Name="_PackCreateNuspecIfNecessary"
+    Inputs="@(TargetResult)"
+    Outputs="$(NuspecPath)"
+    DependsOnTargets="ResolveMetaProjectReferences"
+  >
+    <Message Importance="$(PackVerbosity)" Text="NuspecReferences:" />
+    <Message Importance="$(PackVerbosity)" Text="  %(TargetResult.Identity)" />
+
+    <ItemGroup>
+      <_NuspecPath Include="$(NuspecPath)" />
+    </ItemGroup>
+    <Message Importance="high" Text="%(_NuspecPath.FileName) -> %(_NuspecPath.Identity)" />
+
+    <CreateNuspec
+      Id="$(NuspecId)"
+      Owners="$(NuspecOwners)"
+      Version="$(NuspecVersion)"
+      Authors="$(NuspecAuthors)"
+      Tags="$(NuspecTags)"
+      LicenseUrl="$(NuspecLicenseUrl)"
+      IconUrl="$(NuspecIconUrl)"
+      ProjectUrl="$(NuspecProjectUrl)"
+      RequireLicenseAcceptance="$(NuspecRequireLicenseAcceptance)"
+      Description="$(NuspecDescription)"
+      Copyright="$(NuspecCopyright)"
+      ReleaseNotes="$(NuspecReleaseNotes)"
+      
+      References="@(TargetResult)"
+      Dependencies="@(NuspecDependency)"
+      
+      OutputPath="$(NuspecPath)"
+    />
+  </Target>
+</Project>

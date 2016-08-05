@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!--
+    
+    PreProps
+  -->
+  <PropertyGroup>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <MetaProject>xf.app</MetaProject>
+    <MetaPlatform>xamarin.ios.sim</MetaPlatform>
+    <ProjectGuid>{09BD58E5-80C5-45F5-A506-663DA2FAB178}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
+  <!--
+    
+    Props
+  -->
+  <PropertyGroup>
+    <OutRelDir>$(MSBuildProjectDirectory)\..\</OutRelDir>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
+  <!--
+    
+    Configurations
+  -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>CarouselViewApp</AssemblyName>
+    <MtouchDebug>True</MtouchDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|iPhoneSimulator' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|iPhoneSimulator' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|iPhone' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|iPhone' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|[none]' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|[none]' " />
+  <!--
+    
+    Targets
+  -->
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Target Name="Build">
+    <Message Importance="high" Text="&gt;&gt;&gt;&gt; OutDirAbsolute: $(OutDirAbsolute)" />
+    <MSBuild Projects="..\CarouselView.App.csproj" Targets="Build" Properties="Platform=$(MetaPlatform)" />
+  </Target>
+  <Target Name="Install">
+    <MSBuild Projects="..\CarouselView.App.csproj" Targets="Install" Properties="Platform=$(MetaPlatform)" />
+  </Target>
+</Project>
