@@ -19,4 +19,4 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build enviroment. Si
 7. type `rbuild` to build a release package (just `build` for debug)
 8. Your nuget package will be at `bin\bld\release\carouselView\nuget\Package\Xamarin.Forms.CarouselView.2.3.0-pre2.nupkg`
 
-[1]: https://github.com/xamarin/Xamarin.Forms.Carousel/blob/master/txt/env/env.lnk
+[1]: https://github.com/xamarin/Xamarin.Forms.CarouselView/blob/master/txt/env/env.lnk
