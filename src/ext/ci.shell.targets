@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  
+  <!--GoPath-->
+  <Target 
+    Name="GoPath"
+    Condition="'$(Dir)'==''"
+  >
+    
+    <ItemGroup>
+      <_Path Include="$(Go)"/>
+    </ItemGroup>
+    <Message Text="_Path -> @(_Path)" />
+
+    <ItemGroup>
+      <_SearchPath Include="@(_Path->'%(Identity)', '\**\')"/>
+    </ItemGroup>
+    <PropertyGroup>
+      <_SearchPath>$(RootDir)**\@(_SearchPath)\*</_SearchPath>
+    </PropertyGroup>
+    <Message Text="_SearchPath -> +$(_SearchPath) -$(BuildTempDir)" />
+    
+    <ItemGroup>
+      <_Files
+        Include="$(_SearchPath)" 
+        Exclude="$(BuildTempDir)"
+      />
+    </ItemGroup>
+    <Message Text="_Files -> %(_Files.Identity)" />
+
+    <ItemGroup>
+      <_Dirs Include="@(_Files->'%(RootDir)%(Directory)'->Distinct())" />
+    </ItemGroup>
+    <Message Text="_Dirs -> %(_Dirs.Identity)" />
+    
+    <PropertyGroup Condition="@(_Dirs->Count()) == 1">
+      <Dir>@(_Dirs)</Dir>
+    </PropertyGroup>
+    <Message Text="$(Go) -> $(Dir)" />
+  </Target>
+  
+  <!--GoProperty-->
+  <Target 
+    Name="GoProperty"
+    Condition="'$(Dir)'==''"
+  >
+    <ItemGroup>
+      <_Name Include="$(Go)"/>
+    </ItemGroup>
+    <PropertyGroup Condition="!$(Go.Contains('.'))">
+      <_Value>$(%(_Name.Identity))</_Value>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="$(_Value) != ''">
+      <Dir>$(_Value)</Dir>
+    </PropertyGroup>
+    <Message Text="$(Go) -> $(Dir)" />
+  </Target>
+
+  <!--Go-->
+  <Target 
+    Name="Go"
+    DependsOnTargets="GoProperty;GoPath"
+  >
+    <Message Text="$(Go) -> $(Dir)" />
+    <Error Condition="'$(Dir)'==''" Text="Could not resolve a directory for '$(Go)'." />
+    <Error Condition="!Exists($(Dir))" Text="Directory '$(Dir)' not found." />
+
+    <ItemGroup>
+      <BatFile Include="$(MSBuildStartupDirectory)\cmd.bat" />
+      <Command Include="@echo off"/>
+      <Command Include="pushd $(Dir)"/>
+    </ItemGroup>
+
+    <Exec
+      Command="attrib -h @(BatFile)"
+      Condition="Exists(@(BatFile))"
+    />
+
+    <Message Text="%(BatFile.FileName)%(Extension) -> %(Identity)" />
+    <Message Text="  %(Command.Identity)" />
+
+    <WriteLinesToFile
+      File="@(BatFile)"
+      Lines="@(Command)"
+      Overwrite="true"
+    />
+
+    <Exec Command="attrib +h @(BatFile)" />
+
+  </Target>
+</Project>

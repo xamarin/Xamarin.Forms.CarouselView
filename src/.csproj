@@ -1,66 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
-  <Import Project="$(ExtDir)xf\xf.pre.props"/>
-  <Import Project="$(ExtDir)xf\xf.props" />
+  <Import Project="$(ExtDir)ci.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
+  <Import Project="$(ExtDir)empty.targets" />
+  <Import Project="$(ExtDir)proxy.targets" />
 
   <PropertyGroup>
     <ShimVerbosity Condition="'$(ShimVerbosity)'==''">normal</ShimVerbosity>
   </PropertyGroup>
 
-  <!--shell commands-->
-  <Target Name="Go">
-    <ItemGroup>
-      <PropertyName Include="$(go)"/>
-    </ItemGroup>
-    <PropertyGroup>
-      <PropertyValue>$(%(PropertyName.Identity))</PropertyValue>
-    </PropertyGroup>
-
-    <Message Text="name:@(PropertyName)" />
-    <Message Text="value:$(PropertyValue)" />
-    <Error Condition="'$(PropertyValue)'==''" Text="Property '@(PropertyName)' has no value." />
-    <Error Condition="!Exists($(PropertyValue))" Text="Directory '$(PropertyValue)' not found." />
-
-    <ItemGroup>
-      <BatFile Include="$(MSBuildStartupDirectory)\cmd.bat" />
-      <Command Include="@echo off"/>
-      <Command Include="pushd $(PropertyValue)"/>
-    </ItemGroup>
-
-    <Exec
-      Command="attrib -h @(BatFile)"
-      Condition="Exists(@(BatFile))"
-    />
-
-    <Message Text="%(BatFile.FileName)%(Extension) -> %(Identity)" />
-    <Message Text="  %(Command.Identity)" />
-
-    <WriteLinesToFile
-      File="@(BatFile)"
-      Lines="@(Command)"
-      Overwrite="true"
-    />
-
-    <Exec Command="attrib +h @(BatFile)" />
-
-  </Target>
-
   <!--nice list of build issues: http://xoofx.com/blog/2016/05/11/goodbye-project-json/-->
   <!--see: Google 'MSBuild Reserved Properties' > MSBuildStartupDirectory-->
   <ItemGroup>
     <SolutionFiles Include="$(MSBuildStartupDirectory)\*\**\*.sln" />
-    <SolutionDirs Include="@(SolutionFiles->'%(RelativeDir)')" />
-
-    <AndroidProjFiles Include="$(MSBuildStartupDirectory)\**\android\*.csproj" />
-    <IosProjFiles Include="$(MSBuildStartupDirectory)\**\ios\*.csproj" />
+    <SolutionDirs Include="@(SolutionFiles->'%(RootDir)%(Directory)')" />
   </ItemGroup>
   <PropertyGroup>
-    <ShimInclude>$(MSBuildStartupDirectory)\**\*.csproj</ShimInclude>
+    <ShimInclude>
+      $(MSBuildStartupDirectory)\**\*.csproj
+    </ShimInclude>
     <ShimExclude>
       @(SolutionDirs->'%(Identity)**');
-      @(AndroidProjFiles);
-      @(IosProjFiles);
+      $(MSBuildStartupDirectory)\**\android\*.csproj;
+      $(MSBuildStartupDirectory)\**\ios\*.csproj;
       $(MSBuildProjectFullPath)
     </ShimExclude>
   </PropertyGroup>
@@ -71,19 +34,21 @@
     />
   </ItemGroup>
 
-  <!--
-  Nuget restore may download target files that msbuild needs to include. This is problematic as msbuild will not 
-  execute any targets (like a nuget restore) until all includes have been processed. Therefore nuget restore cannot 
-  be done in the same msbuild process as the actual build (or clean). Instead, this file acts as a shim which executes
-  different msbuild processes for online and offline tasks (e.g. nuget restore vs build). In this way, any targets 
-  downloaded by nuget restore can be present when the build (or clean) executes. 
-  -->
+  <PropertyGroup>
+    <ProxyDependsOn Condition="'$(DefaultsApplied)'==''">
+      DumpProjects;
+      MetaBuild;
+      _TargetPlusDefaults;
+      <!--Publish-->
+    </ProxyDependsOn>
+  </PropertyGroup>
+
+  <Target Name="Proxy" DependsOnTargets="$(ProxyDependsOn)">
+    <MSBuild Projects="@(ProjectFiles)" Targets="$(MSBuildTarget)" Condition="'$(DefaultsApplied)'=='true'" />
+  </Target>
+  
   <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" >
     <MSBuild Projects="@(ProjectFiles)" Targets="NugetRestore" Condition="'$(DefaultsApplied)'=='true'" />
-  </Target>
-
-  <Target Name="Main" DependsOnTargets="$(MainDependsOn)">
-    <MSBuild Projects="@(ProjectFiles)" Targets="$(MSBuildTarget)" Condition="'$(DefaultsApplied)'=='true'" />
   </Target>
 
   <Target Name="DumpProjects">
@@ -92,27 +57,6 @@
     <Message Importance="$(ShimVerbosity)" Text="ProjectFiles:" />
     <Message Importance="$(ShimVerbosity)" Text="  %(ProjectFiles.FullPath)" />
   </Target>
-
-  <PropertyGroup>
-    <RestoreDependsOn Condition="'$(DefaultsApplied)'==''" >
-      DumpProjects;
-      _GenerateBuildMetadata;
-      _RestorePlusDefaults
-    </RestoreDependsOn>
-    <MainDependsOn Condition="'$(DefaultsApplied)'==''">
-      DumpProjects;
-      _GenerateBuildMetadata;
-      _TargetPlusDefaults;
-      <!--Publish-->
-    </MainDependsOn>
-  </PropertyGroup>
-
-  <!--drop-->
-  <PropertyGroup>
-    <DropHashDir>$(DropDir)hash\</DropHashDir>
-    <DropNumberDir>$(DropDir)number\</DropNumberDir>
-    <DropVersionDir>$(DropDir)version\</DropVersionDir>
-  </PropertyGroup>
 
   <!--mbuild command template-->
   <PropertyGroup>
@@ -129,10 +73,10 @@
     <PropertyGroup>
       <_BuildLogFileType>build.restore</_BuildLogFileType>
 
-      <_BuildLogFile>$(BuildLogFile.Replace("$(BuildLogFileType)", "$(_BuildLogFileType)"))</_BuildLogFile>
+      <_BuildLogFile>$(BuildLogFile.Replace("$(BuildLogPrefix)", "$(_BuildLogFileType)"))</_BuildLogFile>
 
       <_CommandLine>$(CommandTemplate)</_CommandLine>
-      <_CommandLine>$(_CommandLine.Replace("$(BuildLogFileType)", "$(_BuildLogFileType)"))</_CommandLine>
+      <_CommandLine>$(_CommandLine.Replace("$(BuildLogPrefix)", "$(_BuildLogFileType)"))</_CommandLine>
       <_CommandLine>$(_CommandLine.Replace("$(BuildTarget)", "Restore"))</_CommandLine>
 
       <!--prevent importing target files which have yet to be restored from nuget-->
@@ -164,10 +108,10 @@
     <PropertyGroup>
       <_BuildLogFileType>build.core</_BuildLogFileType>
       
-      <_BuildLogFile>$(BuildLogFile.Replace("$(BuildLogFileType)", "$(_BuildLogFileType)"))</_BuildLogFile>
+      <_BuildLogFile>$(BuildLogFile.Replace("$(BuildLogPrefix)", "$(_BuildLogFileType)"))</_BuildLogFile>
       
       <_CommandLine>$(CommandTemplate)</_CommandLine>
-      <_CommandLine>$(_CommandLine.Replace("$(BuildLogFileType)", "$(_BuildLogFileType)"))</_CommandLine>
+      <_CommandLine>$(_CommandLine.Replace("$(BuildLogPrefix)", "$(_BuildLogFileType)"))</_CommandLine>
       <_CommandLine>$(_CommandLine.Replace("$(BuildTarget)", "Main"))</_CommandLine>
       <_CommandLine>$(_CommandLine) /p:MSBuildTarget=$(MSBuildTarget)</_CommandLine>
     </PropertyGroup>
@@ -195,159 +139,9 @@
     <Exec Command="$(_CommandLine)" WorkingDirectory="$(MSBuildStartupDirectory)" />
   </Target>
 
-  <Target
-    Name="_GenerateBuildMetadata"
-    DependsOnTargets="
-      _GenerateBuildGitStatus;
-      _GenerateBuildGitHash;
-      _GenerateBuildNumber;
-    "
-  />
-  
-  <Target Name="_GenerateBuildGitStatus">
-    <!--capture git status-->
-    <MakeDir Directories="@(BuildGitStatusFile->'%(RootDir)%(Directory)')" />
-    <Exec
-      Command="git status --porcelain > @(BuildGitStatusFile)"
-      WorkingDirectory="$(rootDir)"
-    />
-
-    <!--check if git is clean-->
-    <ReadLinesFromFile File="@(BuildGitStatusFile)">
-      <Output TaskParameter="Lines" ItemName="_GitStatusFileLines" />
-    </ReadLinesFromFile>
-    <PropertyGroup>
-      <_IsGitClean>false</_IsGitClean>
-      <_IsGitClean Condition="@(_GitStatusFileLines->Count()) == 0">true</_IsGitClean>
-      <_GitStatus Condition="$(_IsGitClean)">clean</_GitStatus>
-      <_GitStatus Condition="!$(_IsGitClean)">dirty</_GitStatus>
-    </PropertyGroup>
-
-    <!--report git status-->
-    <Message 
-      Importance="high" 
-      Text="%(FileName)%(Extension) -> @(BuildGitStatusFile) ($(_GitStatus))"
-    />
-    <Warning Text="Repository contains modified, new, or untracked files." Condition="!$(_IsGitClean)" />
-  </Target>
-
-  <Target Name="_GenerateBuildGitHash">
-    <ItemGroup>
-      <_BuildGitHashFileFresh Include="@(BuildGitHashFile->'%(Identity).fresh')" />
-    </ItemGroup>
-    
-    <!--fresh git hash-->
-    <Exec
-      Command="git rev-list -n 1 head > @(_BuildGitHashFileFresh)"
-      WorkingDirectory="$(rootDir)"
-    />
-    <ReadLinesFromFile File="@(_BuildGitHashFileFresh)" >
-      <Output TaskParameter="Lines" ItemName="_BuildGitHashFresh" />
-    </ReadLinesFromFile>
-    <Message Importance="$(ShimVerbosity)" Text="Fresh git hash: @(_BuildGitHashFresh)" />
-
-    <!--saved git hash-->
-    <ReadLinesFromFile 
-      File="@(BuildGitHashFile)"
-      Condition="Exists(@(BuildGitHashFile))"
-    >
-      <Output TaskParameter="Lines" ItemName="_BuildGitHashSaved" />
-    </ReadLinesFromFile>
-    <Message Importance="$(ShimVerbosity)" Text="Saved git hash: @(_BuildGitHashSaved)" />
-    
-    <!--record git hash-->
-    <PropertyGroup>
-      <_BuildGitHashStale Condition="'@(_BuildGitHashFresh)'!='@(_BuildGitHashSaved)'">true</_BuildGitHashStale>
-      <_BuildGitHashSaved>@(_BuildGitHashSaved)</_BuildGitHashSaved>
-    </PropertyGroup>
-    <Message
-      Importance="high"
-      Text="%(FileName)%(Extension) -> @(BuildGitHashFile) ($(_BuildGitHashSaved))"
-    />
-    <MakeDir Directories="@(BuildGitHashFile->'%(RootDir)%(Directory)')" />
-    <WriteLinesToFile
-      File="@(BuildGitHashFile)"
-      Condition="'$(_BuildGitHashStale)'=='true'"
-      Overwrite="true"
-      Lines="@(_BuildGitHashFresh)"
-    />
-    <Delete Files="@(_BuildGitHashFileFresh)" />
-  </Target>
-
-  <Target Name="_GenerateBuildNumber">
-
-    <!--default drop dir-->
-    <MakeDir Directories="$(DropNumberDir)10000" Condition="!Exists($(DropNumberDir))" />
-
-    <!--fresh build number-->
-    <ItemGroup>
-      <_BuildDir Include="$([System.IO.Directory]::GetDirectories($(DropNumberDir)))" />
-      <_BuildNumbers Include="@(_BuildDir->'%(FileName)')" />
-    </ItemGroup>
-    <PropertyGroup>
-      <_BuildNumbers>@(_BuildNumbers->Reverse())</_BuildNumbers>
-      <_BuildNumberFresh>$(_BuildNumbers.Split(';')[0])</_BuildNumberFresh>
-      <_BuildNumberFresh>$([MSBuild]::Add(1, $(_BuildNumberFresh)))</_BuildNumberFresh>
-    </PropertyGroup>
-    <Message Importance="$(ShimVerbosity)" Text="Fresh build number: $(_BuildNumberFresh)" />
-
-    <!--saved build number-->
-    <ReadLinesFromFile 
-      File="@(BuildNumberFile)"
-      Condition="Exists(@(BuildNumberFile))"
-    >
-      <Output TaskParameter="Lines" ItemName="_BuildNumberSaved" />
-    </ReadLinesFromFile>
-    <Message Importance="$(ShimVerbosity)" Text="Saved build number: @(_BuildNumberSaved)" />
-
-    <!--refresh build number-->
-    <PropertyGroup>
-      <_BuildNumberStale Condition="'$(_BuildNumberFresh)'!='@(_BuildNumberSaved)'">true</_BuildNumberStale>
-    </PropertyGroup>
-    <MakeDir Directories="@(BuildNumberFile->'%(RootDir)%(Directory)')" />
-    <Message
-      Importance="high"
-      Text="%(FileName)%(Extension) -> @(BuildNumberFile) ($(_BuildNumberFresh))"
-    />
-    <WriteLinesToFile
-      File="@(BuildNumberFile)" 
-      Lines="$(_BuildNumberFresh)" 
-      Overwrite="true"
-      Condition="'$(_BuildNumberStale)'=='true'"
-    />
-  </Target>
-
-  <Target Name="Publish" >
-    <Message Text="DropDir -> $(DropDir)" />
-
-    <!--read git revision-->
-    <PropertyGroup>
-      <_PublishRevisionDir>$(DropHashDir)$(GitRevision)\</_PublishRevisionDir>
-    </PropertyGroup>
-    <Message Importance="high" Text="Publish by Hash -> $(_PublishRevisionDir)" />
-    <Error Condition="Exists($(_PublishRevisionDir))" Text="Publish directory exists: $(_PublishRevisionDir)" />
-
-    <!--compute build number-->
-    <ItemGroup>
-      <_BuildDir Include="$([System.IO.Directory]::GetDirectories($(DropNumberDir)))" />
-      <_BuildNumbers Include="@(_BuildDir->'%(FileName)')" />
-    </ItemGroup>
-    <PropertyGroup>
-      <_BuildNumbers>@(_BuildNumbers->Reverse())</_BuildNumbers>
-      <_BuildNumber>$(_BuildNumbers.Split(';')[0])</_BuildNumber>
-      <_BuildNumber>$([MSBuild]::Add(1, $(_BuildNumber)))</_BuildNumber>
-      <_BuildDir>$(DropDir)build\$(_BuildNumber)\</_BuildDir>
-    </PropertyGroup>
-    <Exec Command="mklink /J $(_BuildDir) $(_PublishRevisionDir) >NUL" />
-    <Message Importance="high" Text="Publish by Number -> $(_BuildDir) => $(_PublishRevisionDir)" />
-
-    <!--copy build-->
-    <ItemGroup>
-      <_DropFiles Include="$(BuildBinConfigDir)**" />
-    </ItemGroup>
-    <Copy SourceFiles="@(_DropFiles)" DestinationFolder="$(_PublishRevisionDir)%(RecursiveDir)" />
-  </Target>
-
+  <Import Project="$(ExtDir)ci.shell.targets" />
+  <Import Project="$(ExtDir)ci.meta.targets" />
+  <Import Project="$(ExtDir)ci.common.targets" />
   <Import
     Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets"
     Condition="'$(DefaultsApplied)'==''"

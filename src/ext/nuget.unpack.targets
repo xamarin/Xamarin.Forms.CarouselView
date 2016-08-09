@@ -33,7 +33,7 @@
       <_CommandLine>$(_CommandLine) /p:Configuration=$(Configuration)</_CommandLine>
       <_CommandLine>$(_CommandLine) /m</_CommandLine>
       <_CommandLine>$(_CommandLine) $(Properties)</_CommandLine>
-      <_CommandLine>$(_CommandLine) $(DefaultArgs.Replace("$(BuildLogFileType)", "$(_LogFileType)"))</_CommandLine>
+      <_CommandLine>$(_CommandLine) $(DefaultArgs.Replace("$(BuildLogPrefix)", "$(_LogFileType)"))</_CommandLine>
     </PropertyGroup>
 
     <Exec Command="$(_CommandLine)" WorkingDirectory="$(UnpackAfterDir)" />

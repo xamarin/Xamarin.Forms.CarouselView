@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <FreshBuildNumberFile Include="@(BuildNumberFile->'%(Identity).fresh')" />
+    <FreshEnlistmentStatusFile Include="@(EnlistmentStatusFile->'%(Identity).fresh')" />
+    <FreshEnlistmentRevisionFile Include="@(EnlistmentRevisionFile->'%(Identity).fresh')" />
+    <FreshEnlistmentBranchFile Include="@(EnlistmentBranchFile->'%(Identity).fresh')" />
+    <FreshEnlistmentUrlFile Include="@(EnlistmentUrlFile->'%(Identity).fresh')" />
+  </ItemGroup>
+
+  <Import Project="ci.meta.git.targets"/>
+  
+  <PropertyGroup>
+    <MetaBuildDependsOn>_GenerateBuildInfo</MetaBuildDependsOn>
+  </PropertyGroup>
+  <Target Name="MetaBuild" DependsOnTargets="$(MetaBuildDependsOn)" />
+
+  <Target
+    Name="_GenerateBuildInfo"
+    DependsOnTargets="_GenerateBuildInfoIfNeeded">
+
+    <Message
+      Text="AssemblyInfo.cs -> @(AssemblyInfoPath)"
+      Importance="high"
+    />
+  </Target>
+
+  <Target
+    Name="_GenerateBuildInfoIfNeeded"
+    Inputs="@(EnlistmentStatusFile);@(EnlistmentRevisionFile);@(BuildNumberFile)"
+    Outputs="@(AssemblyInfoPath)"
+    DependsOnTargets="
+      _RefreshEnlistmentStatus;
+      _CheckEnlistmentStatus;
+      _RefreshEnlistmentRevision;
+      _RefreshBuildNumber
+    ">
+
+    <!--enlistment revision-->
+    <ReadLinesFromFile File="@(EnlistmentRevisionFile)">
+      <Output TaskParameter="Lines" PropertyName="_EnlistmentRevision" />
+    </ReadLinesFromFile>
+
+    <!--build number-->
+    <ReadLinesFromFile File="@(BuildNumberFile)">
+      <Output TaskParameter="Lines" PropertyName="_BuildNumber" />
+    </ReadLinesFromFile>
+
+    <!--generate assemblyInfo.cs-->
+    <GenAssemblyInfoFile
+      Path="@(AssemblyInfoPath)"
+      BuildVersion="$(BuildVersion)"
+      BuildNumber="$(_BuildNumber)"
+      SourceControlId="$(_EnlistmentRevision)"
+      SourceControlBranch="todo-find-branch"
+      SourceControlUrl="todo-find-url"
+    />
+  </Target>
+
+  <!--_RefreshEnlistmentStatus-->
+  <Target 
+    Name="_RefreshEnlistmentStatus" 
+    DependsOnTargets="_SaveFreshEnlistmentStatus"
+  >
+    <!--load fresh status file-->
+    <ReadLinesFromFile File="@(FreshEnlistmentStatusFile)">
+      <Output TaskParameter="Lines" PropertyName="_Fresh" />
+    </ReadLinesFromFile>
+
+    <!--load last status file-->
+    <ReadLinesFromFile File="@(EnlistmentStatusFile)" Condition="Exists(@(EnlistmentStatusFile))">
+      <Output TaskParameter="Lines" PropertyName="_Last" />
+    </ReadLinesFromFile>
+
+    <Message
+      Importance="$(Verbosity)"
+      Text="%(FileName)%(Extension) -> @(EnlistmentStatusFile)"
+    />
+    
+    <!--if last status file is stale then refresh it-->
+    <WriteLinesToFile
+      File="@(EnlistmentStatusFile)"
+      Lines="$(_Fresh)"
+      Overwrite="true"
+      Condition="'$(_Fresh)'!='$(_Last)'"
+    />
+
+    <Delete Files="@(FreshEnlistmentStatusFile)" />
+  </Target>
+
+  <!--_LoadEnlistmentStatus-->
+  <Target Name="_LoadEnlistmentStatus">
+
+    <!--load get status file-->
+    <ReadLinesFromFile File="@(EnlistmentStatusFile)">
+      <Output TaskParameter="Lines" ItemName="_Lines" />
+    </ReadLinesFromFile>
+
+    <!--enlistment is clean if status file is empty-->
+    <PropertyGroup>
+      <IsEnlistmentClean>false</IsEnlistmentClean>
+      <IsEnlistmentClean Condition="@(_Lines->Count()) == 0">true</IsEnlistmentClean>
+    </PropertyGroup>
+  </Target>
+
+  <!--_CheckEnlistmentStatus-->
+  <Target 
+    Name="_CheckEnlistmentStatus" 
+    DependsOnTargets="_LoadEnlistmentStatus"
+  >
+    <Warning Text="Enslitment contains modified, new, or untracked files." Condition="!$(IsEnlistmentClean)" />
+  </Target>
+
+  <!--_RefreshEnlistmentRevision-->
+  <Target
+    Name="_RefreshEnlistmentRevision"
+    DependsOnTargets="
+      _LoadEnlistmentStatus;
+      _SaveFreshEnlistmentRevision
+    "
+  >
+    <!--load fresh status file-->
+    <ReadLinesFromFile File="@(FreshEnlistmentRevisionFile)">
+      <Output TaskParameter="Lines" PropertyName="_Fresh" />
+    </ReadLinesFromFile>
+    <PropertyGroup Condition="!$(IsEnlistmentClean)">
+      <_Fresh>$(EnlistmentRevisionDirty)</_Fresh>
+    </PropertyGroup>
+
+    <!--load last status file-->
+    <ReadLinesFromFile File="@(EnlistmentRevisionFile)" Condition="Exists(@(EnlistmentRevisionFile))">
+      <Output TaskParameter="Lines" PropertyName="_Last" />
+    </ReadLinesFromFile>
+
+    <Message
+      Importance="high"
+      Text="%(FileName)%(Extension) -> @(EnlistmentRevisionFile) ($(_Fresh))"
+    />
+
+    <!--if last status file is stale then refresh it-->
+    <WriteLinesToFile
+      File="@(EnlistmentRevisionFile)"
+      Lines="$(_Fresh)"
+      Overwrite="true"
+      Condition="'$(_Fresh)'!='$(_Last)'"
+    />
+
+    <Delete Files="@(FreshEnlistmentRevisionFile)" />
+  </Target>
+
+  <!--_LoadEnlistmentRevision-->
+  <Target Name="_LoadEnlistmentRevision">
+    <ReadLinesFromFile File="@(EnlistmentRevisionFile)">
+      <Output TaskParameter="Lines" PropertyName="EnlistmentRevision" />
+    </ReadLinesFromFile>
+    
+    <PropertyGroup>
+      <BuildRevisionDir>$(BuildByRevisionDir)$(EnlistmentRevision)\</BuildRevisionDir>
+    </PropertyGroup>
+  </Target>
+
+  <!--_RefreshBuildNumber-->
+  <Target Name="_RefreshBuildNumber">
+
+    <!--create $(DropDir)10000 if no drop dirs exist-->
+    <MakeDir Directories="$(BuildByNumberDir)10000" Condition="!Exists($(BuildByNumberDir))" />
+
+    <!--_Fresh <- last directory in $(DropDir) + 1-->
+    <ItemGroup>
+      <_BuildDir Include="$([System.IO.Directory]::GetDirectories($(BuildByNumberDir)))" />
+      <_BuildNumbers Include="@(_BuildDir->'%(FileName)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_BuildNumbers>@(_BuildNumbers->Reverse())</_BuildNumbers>
+      <_Fresh>$(_BuildNumbers.Split(';')[0])</_Fresh>
+      <_Fresh>$([MSBuild]::Add(1, $(_Fresh)))</_Fresh>
+    </PropertyGroup>
+    <Message Importance="$(ShimVerbosity)" Text="Fresh build number: $(_Fresh)" />
+
+    <!--_Last <- @(BuildNumberFile)-->
+    <ReadLinesFromFile
+      File="@(BuildNumberFile)"
+      Condition="Exists(@(BuildNumberFile))"
+    >
+      <Output TaskParameter="Lines" ItemName="_Last" />
+    </ReadLinesFromFile>
+    <Message Importance="$(ShimVerbosity)" Text="Saved build number: @(_Last)" />
+
+    <!--if stale, _Fresh -> @(BuildNumberFile)-->
+    <PropertyGroup>
+      <_BuildNumberStale Condition="'$(_Fresh)'!='@(_Last)'">true</_BuildNumberStale>
+    </PropertyGroup>
+    <MakeDir Directories="@(BuildNumberFile->'%(RootDir)%(Directory)')" />
+    <Message
+      Importance="high"
+      Text="%(FileName)%(Extension) -> @(BuildNumberFile) ($(BuildByNumberDir)$(_Fresh))"
+    />
+    <WriteLinesToFile
+      File="@(BuildNumberFile)"
+      Lines="$(_Fresh)"
+      Overwrite="true"
+      Condition="'$(_BuildNumberStale)'=='true'"
+    />
+  </Target>
+
+  <!--_LoadBuildNumber-->
+  <Target Name="_LoadBuildNumber">
+    <ReadLinesFromFile File="@(BuildNumberFile)">
+      <Output TaskParameter="Lines" PropertyName="BuildNumber" />
+    </ReadLinesFromFile>
+
+    <PropertyGroup>
+      <BuildNumberDir>$(BuildByNumberDir)$(BuildNumber)\</BuildNumberDir>
+    </PropertyGroup>
+  </Target>
+
+  <!--Publish-->
+  <Target
+    Name="Publish"
+    DependsOnTargets="
+      _LoadEnlistmentStatus;
+      _PublishBuildNumber;
+      _PublishRevisionNumber;
+    "/>
+
+  <!--_PublishBuildNumber-->
+  <Target 
+    Name="_PublishBuildNumber"
+    DependsOnTargets="_LoadBuildNumber"
+  >
+    <MakeDir Directories="$(BuildByNumberDir)" />
+   
+    <Error
+      Condition="Exists($(BuildNumberDir))"
+      Text="Publication directory '$(BuildNumberDir)' already exists."
+    />
+    
+    <!--copy build-->
+    <Message Importance="high" Text="$(BuildBinDir) -> $(BuildNumberDir)" />
+    <ItemGroup>
+      <_BuildFiles Include="$(BuildBinDir)**" />
+    </ItemGroup>
+    <MakeDir Directories="$(BuildNumberDir)" />
+    <Copy SourceFiles="@(_BuildFiles)" DestinationFolder="$(BuildNumberDir)%(RecursiveDir)" />
+  </Target>
+
+  <!--_PublishRevisionNumber-->
+  <Target
+    Name="_PublishRevisionNumber"
+    DependsOnTargets="
+      _PublishBuildNumber;
+      _LoadEnlistmentRevision;
+    "
+    Condition="$(IsEnlistmentClean)"
+  >
+    <MakeDir Directories="$(BuildByRevisionDir)" />
+   
+    <Error
+      Condition="Exists($(BuildRevisionDir))"
+      Text="Publication directory '$(BuildRevisionDir)' already exists."
+    />
+
+    <Message Importance="high" Text="$(BuildNumberDir) -> $(BuildRevisionDir)" />
+    <Exec Command="mklink /J $(BuildRevisionDir) $(BuildNumberDir) >NUL" />
+  </Target>
+</Project>

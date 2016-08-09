@@ -3,23 +3,6 @@
 
   <!--
 
-    Nuspec Version
-  -->
-  <PropertyGroup>
-    <!--TODO: discover dynamically-->
-    <SourceControlBranch>master</SourceControlBranch>
-    <SourceControlUrl>https://github.com/xamarin/Xamarin.Forms.Carousel.git</SourceControlUrl>
-
-    <BuildMajorVersion>2</BuildMajorVersion>
-    <BuildMinorVersion>3</BuildMinorVersion>
-    <BuildPatchVersion>0</BuildPatchVersion>
-    <BuildVersion>$(BuildMajorVersion).$(BuildMinorVersion).$(BuildPatchVersion)</BuildVersion>
-
-    <AssemblyInfoPath>$(IntermediateOutputPathAbsolute)AssemblyInfo.cs</AssemblyInfoPath>
-  </PropertyGroup>
-
-  <!--
-
     Nuspec Dependencies
   -->
   <ItemGroup>

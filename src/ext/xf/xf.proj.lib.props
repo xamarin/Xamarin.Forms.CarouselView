@@ -8,6 +8,7 @@
   </PropertyGroup>
   <Import Project="$(ExtDir)xf\xf.pre.props"/>
   <Import Project="$(ExtDir)xf\xf.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .props))\.props" />
 
   <!--declare self-references outside of .csproj to prevent VS solution explorer from creating artifacts-->
   

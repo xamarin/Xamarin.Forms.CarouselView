@@ -6,8 +6,10 @@
   <Import Project="$(ExtDir)empty.targets" Condition="'$(IsLeafPlatform)'!='true'" />
   
   <!--leaf-->
-  <Import Project="$(TargetsFile)" Condition="'$(IsLeafPlatform)'=='true' AND Exists($(TargetsFile))"/>
-  <Import Project="xf.leaf.targets"  Condition="'$(IsLeafPlatform)'=='true'" />
+  <ImportGroup Condition="'$(IsLeafPlatform)'=='true'">
+    <Import Project="$(TargetsFile)" Condition="Exists($(TargetsFile))"/>
+    <Import Project="xf.leaf.targets"/>
+  </ImportGroup>
   
   <Import Project="xf.common.targets" />
 </Project>

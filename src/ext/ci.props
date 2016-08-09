@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Main" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <KnownBeforeTargets>
+      DryRun;
+      NugetRestore;
+      BeforeInstall;
+      BeforeClean;
+      BeforeBuild;
+    </KnownBeforeTargets>
+  </PropertyGroup>
+
+  <!--?-->
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+
+  <!--default configuration|platform-->
+  <PropertyGroup>
+    <Platform Condition="'$(Platform)'==''">AnyCPU</Platform>
+    <Configuration Condition="'$(Configuration)'==''">debug</Configuration>
+  </PropertyGroup>
+
+  <!--nuget-->
+  <PropertyGroup>
+    <NugetExeVersion>v3.4.4</NugetExeVersion>
+    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
+    <NugetPackagesDir>$([MSBuild]::MakeRelative($(ProjDir), $(NugetPackagesDirAbsolute)))</NugetPackagesDir>
+    <NugetExe>$(ToolsDir)nuget.exe</NugetExe>
+  </PropertyGroup>
+
+  <!--build drop paths-->
+  <PropertyGroup>
+    <BuildByNumberDir>$(DropDir)number\</BuildByNumberDir>
+    <BuildByRevisionDir>$(DropDir)revision\</BuildByRevisionDir>
+    <BuildByVersionDir>$(DropDir)version\</BuildByVersionDir>
+  </PropertyGroup>
+
+  <!--build-->
+  <PropertyGroup>
+
+    <BuildConfigurationDir>$(Configuration)\</BuildConfigurationDir>
+
+    <!--buildDir-->
+    <BuildBinSubDir>bin\</BuildBinSubDir>
+    <BuildBinDir>$(BuildDir)$(BuildBinSubDir)</BuildBinDir>
+    <BuildBinConfigDir>$(BuildBinDir)$(BuildConfigurationDir)</BuildBinConfigDir>
+
+    <!--outSubDir-->
+    <OutSubDir Condition="'$(MetaPlatform)'!=''">$(MetaPlatform)\</OutSubDir>
+
+    <!--outDir-->
+    <OutRelDir Condition="'$(OutRelDir)'==''">$(ProjDir)</OutRelDir>
+    <OutDirAbsolute>$(BuildBinConfigDir)$([MSBuild]::MakeRelative($(SrcDir), $(OutRelDir)))\$(OutSubDir)</OutDirAbsolute>
+    <OutDirAbsolute>$([System.IO.Path]::GetFullPath('$(OutDirAbsolute)'))</OutDirAbsolute>
+    <OutDir>$([MSBuild]::MakeRelative($(ProjDir), $(OutDirAbsolute)))</OutDir>
+
+    <!--todo: support xs-->
+    <!--hack: xbuild + xs doesn't normalize slashes (maybe if windows does, they should all be reversed)-->
+    <!--<OutDir Condition="'$(UsingXBuild)'=='true'">$(BuildBinSubDir)/$(Configuration)/</OutDir>-->
+
+    <!--C# targets files say OutDir should be used over OutputPath but build fails if OutputPath is not set-->
+    <OutputPath>$(OutDir)</OutputPath>
+
+    <!--remove trainig wheels; default is true if an outDir is specified-->
+    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
+
+    <!--tempDir-->
+    <BuildTempSubDir>obj\</BuildTempSubDir>
+    <BuildTempDir>$(BuildBinDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempDir>
+    <BuildTempConfigDir>$(BuildBinConfigDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempConfigDir>
+    <IntermediateOutputPath>$(OutDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</IntermediateOutputPath>
+    <IntermediateOutputPathAbsolute>$(OutDirAbsolute.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</IntermediateOutputPathAbsolute>
+  </PropertyGroup>
+
+  <!--tasks (depends on BuildBinConfigDir)-->
+  <Import Project="ci.tasks" Condition="'$(IsBuildProj)'==''" />
+
+  <!--msbuild logs-->
+  <PropertyGroup>
+    <BuildLogDir>$(BuildBinDir)</BuildLogDir>
+  </PropertyGroup>
+
+  <!--meta build paths-->
+  <ItemGroup>
+    <AssemblyInfoPath Include="$(BuildBinDir)AssemblyInfo.cs" />
+    <BuildNumberFile Include="$(BuildBinDir)build.number" />
+    <EnlistmentStatusFile Include="$(BuildBinDir)enlistment.status" />
+    <EnlistmentRevisionFile Include="$(BuildBinDir)enlistment.revision" />
+    <EnlistmentBranchFile Include="$(BuildBinDir)enlistment.branch" />
+    <EnlistmentUrlFile Include="$(BuildBinDir)enlistment.url" />
+  </ItemGroup>
+  <PropertyGroup>
+    <EnlistmentRevisionDirty>dirty</EnlistmentRevisionDirty>
+  </PropertyGroup>
+
+</Project>

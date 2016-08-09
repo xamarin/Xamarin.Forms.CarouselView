@@ -5,4 +5,5 @@
   </PropertyGroup>
   <Import Project="$(ExtDir)xf\xf.pre.props"/>
   <Import Project="$(ExtDir)xf\xf.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .props))\.props" />
 </Project>

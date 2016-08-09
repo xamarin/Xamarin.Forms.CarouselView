@@ -1,124 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ExtDir)ci.props" />
   <Import Project="$(ExtDir)nuget\.props" />
 
-  <PropertyGroup>
-    <KnownBeforeTargets>
-      DryRun;
-      NugetRestore;
-      BeforeInstall;
-      BeforeClean;
-      BeforeBuild;
-    </KnownBeforeTargets>
-  </PropertyGroup>
-  
-  <!--?-->
-  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
-    <VisualStudioVersion>12.0</VisualStudioVersion>
-  </PropertyGroup>
-
-  <!--default configuration|platform-->
-  <PropertyGroup>
-    <Platform Condition="'$(Platform)'==''">AnyCPU</Platform>
-    <Configuration Condition="'$(Configuration)'==''">debug</Configuration>
-  </PropertyGroup>
-  
-  <!--nuget-->
-  <PropertyGroup>
-    <NugetExeVersion>v3.4.4</NugetExeVersion>
-    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
-    <NugetPackagesDir>$([MSBuild]::MakeRelative($(ProjDir), $(NugetPackagesDirAbsolute)))</NugetPackagesDir>
-    <NugetExe>$(ToolsDir)nuget.exe</NugetExe>
-  </PropertyGroup>
-
-  <!--build-->
-  <PropertyGroup>
-
-    <BuildConfigurationDir>$(Configuration)\</BuildConfigurationDir>
-
-    <!--buildDir-->
-    <BuildBinSubDir>bin\</BuildBinSubDir>
-    <BuildBinDir>$(BuildDir)$(BuildBinSubDir)</BuildBinDir>
-    <BuildBinConfigDir>$(BuildBinDir)$(BuildConfigurationDir)</BuildBinConfigDir>
-
-    <!--outSubDir-->
-    <OutSubDir Condition="'$(MetaPlatform)'!=''">$(MetaPlatform)\</OutSubDir>
-
-    <!--outDir-->
-    <OutRelDir Condition="'$(OutRelDir)'==''">$(ProjDir)</OutRelDir>
-    <OutDirAbsolute>$(BuildBinConfigDir)$([MSBuild]::MakeRelative($(SrcDir), $(OutRelDir)))\$(OutSubDir)</OutDirAbsolute>
-    <OutDirAbsolute>$([System.IO.Path]::GetFullPath('$(OutDirAbsolute)'))</OutDirAbsolute>
-    <OutDir>$([MSBuild]::MakeRelative($(ProjDir), $(OutDirAbsolute)))</OutDir>
-
-    <!--todo: support xs-->
-    <!--hack: xbuild + xs doesn't normalize slashes (maybe if windows does, they should all be reversed)-->
-    <!--<OutDir Condition="'$(UsingXBuild)'=='true'">$(BuildBinSubDir)/$(Configuration)/</OutDir>-->
-
-    <!--C# targets files say OutDir should be used over OutputPath but build fails if OutputPath is not set-->
-    <OutputPath>$(OutDir)</OutputPath>
-
-    <!--remove trainig wheels; default is true if an outDir is specified-->
-    <GenerateProjectSpecificOutputFolder>false</GenerateProjectSpecificOutputFolder>
-
-    <!--tempDir-->
-    <BuildTempSubDir>obj\</BuildTempSubDir>
-    <BuildTempDir>$(BuildBinDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempDir>
-    <BuildTempConfigDir>$(BuildBinConfigDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempConfigDir>
-    <IntermediateOutputPath>$(OutDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</IntermediateOutputPath>
-    <IntermediateOutputPathAbsolute>$(OutDirAbsolute.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</IntermediateOutputPathAbsolute>
-  </PropertyGroup>
-
-  <!--TODO: move to nuget; for now, depends on BuildBinConfigDir-->
-  <Import Project="xf.tasks" Condition="'$(IsBuildProj)'==''" />
-
-  <!--meta build paths-->
-  <ItemGroup>
-    <BuildNumberFile Include="$(BuildBinDir)build.number" />
-    <BuildGitStatusFile Include="$(BuildBinDir)build.git.status" />
-    <BuildGitHashFile Include="$(BuildBinDir)build.git.hash" />
-    <BuildGitBranchFile Include="$(BuildBinDir)build.git.branch" />
-    <BuildGitUrlFile Include="$(BuildBinDir)build.git.url" />
-  </ItemGroup>
-
-  <!--build files-->
-  <PropertyGroup>
-    <BuildLogFileType>[LOG_TYPE]</BuildLogFileType>
-  </PropertyGroup>
-
-  <!--default msbuild args-->
-  <PropertyGroup>
-    <BuildLogDir>$(BuildBinDir)</BuildLogDir>
-    <BuildSummaryFile>$(BuildLogDir)$(BuildLogFileType).summary</BuildSummaryFile>
-    <BuildLogFile>$(BuildLogDir)$(BuildLogFileType).log</BuildLogFile>
-    <BuildDetailsFile>$(BuildLogDir)$(BuildLogFileType).detailed</BuildDetailsFile>
-    <BuildDiagFile>$(BuildLogDir)$(BuildLogFileType).diag</BuildDiagFile>
-    <BuildWarningFile>$(BuildLogDir)$(BuildLogFileType).warning</BuildWarningFile>
-    <BuildErrorFile>$(BuildLogDir)$(BuildLogFileType).error</BuildErrorFile>
-
-    <!--prevent recursion-->
-    <DefaultArgs>/p:DefaultsApplied=true</DefaultArgs>
-
-    <!--minimal console logging-->
-    <DefaultArgs>$(DefaultArgs) /nologo</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /clp:v=m</DefaultArgs>
-
-    <!--exit msbuild after build compleated to unlock files-->
-    <DefaultArgs>$(DefaultArgs) /nodeReuse:false</DefaultArgs>
-
-    <!--logfiles-->
-    <DefaultArgs>$(DefaultArgs) /flp:v=m;logfile=$(BuildSummaryFile);showeventId</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /flp1:v=n;logfile=$(BuildLogFile);showeventId;summary</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /flp2:v=d;logfile=$(BuildDetailsFile);showeventId;summary;performanceSummary</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /flp3:v=d;logfile=$(BuildWarningFile);showeventId;warningsonly</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /flp4:v=d;logfile=$(BuildErrorFile);showeventId;errorsonly</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /flp5:v=diag;logfile=$(BuildDiagFile);showeventId;summary;performanceSummary</DefaultArgs>
-  </PropertyGroup>
-
-  <!--default msbuild args (ios server)-->
+  <!--ios build server-->
   <PropertyGroup Condition="'$(iosServerAddress)'!='' AND '$(iosServerUser)'!='' AND '$(iosServerPassword)'!=''">
-    <DefaultArgs>$(DefaultArgs) /p:serverAddress=$(iosServerAddress)</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /p:serverUser=$(iosServerUser)</DefaultArgs>
-    <DefaultArgs>$(DefaultArgs) /p:serverPassword=$(iosServerPassword)</DefaultArgs>
+    <ServerAddress>$(iosServerAddress)</ServerAddress>
+    <ServerUser>$(iosServerUser)</ServerUser>
+    <ServerPassword>$(iosServerPassword)</ServerPassword>
   </PropertyGroup>
 
   <!--test-->
@@ -135,5 +24,4 @@
     <ServerPassword>$(iOSServerPassword)</ServerPassword>
   </PropertyGroup>
 
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .props))\.props" />
 </Project>

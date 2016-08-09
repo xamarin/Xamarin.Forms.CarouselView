@@ -27,6 +27,11 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.meta.git.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.shell.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.meta.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.common.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.post.props" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.props" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\nuget.pack.targets" />
@@ -55,6 +60,8 @@
     <None Include="$(MSBuildThisFileDirectory)src\env\env.lnk" />
     <None Include="$(MSBuildThisFileDirectory)src\env\vcvarsallShim.bat" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\empty.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\proxy.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ext\ci.tasks" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.common.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.aut.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.proj.aut.props" />
@@ -67,7 +74,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.props" />
     <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.targets" />
-    <None Include="$(MSBuildThisFileDirectory)src\ext\xf\xf.tasks" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.json" />

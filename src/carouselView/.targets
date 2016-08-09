@@ -4,41 +4,12 @@
     
   <Target
     Name="GenAssemblyInfoFile"
-    Inputs="@(BuildGitHashFile);@(BuildNumberFile)"
-    Outputs="$(AssemblyInfoPath)"
     Condition="'$(IsLeafPlatform)'=='true'"
     BeforeTargets="BeforeBuild" >
 
-    <!--git file hash-->
-    <ReadLinesFromFile File="@(BuildGitHashFile)">
-      <Output TaskParameter="Lines" ItemName="_GitHashFileLines" />
-    </ReadLinesFromFile>
-    <PropertyGroup>
-      <_BuildGitHash>@(_GitHashFileLines)</_BuildGitHash>
-    </PropertyGroup>
-
-    <!--build number-->
-    <ReadLinesFromFile File="@(BuildNumberFile)">
-      <Output TaskParameter="Lines" ItemName="_BuildNumberFileLines" />
-    </ReadLinesFromFile>
-    <PropertyGroup>
-      <_BuildNumber>@(_BuildNumberFileLines)</_BuildNumber>
-    </PropertyGroup>
-
-    <!--generate assemblyInfo.cs-->
-    <Message Text="AssemblyInfo.cs -> $(AssemblyInfoPath)" />
-    <GenAssemblyInfoFile
-      Path="$(AssemblyInfoPath)"
-      BuildVersion="$(BuildVersion)"
-      BuildNumber="$(_BuildNumber)"
-      SourceControlId="$(_BuildGitHash)"
-      SourceControlBranch="master"
-      SourceControlUrl=""
-    />
-
     <!--include assemblyInfo.cs in list of files to compile-->
     <ItemGroup>
-      <Compile Include="$(AssemblyInfoPath)" />
+      <Compile Include="@(AssemblyInfoPath)" />
     </ItemGroup>
   </Target>
 </Project>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--
+    Logic to generate a default command line for msbuild.exe.
+    
+      Input:
+        BuildLogPrefix
+        BuildLogDir
+  -->
+  <Target
+    Name="GetMsbuildArgs"
+    Returns="$(_Result)"
+  >
+
+    <!--files-->
+    <PropertyGroup>
+      <_BuildFile>$(BuildLogDir)$(BuildLogPrefix).summary</_BuildFile>
+      
+      <_BuildSummaryFile>$(_BuildFile).summary</_BuildSummaryFile>
+      <_BuildLogFile>$(_BuildFile).log</_BuildLogFile>
+      <_BuildDetailsFile>$(_BuildFile).detailed</_BuildDetailsFile>
+      <_BuildDiagnosticFile>$(_BuildFile).diag</_BuildDiagnosticFile>
+      <_BuildWarningFile>$(_BuildFile).warning</_BuildWarningFile>
+      <_BuildErrorFile>$(_BuildFile).error</_BuildErrorFile>
+    </PropertyGroup>
+    
+    <PropertyGroup>
+      <!--prevent recursion-->
+      <_Result>/p:DefaultsApplied=true</_Result>
+
+      <!--minimal console logging-->
+      <_Result>$(_Result) /nologo</_Result>
+      <_Result>$(_Result) /clp:v=m</_Result>
+
+      <!--exit msbuild after build compleated to unlock files-->
+      <_Result>$(_Result) /nodeReuse:false</_Result>
+
+      <!--logfiles-->
+      <_Result Condition="'$(_BuildSummaryFile)'!=''">$(_Result) /flp:v=m;logfile=$(_BuildSummaryFile);showeventId</_Result>
+      <_Result Condition="'$(_BuildLogFile)'!=''">$(_Result) /flp1:v=n;logfile=$(_BuildLogFile);showeventId;summary</_Result>
+      <_Result Condition="'$(_BuildDetailsFile)'!=''">$(_Result) /flp2:v=d;logfile=$(_BuildDetailsFile);showeventId;summary;performanceSummary</_Result>
+      <_Result Condition="'$(_BuildWarningFile)'!=''">$(_Result) /flp3:v=d;warningsonly;logfile=$(_BuildWarningFile);showeventId</_Result>
+      <_Result Condition="'$(_BuildErrorFile)'!=''">$(_Result) /flp4:v=d;errorsonly;logfile=$(_BuildErrorFile);showeventId</_Result>
+      <_Result Condition="'$(_BuildDiagnosticFile)'!=''">$(_Result) /flp5:v=diag;logfile=$(_BuildDiagnosticFile);showeventId;summary;performanceSummary</_Result>
+    </PropertyGroup>
+
+    <Message Text="GetMsbuildArgs -> $(_Result)" />
+  </Target>
+
+</Project>
