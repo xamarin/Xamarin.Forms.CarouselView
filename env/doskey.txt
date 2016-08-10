@@ -41,14 +41,14 @@ nuke=git clean -fdXq
 scorch=git clean -fdXq -e !dls
 
 ;= build
-shim=msbuild %srcDir%.csproj /nologo /t:dumpProjects /v:m /p:ShimVerbosity=high
-restore=msbuild %srcDir%.csproj /t:restore /v:m
-build=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="debug" /p:OtherProperties="$*"
-clean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="debug" /p:OtherProperties="$*"
-rbuild=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="release" /p:OtherProperties="$*"
-rclean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="release" /p:OtherProperties="$*"
-abuild=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=build /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
-aclean=msbuild %srcDir%.csproj /t:main /v:m /p:MSBuildTarget=clean /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
+shim=msbuild %shimProj% /t:dumpProjects
+restore=msbuild %shimProj% /v:m /t:restore
+build=msbuild %shimProj% /v:m /t:build /p:Properties=Configuration="debug" /p:OtherProperties="$*"
+clean=msbuild %shimProj% /v:m /t:clean /p:Properties=Configuration="debug" /p:OtherProperties="$*"
+rbuild=msbuild %shimProj% /v:m /t:build /p:Properties=Configuration="release" /p:OtherProperties="$*"
+rclean=msbuild %shimProj% /v:m /t:clean /p:Properties=Configuration="release" /p:OtherProperties="$*"
+abuild=msbuild %shimProj% /v:m /t:build /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
+aclean=msbuild %shimProj% /v:m /t:clean /p:Properties=Configuration="\"release;debug\"" /p:OtherProperties="$*"
 
 ;= link
 linkdir=mklink /j $1 $2

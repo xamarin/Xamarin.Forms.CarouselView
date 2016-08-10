@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--?-->
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '12.0' ">
+    <VisualStudioVersion>12.0</VisualStudioVersion>
+  </PropertyGroup>
+
+  <!--msbuild paths-->
+  <PropertyGroup>
+    <StartupDir>$(MSBuildStartupDirectory)\</StartupDir>
+    <ProjDir>$(MSBuildProjectDirectory)\</ProjDir>
+    <ProjName>$(MSBuildProjectName)</ProjName>
+    <ProjFullName>$(MSBuildProjectFile)</ProjFullName>
+    <ProjFile>$(MSBuildProjectFullPath)</ProjFile>
+    <MsbuildExe>"$(MSBuildBinPath)\msbuild.exe"</MsbuildExe>
+  </PropertyGroup>
+  <ItemGroup>
+    <StartupDir Include="$(StartupDir)" />
+    <ProjDir Include="$(ProjDir)" />
+    <ProjName Include="$(ProjName)" />
+    <ProjFullName Include="$(ProjFullName)" />
+    <ProjFile Include="$(ProjFile)" />
+    <MsbuildExe Include="$(MsbuildExe)" />
+  </ItemGroup>
+  
+  <!--vs-->
+  <PropertyGroup>
+    <IsInVs>$(BuildingInsideVisualStudio)</IsInVs>
+    <BuildingInsideVisualStudio Condition="'$(BuildingInsideVisualStudio)'==''">$(IsInVs)</BuildingInsideVisualStudio>
+  </PropertyGroup>
+  
+  <!--escaping-->
+  <PropertyGroup>
+    <!--;-->
+    <Sc>%3B</Sc>
+    <Cr>%0D</Cr>
+    <Lf>%0A</Lf>
+    <Nl>$(Cr)$(Lf)</Nl>
+  </PropertyGroup>
+
+  <!--download root path-->
+  <PropertyGroup>
+    <DlsDir>$(RootDir)dls\</DlsDir>
+  </PropertyGroup>
+
+  <!--build root paths-->
+  <PropertyGroup>
+    <BuildDir>$(RootDir)bld\</BuildDir>
+
+    <!--buildDir-->
+    <BuildBinSubDir>bin\</BuildBinSubDir>
+    <BuildBinDir>$(BuildDir)$(BuildBinSubDir)</BuildBinDir>
+
+    <!--tempDir-->
+    <BuildTempSubDir>obj\</BuildTempSubDir>
+    <BuildTempDir>$(BuildBinDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempDir>
+  </PropertyGroup>
+
+  <!--tool path-->
+  <PropertyGroup>
+    <ToolsDir>$(DlsDir)tools\</ToolsDir>
+  </PropertyGroup>
+</Project>

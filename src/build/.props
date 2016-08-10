@@ -6,4 +6,16 @@
     <IsBuildProj>true</IsBuildProj>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
   </PropertyGroup>
+
+  <!--shim-->
+  <PropertyGroup>
+    <ShimTarget>Restore</ShimTarget>
+    <ShimInclude>$(MSBuildThisFileDirectory)**\*.csproj</ShimInclude>
+    <ShimExclude/>
+  </PropertyGroup>
+
+  <!--meta-->
+  <PropertyGroup>
+    <BuildName>Setup</BuildName>
+  </PropertyGroup>
 </Project>

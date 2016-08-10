@@ -5,6 +5,5 @@
   <!--root paths; used to as part of temp|out dir by forming relative path to project-->
   <PropertyGroup>
     <SrcDir>$(MSBuildThisFileDirectory)</SrcDir>
-    <ExtDir>$(SrcDir)ext\</ExtDir>
   </PropertyGroup>
 </Project>

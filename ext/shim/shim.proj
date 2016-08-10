@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(StartupDir), .props))\.props" />
+
+  <PropertyGroup>
+    <ProjectGuid>{0410505A-9E46-48B7-A1A1-ACA80AEA0013}</ProjectGuid>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ShimProjectFiles
+      Include="$(ShimInclude)"
+      Exclude="$(ShimExclude)"
+    />
+    <ShimTarget Include="$(ShimTarget)" />
+  </ItemGroup>
+
+  <!--build log files-->
+  <PropertyGroup>
+    <_BuildFile>$(BuildBinDir)$(BuildName).$(BuildTarget)</_BuildFile>
+
+    <BuildSummaryFile>$(_BuildFile).summary</BuildSummaryFile>
+    <BuildLogFile>$(_BuildFile).log</BuildLogFile>
+    <BuildDetailsFile>$(_BuildFile).detailed</BuildDetailsFile>
+    <BuildDiagnosticFile>$(_BuildFile).diag</BuildDiagnosticFile>
+    <BuildWarningFile>$(_BuildFile).warning</BuildWarningFile>
+    <BuildErrorFile>$(_BuildFile).error</BuildErrorFile>
+  </PropertyGroup>
+
+  <!--shim command line-->
+  <ItemGroup>
+    <BuildCommand Include="msbuild.exe" />
+    <BuildCommand Include="$(ProjFile)" />
+    <BuildCommand Include="/t:_Dispatch" />
+    
+    <!--properties-->
+    <BuildCommand Include="/p:BuildTarget=$(BuildTarget)" />
+    <BuildCommand Include="/p:Platform=$(Platform)" />
+    <BuildCommand Include="/p:Configuration=$(Configuration)" />
+
+    <!--misc-->
+    <BuildCommand Include="/nodeReuse:false" />
+
+    <!--console logging-->
+    <BuildCommand Include="/nologo" />
+    <BuildCommand Include="/clp:v=m" />
+
+    <!--file logging-->
+    <BuildCommand Condition="'$(BuildSummaryFile)'!=''" Include="/flp:v=m$(Sc)logfile=$(BuildSummaryFile)$(Sc)showeventId" />
+    <BuildCommand Condition="'$(BuildLogFile)'!=''" Include="/flp1:v=n$(Sc)logfile=$(BuildLogFile)$(Sc)showeventId$(Sc)summary" />
+    <BuildCommand Condition="'$(BuildDetailsFile)'!=''" Include="/flp2:v=d$(Sc)logfile=$(BuildDetailsFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
+    <BuildCommand Condition="'$(BuildWarningFile)'!=''" Include="/flp3:v=d$(Sc)warningsonly$(Sc)logfile=$(BuildWarningFile)$(Sc)showeventId" />
+    <BuildCommand Condition="'$(BuildErrorFile)'!=''" Include="/flp4:v=d$(Sc)errorsonly$(Sc)logfile=$(BuildErrorFile)$(Sc)showeventId" />
+    <BuildCommand Condition="'$(BuildDiagnosticFile)'!=''" Include="/flp5:v=diag$(Sc)logfile=$(BuildDiagnosticFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
+  </ItemGroup>
+
+  <Import Project="$(ExtDir)empty.targets" />
+  <Import Project="$(ExtDir)proxy.targets" />
+  <Import Project="shim.targets" />
+</Project>

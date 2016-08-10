@@ -2,6 +2,24 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., .props))\.props" />
 
+  <!--shim-->
+  <PropertyGroup>
+    <ShimTarget>Restore</ShimTarget>
+    <ShimInclude>$(MSBuildThisFileDirectory)**\*.csproj</ShimInclude>
+    <ShimExclude>
+      $(MSBuildThisFileDirectory)**\build\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\android\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\ios\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
+    </ShimExclude>
+  </PropertyGroup>
+
+  <!--meta-->
+  <PropertyGroup>
+    <BuildName>Core</BuildName>
+  </PropertyGroup>
+
   <PropertyGroup>
     <!--TODO: discover dynamically-->
     <SourceControlBranch>master</SourceControlBranch>

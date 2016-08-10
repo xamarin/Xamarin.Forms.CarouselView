@@ -1,10 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project 
+  ToolsVersion="12.0" 
+  DefaultTargets="Build" 
+  InitialTargets="C6D4C295-BD1A-4F1F-9E5A-B61496734293"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+  <Import 
+    Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" 
+    Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" 
+  />
+  <Import Project="$(ExtDir)common.props"/>
 
   <!--inject .post.props and .targets-->
   <PropertyGroup>
     <CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets</CustomAfterMicrosoftCommonTargets>
   </PropertyGroup>
+
+  <!--cctor-->
+  <Target 
+    Name="C6D4C295-BD1A-4F1F-9E5A-B61496734293"
+    Condition="'$(HasBuildInfo)'=='true'"
+  >
+    <ItemGroup>
+      <Compile Include="@(BuildInfoFile)" />
+    </ItemGroup>
+    <PropertyGroup>
+      <DefineConstants>$(DefineConstants)HAS_BUILD_INFO;</DefineConstants>
+    </PropertyGroup>
+  </Target>
   
 </Project>

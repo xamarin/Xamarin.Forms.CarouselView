@@ -8,7 +8,7 @@
     <InstallDependsOn />
     <CompileDependsOn />
     <GetTargetPathDependsOn />
-    <NugetRestoreDependsOn />
+    <RestoreDependsOn />
     <PackageDependsOn />
     <SignDependsOn />
   </PropertyGroup>
@@ -22,10 +22,10 @@
   <Target Name="Compile" Outputs="@(TargetResult)" DependsOnTargets="$(CompileDependsOn)" />
   <Target Name="GetTargetPath" Outputs="@(TargetResult)" DependsOnTargets="$(GetTargetPathDependsOn)" />
   
-  <!--should be a standard VS target-->
-  <Target Name="NugetRestore" DependsOnTargets="$(NugetRestoreDependsOn)" />
+  <!--restore (e.g. nuget packages)-->
+  <Target Name="Restore" DependsOnTargets="$(RestoreDependsOn)" />
   
-  <!--android-->
+  <!--xamarin android-->
   <Target Name="Package" DependsOnTargets="$(PackageDependsOn)" />
   <Target Name="Sign" DependsOnTargets="$(SignDependsOn)" />
 

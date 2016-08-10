@@ -9,12 +9,14 @@
         Build
         Clean
         Install
-        NugetRestore
-        DryRun
         Compile
+        GetTargetPath
+        
+        Shim
+        DryRun
+        
         Package
         Sign
-        GetTargetPath
       
       see also: https://github.com/Microsoft/msbuild/issues/851
   -->
@@ -22,47 +24,47 @@
   <!--capture target name-->
   <Target Name="_SetProxyTargetBuild">
     <PropertyGroup>
-      <ProxyTarget>Build</ProxyTarget>
+      <BuildTarget>Build</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetClean">
     <PropertyGroup>
-      <ProxyTarget>Clean</ProxyTarget>
+      <BuildTarget>Clean</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetInstall">
     <PropertyGroup>
-      <ProxyTarget>Install</ProxyTarget>
+      <BuildTarget>Install</BuildTarget>
     </PropertyGroup>
   </Target>
-  <Target Name="_SetProxyTargetNugetRestore">
+  <Target Name="_SetProxyTargetShim">
     <PropertyGroup>
-      <ProxyTarget>NugetRestore</ProxyTarget>
+      <BuildTarget>Shim</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetDryRun">
     <PropertyGroup>
-      <ProxyTarget>DryRun</ProxyTarget>
+      <BuildTarget>DryRun</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetCompile">
     <PropertyGroup>
-      <ProxyTarget>Compile</ProxyTarget>
+      <BuildTarget>Compile</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetPackage">
     <PropertyGroup>
-      <ProxyTarget>Package</ProxyTarget>
+      <BuildTarget>Package</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetSign">
     <PropertyGroup>
-      <ProxyTarget>Sign</ProxyTarget>
+      <BuildTarget>Sign</BuildTarget>
     </PropertyGroup>
   </Target>
   <Target Name="_SetProxyTargetGetTargetPath">
     <PropertyGroup>
-      <ProxyTarget>GetTargetPath</ProxyTarget>
+      <BuildTarget>GetTargetPath</BuildTarget>
     </PropertyGroup>
   </Target>
 

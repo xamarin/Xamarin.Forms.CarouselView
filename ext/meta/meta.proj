@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  DefaultTargets="Build" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(StartupDir), .props))\.props" />
+
+  <PropertyGroup>
+    <ProjectGuid>{444D601D-FB88-48C4-A281-0156ED6EDDE0}</ProjectGuid>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <FreshBuildNumberFile Include="@(BuildNumberFile->'%(Identity).fresh')" />
+    <FreshEnlistmentStatusFile Include="@(EnlistmentStatusFile->'%(Identity).fresh')" />
+    <FreshEnlistmentRevisionFile Include="@(EnlistmentRevisionFile->'%(Identity).fresh')" />
+    <FreshEnlistmentBranchFile Include="@(EnlistmentBranchFile->'%(Identity).fresh')" />
+    <FreshEnlistmentUrlFile Include="@(EnlistmentUrlFile->'%(Identity).fresh')" />
+  </ItemGroup>
+
+  <Import Project="$(ExtDir)empty.targets" />
+  <Import Project="meta.git.targets"/>
+  <Import Project="meta.targets" />
+</Project>

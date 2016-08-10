@@ -9,9 +9,12 @@ call vcvarsallShim.bat
 set envDir=%~dp0
 
 :: cd to root of repo
-pushd %~dp0..\..
+pushd %~dp0..\
 set repoDir=%cd%\
 set srcDir=%repoDir%src\
+set extDir=%repoDir%ext\
+set shimProj=%extDir%shim\shim.proj
+set metaProj=%extDir%meta\meta.proj
 
 :: variables
 set platform=
