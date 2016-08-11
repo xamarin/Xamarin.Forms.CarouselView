@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(ExtDir)common.targets" />
+  <Import Project="$(ExtNugetDir)nuget.targets" />
   
   <!--diagnostic-->
-  <Target Name="BeforeBuild" BeforeTargets="Build" Condition="'$(Verbosity)'=='high' AND false">
+  <!--<Target Name="BeforeBuild" BeforeTargets="Build">
     <Message Text="MSBuildProjectFullPath: $(MSBuildProjectFullPath)" Importance="high" />
     <Message Text="  ProjDir: $(ProjDir)" Importance="high" />
     <Message Text="  Platform: $(Plat)" Importance="high" />
@@ -16,7 +18,8 @@
     <Message Text="  IsLibraryPlatform: $(IsLibraryPlatform)" Importance="high" />
     <Message Text="  IsMetaPlatform: $(IsMetaPlatform)" Importance="high" />
     <Message Text="  DefineConstants: $(DefineConstants)" Importance="high" />
-  </Target>
+    <Message Text="  Reference: @(Reference)" Importance="high" />
+  </Target>-->
 
   <!--DumpItems-->
   <ItemGroup>
@@ -24,16 +27,16 @@
   </ItemGroup>
   <Target
     Name="DumpItems"
-    DependsOnTargets="MobilePlatformProperties"
     Outputs="%(Items.Identity)"
   >
     <Error Condition="'$(Items)'==''" Text="No items names; Property 'Items' is empty." />
 
-    <DumpTaskItems
+    <Message Importance="high" Text="%(Items.Identity)" />
+    <!--<DumpTaskItems
       Header="%(Items.Identity)"
       Items="@(%(Identity))"
       ExcludeDefaultMetadata="$(ExcludeDefaultMetadata)"
-    />
+    />-->
   </Target>
 
   <!--DumpList-->

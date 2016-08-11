@@ -16,11 +16,10 @@
   <!--ext paths-->
   <PropertyGroup>
     <ExtCiDir>$(ExtDir)ci\</ExtCiDir>
-    <ExtNugetDir>$(ExtDir)nuget\</ExtNugetDir>
     <ExtShimDir>$(ExtDir)shim\</ExtShimDir>
-    <ExtMetaDir>$(ExtDir)meta\</ExtMetaDir>
     <ExtXfDir>$(ExtDir)xf\</ExtXfDir>
   </PropertyGroup>
 
-  <Import Project="$(ExtMetaDir)meta.pre.props"/>
+  <Import Project="$(ExtDir)meta\meta.pre.props"/>
+  <Import Project="$(ExtDir)nuget\nuget.pre.props"/>
 </Project>

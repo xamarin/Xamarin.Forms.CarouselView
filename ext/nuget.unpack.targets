@@ -82,7 +82,7 @@
       Command="$(_Command) &gt; $(_Log)" 
       WorkingDirectory="$(UnpackAfterDir)" 
     />
-    <Message Importance="$(UnpackVerbosity)" Text="Restore -&gt; $(_Log)" />
+    <Message Importance="$(UnpackVerbosity)" Text="NugetRestore -&gt; $(_Log)" />
   </Target>
 
   <!--copy-->

@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env\androidEmulatorLaunch.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\androidPackageInstall.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\env.bat" />
@@ -19,6 +20,7 @@
     <None Include="$(MSBuildThisFileDirectory)env\killUsual.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\testsRun.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\vcvarsallShim.bat" />
+    <None Include="$(MSBuildThisFileDirectory)ext\common.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\ci\ci.props" />
@@ -31,21 +33,22 @@
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget.pack.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget.unpack.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\NUnit.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\WPtoolkit.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.Android.Support.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.Android.Support.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.Forms.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.Forms.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.TestCloud.Agent.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\Xamarin.UITest.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\NUnit.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\WPtoolkit.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Android.Support.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Android.Support.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.TestCloud.Agent.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.UITest.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\vs.targets" />
@@ -63,7 +66,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\build\.props" />
     <None Include="$(MSBuildThisFileDirectory)src\build\dev\Build\Build.csproj" />
-    <None Include="$(MSBuildThisFileDirectory)src\build\test\.props" />
     <None Include="$(MSBuildThisFileDirectory)src\build\test\Unit\Build.Unit.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\build\test\Unit\test.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\.props" />
@@ -86,7 +88,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselView.Test.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
-    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.proj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)env\doskey.txt" />
@@ -133,6 +134,8 @@
     <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)ext\proj\" />
+    <Folder Include="$(MSBuildThisFileDirectory)ext\pack\" />
     <Folder Include="$(MSBuildThisFileDirectory)src\carouselView\app\shared\" />
   </ItemGroup>
 </Project>

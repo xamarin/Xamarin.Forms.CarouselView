@@ -36,6 +36,8 @@
       <BuildCommand>@(BuildCommand, ' ')</BuildCommand>
     </PropertyGroup>
     <Message Importance="high" Text="$(BuildName) ($(BuildTarget)) -> $(BuildLogFile)" />
+
+    <MakeDir Directories="$(BuildLogDir)"/>
     <Exec 
       Command="$(BuildCommand)" 
       WorkingDirectory="$(MSBuildStartupDirectory)"

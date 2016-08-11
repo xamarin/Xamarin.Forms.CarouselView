@@ -175,6 +175,7 @@
       Text="Platform 'Compile' is only supported when building in VS during intellisesne loading."
     />
     
+    <!--_ChildProjectReference-->
     <ItemGroup>
       <!--if (ChildPlatforms has value) then Platform-->
       <_ChildProjectReference 

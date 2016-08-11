@@ -4,7 +4,7 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
-  <Import Project="$(ExtCiDir)ci.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <PropertyGroup>
     <ProjectGuid>{C4C3E202-9A8A-4424-9167-514101DB2459}</ProjectGuid>
   </PropertyGroup>
@@ -25,6 +25,7 @@
     <Compile Include="PublishTask.test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <Import Project="$(NugetRefDir)NUnit.props" />
   <ItemGroup>
     <ProjectReference Include="..\..\dev\Build\Build.csproj">
       <Project>{8e9c4286-1afb-48a6-ab17-180e14f47a9e}</Project>
@@ -36,6 +37,5 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
-  <Import Project="$(ExtCiDir)ci.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

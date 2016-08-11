@@ -41,6 +41,7 @@ nuke=git clean -fdXq
 scorch=git clean -fdXq -e !dls
 
 ;= build
+metabuild=msbuild %metaProj%
 shim=msbuild %shimProj% /t:dumpProjects
 restore=msbuild %shimProj% /v:m /t:restore
 build=msbuild %shimProj% /v:m /t:build /p:Properties=Configuration="debug" /p:OtherProperties="$*"

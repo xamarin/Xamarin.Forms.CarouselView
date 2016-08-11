@@ -19,7 +19,6 @@
     <FreshEnlistmentUrlFile Include="@(EnlistmentUrlFile->'%(Identity).fresh')" />
   </ItemGroup>
 
-  <Import Project="$(ExtDir)empty.targets" />
   <Import Project="meta.git.targets"/>
   <Import Project="meta.targets" />
 </Project>

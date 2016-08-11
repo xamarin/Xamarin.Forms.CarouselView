@@ -9,8 +9,8 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimTarget>Restore</ShimTarget>
-    <ShimInclude>$(MSBuildThisFileDirectory)**\*.csproj</ShimInclude>
+    <ShimTarget>NugetRestore</ShimTarget>
+    <ShimInclude>$(MSBuildThisFileDirectory)\**\*.csproj</ShimInclude>
     <ShimExclude/>
   </PropertyGroup>
 

@@ -10,8 +10,9 @@
     Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" 
   />
   <Import Project="$(ExtDir)common.props"/>
+  <Import Project="$(ExtNugetDir)nuget.props"/>
 
-  <!--inject .post.props and .targets-->
+  <!--inject .targets-->
   <PropertyGroup>
     <CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets</CustomAfterMicrosoftCommonTargets>
   </PropertyGroup>

@@ -5,7 +5,7 @@
     <IsBuildProj>true</IsBuildProj>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
-  <Import Project="$(ExtCiDir)ci.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <PropertyGroup>
     <ProjectGuid>{8E9C4286-1AFB-48A6-AB17-180E14F47A9E}</ProjectGuid>
   </PropertyGroup>
@@ -35,6 +35,5 @@
     <Compile Include="PublishTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="$(ExtCiDir)ci.targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

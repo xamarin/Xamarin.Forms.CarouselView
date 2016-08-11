@@ -36,7 +36,7 @@
     <Reference Include="System.Xml" />
     <None Include="nuspec.props" />
   </ItemGroup>
-  <Import Project="$(NugetPackagePropsDir)Xamarin.Forms.props" />
+  <Import Project="$(NugetRefDir)Xamarin.Forms.props" />
   <!--
   
     Nuget Pack
@@ -115,7 +115,7 @@
     <Compile Include="android\CarouselViewRenderer.cs" />
   </ItemGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' " >
-    <Import Project="$(NugetPackagePropsDir)Xamarin.Android.Support.props"/>
+    <Import Project="$(NugetRefDir)Xamarin.Android.Support.props"/>
   </ImportGroup>
   <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
     <Reference Include="Mono.Android" />

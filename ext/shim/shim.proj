@@ -17,7 +17,8 @@
 
   <!--build log files-->
   <PropertyGroup>
-    <_BuildFile>$(BuildBinDir)$(BuildName).$(BuildTarget)</_BuildFile>
+    <BuildLogDir>$(BuildBinDir)</BuildLogDir>
+    <_BuildFile>$(BuildLogDir)$(BuildName).$(BuildTarget)</_BuildFile>
 
     <BuildSummaryFile>$(_BuildFile).summary</BuildSummaryFile>
     <BuildLogFile>$(_BuildFile).log</BuildLogFile>

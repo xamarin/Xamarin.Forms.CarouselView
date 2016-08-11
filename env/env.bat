@@ -15,6 +15,7 @@ set srcDir=%repoDir%src\
 set extDir=%repoDir%ext\
 set shimProj=%extDir%shim\shim.proj
 set metaProj=%extDir%meta\meta.proj
+set shellProj=%extDir%shell\shell.proj
 
 :: variables
 set platform=
