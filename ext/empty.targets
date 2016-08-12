@@ -8,9 +8,10 @@
     <InstallDependsOn />
     <CompileDependsOn />
     <GetTargetPathDependsOn />
-    <RestoreDependsOn />
+    <NugetRestoreDependsOn />
     <PackageDependsOn />
     <SignDependsOn />
+    <DryRunDependsOn />
   </PropertyGroup>
   
   <Target Name="Build" Outputs="@(TargetResult)" DependsOnTargets="$(BuildDependsOn)" />
@@ -23,10 +24,13 @@
   <Target Name="GetTargetPath" Outputs="@(TargetResult)" DependsOnTargets="$(GetTargetPathDependsOn)" />
   
   <!--nugetRestore (e.g. nuget packages)-->
-  <Target Name="NugetRestore" Outputs="@(TargetResult)" DependsOnTargets="$(RestoreDependsOn)" />
+  <Target Name="NugetRestore" Outputs="@(TargetResult)" DependsOnTargets="$(NugetRestoreDependsOn)" />
   
   <!--xamarin android-->
   <Target Name="Package" Outputs="@(TargetResult)" DependsOnTargets="$(PackageDependsOn)" />
   <Target Name="Sign" Outputs="@(TargetResult)" DependsOnTargets="$(SignDependsOn)" />
+
+  <!--debugging-->
+  <Target Name="DryRun" Outputs="@(TargetResult)" DependsOnTargets="$(DryRunDependsOn)" />
 
 </Project>

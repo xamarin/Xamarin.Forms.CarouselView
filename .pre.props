@@ -20,6 +20,7 @@
     <ExtXfDir>$(ExtDir)xf\</ExtXfDir>
   </PropertyGroup>
 
+  <Import Project="$(ExtDir)proj\proj.pre.props"/>
   <Import Project="$(ExtDir)meta\meta.pre.props"/>
   <Import Project="$(ExtDir)nuget\nuget.pre.props"/>
 </Project>

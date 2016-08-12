@@ -20,12 +20,11 @@
     <None Include="$(MSBuildThisFileDirectory)env\killUsual.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\testsRun.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\vcvarsallShim.bat" />
+    <None Include="$(MSBuildThisFileDirectory)ext\common.tasks" />
+    <None Include="$(MSBuildThisFileDirectory)ext\debug.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ci\ci.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ci\ci.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ci\ci.tasks" />
     <None Include="$(MSBuildThisFileDirectory)ext\empty.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\BuildInfoTemplate.cs" />
@@ -47,15 +46,17 @@
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.TestCloud.Agent.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.UITest.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.leaf.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.common.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
+    <None Include="$(MSBuildThisFileDirectory)ext\shim.common.tasks" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\vs.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.common.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.leaf.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.post.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.proj.app.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.proj.app.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.proj.aut.props" />
@@ -63,7 +64,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.proj.lib.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.proj.lib.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\build\.props" />
     <None Include="$(MSBuildThisFileDirectory)src\build\dev\Build\Build.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\build\test\Unit\Build.Unit.csproj" />
@@ -134,7 +134,6 @@
     <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\Package.appxmanifest" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)ext\proj\" />
     <Folder Include="$(MSBuildThisFileDirectory)ext\pack\" />
     <Folder Include="$(MSBuildThisFileDirectory)src\carouselView\app\shared\" />
   </ItemGroup>

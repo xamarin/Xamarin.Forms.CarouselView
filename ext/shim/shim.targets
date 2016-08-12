@@ -6,19 +6,44 @@
   <!--Proxy-->
   <Target Name="Proxy">
     
-    <!--inject shim target(s) in another msbuild process-->
-    <MSBuild
-      Targets="_ExecDispatch"
-      Projects="$(ProjFile)"
-      Properties="BuildTarget=%(ShimTarget.Identity)"
-      Condition="!@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))"
-    />
-    
+    <!--self dispatch (to enable logging)-->
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
       Properties="BuildTarget=$(BuildTarget)"
+      Condition="$(IsShimStateInit)"
     />
+
+    <!--before shim target-->
+    <MSBuild
+      Projects="$(ShimBeforeProject)"
+      Targets="$(ShimBeforeTarget)"
+      Condition="$(IsShimStateSelf)"
+    />
+    
+    <!--inject shim target(s)-->
+    <MSBuild
+      Targets="_ExecDispatch"
+      Projects="$(ProjFile)"
+      Properties="BuildTarget=%(ShimTarget.Identity)"
+      Condition="$(IsShimStateSelf) AND !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))"
+    />
+
+    <!--dispatch build target-->
+    <MSBuild
+      Targets="_ExecDispatch"
+      Projects="$(ProjFile)"
+      Properties="BuildTarget=$(BuildTarget)"
+      Condition="$(IsShimStateSelf)"
+    />
+
+    <!--after shim target-->
+    <MSBuild
+      Projects="$(ShimAfterProject)"
+      Targets="$(ShimAfterTarget)"
+      Condition="$(IsShimStateSelf)"
+    />
+
   </Target>
 
   <!--DumpProjects-->
@@ -46,8 +71,9 @@
 
   <!--_Dispatch-->
   <Target Name="_Dispatch">
+
     <MSBuild
-      Projects="@(ShimProjectFiles)"
+      Projects="@(DispatchProjectFiles)"
       Targets="$(BuildTarget)"
       ContinueOnError="true"
       BuildInParallel="true"

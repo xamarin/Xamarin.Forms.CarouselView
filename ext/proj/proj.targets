@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="xf.post.props" />
+  <Import Project="proj.post.props" />
   
   <!--node-->
   <Import Project="$(ExtDir)empty.targets" Condition="'$(IsLeafPlatform)'!='true'" />
@@ -8,8 +8,8 @@
   <!--leaf-->
   <ImportGroup Condition="'$(IsLeafPlatform)'=='true'">
     <Import Project="$(TargetsFile)" Condition="Exists($(TargetsFile))"/>
-    <Import Project="xf.leaf.targets"/>
+    <Import Project="proj.leaf.targets"/>
   </ImportGroup>
   
-  <Import Project="xf.common.targets" />
+  <Import Project="proj.common.targets" />
 </Project>

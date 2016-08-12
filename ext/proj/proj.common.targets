@@ -3,28 +3,6 @@
 
   <!--
     
-    _BuildTaskProject
-      build task assembly before anything else
-  -->
-  <Target
-    Name="_BuildTaskProject"
-    Condition="'$(BuildingInsideVisualStudio)'!='true' " >
-    <!--Unexpected: Build.csproj gets touched when solutions is loaded in VS-->
-
-    <MSBuild
-      Projects="$(SrcDir)build\dev\Build\Build.csproj"
-      Properties="OutSubDir=AnyCPU;Platform=AnyCPU;Configuration=Debug"
-      Targets="Build"
-    />
-    <MSBuild
-      Projects="$(SrcDir)build\dev\Build\Build.csproj"
-      Properties="OutSubDir=AnyCPU;Platform=AnyCPU;Configuration=Release"
-      Targets="Build"
-    />
-  </Target>
-
-  <!--
-    
     Rebuild
   -->
   <Target Name="Rebuild">
@@ -236,12 +214,12 @@
     <!--pre log-->
     <Message
       Text="MetaProjectReferences: @(_ChildProjectReference->Count())"
-      Importance="$(PlatformVerbosity)" 
+      Importance="$(ProjVerbosity)" 
     />
     <Message
       Text="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(WellKnownTargetName) /+p:%(AdditionalProperties)"
       Condition="'@(_ChildProjectReference)'!=''"
-      Importance="$(PlatformVerbosity)"
+      Importance="$(ProjVerbosity)"
     />
     <!--<WriteLineToFile
       File="f:\vs.log"
@@ -289,7 +267,7 @@
     <Message
       Text="%(ReferenceSource): $(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;- %(TargetResult.Identity)"
       Condition="'%(Identity)'!=''"
-      Importance="$(PlatformVerbosity)" 
+      Importance="$(ProjVerbosity)" 
     />
 
     <!--ProjectReference and SelfReference -> Reference-->
@@ -303,7 +281,7 @@
     <Message 
       Text="  %(ReferenceSource): Reference += %(IncludeInReference.Identity) -> %(HintPath)"
       Condition="'@(IncludeInReference)'!=''"
-      Importance="$(PlatformVerbosity)" 
+      Importance="$(ProjVerbosity)" 
     />
   </Target>
 

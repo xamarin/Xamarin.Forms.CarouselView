@@ -1,8 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+  <!--
+    Loads type information for the current platform. Platforms form a tree.
+    
+      Booleans:
+        IsLeafPlatform
+        IsLibraryPlatform
+        IsAppPlatform
+        IsMetaPlatform
+        IsMobileLibraryPlatform
+        IsPartPlatform
+        IsUiTestPlatform
+      
+      Properties:
+        Plat
+        DefineConstants
+        LeafPlatform
+        MetaPlatform
+        TargetFramwork
+        MobilePlatform
+        MobileSubPlatform
+        TargetProject
+        
+      ItemGroups:
+        ChildPlatforms
+  -->
+  
   <PropertyGroup>
-    <PlatformVerbosity>$(Verbosity)</PlatformVerbosity>
+    <ExtProjDir>$(MSBuildThisFileDirectory)</ExtProjDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <ProjVerbosity>$(Verbosity)</ProjVerbosity>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -39,8 +69,15 @@
     <UnpackProjectId>unpack</UnpackProjectId>
   </PropertyGroup>
 
-  <!--Xamarin.Forms Project Ids-->
+  <!--
+  
+    Meta Project Ids & Properties
+  -->
+
   <PropertyGroup>
+    <DesktopLibraryMetaProjectId>desktop.lib</DesktopLibraryMetaProjectId>
+
+    <!--Xamarin.Forms Project Ids-->
     <MobileAppMetaProjectId>xf.app</MobileAppMetaProjectId>
     <MobileLibraryMetaProjectId>xf.lib</MobileLibraryMetaProjectId>
     <MobileAutomationMetaProjectId>xf.aut</MobileAutomationMetaProjectId>
@@ -48,12 +85,18 @@
 
   <!--Xamarin.Forms Project Predicates-->
   <PropertyGroup>
+    <IsDesktopLibraryProject>false</IsDesktopLibraryProject>
     <IsAppProject>false</IsAppProject>
     <IsLibraryProject>false</IsLibraryProject>
     <IsUiTestProject>false</IsUiTestProject>
     <IsTest>false</IsTest>
   </PropertyGroup>
   <Choose>
+    <When Condition="'$(MetaProject)'=='$(DesktopLibraryMetaProjectId)'">
+      <PropertyGroup>
+        <IsDesktopLibraryProject>true</IsDesktopLibraryProject>
+      </PropertyGroup>
+    </When>
     <When Condition="'$(MetaProject)'=='$(MobileAppMetaProjectId)'">
       <PropertyGroup>
         <IsAppProject>true</IsAppProject>
@@ -90,15 +133,12 @@
     <IPhoneSimulatorLeafPlatformId>iPhoneSimulator</IPhoneSimulatorLeafPlatformId>
   </PropertyGroup>
 
-  <!--automation platform ids-->
-  <PropertyGroup>
-    <AndroidAutomationLibraryPlatformId>android.aut</AndroidAutomationLibraryPlatformId>
-    <IosAutomationLibraryPlatformId>ios.aut</IosAutomationLibraryPlatformId>
-    <WindowsAutomationLibraryPlatformId>windows.aut</WindowsAutomationLibraryPlatformId>
-  </PropertyGroup>
-
   <!--library platform ids-->
   <PropertyGroup>
+    
+    <!--desktop-->
+    <DesktopLibraryPlatformId>desktop</DesktopLibraryPlatformId>
+
     <!--aut-->
     <AndroidAutomationLibraryPlatformId>android.aut</AndroidAutomationLibraryPlatformId>
     <IosAutomationLibraryPlatformId>ios.aut</IosAutomationLibraryPlatformId>
@@ -106,7 +146,6 @@
     
     <!--mobile-->
     <PortableLibraryPlatformId>dotnet</PortableLibraryPlatformId>
-    <WindowsAutomationLibraryPlatformId>windows.aut</WindowsAutomationLibraryPlatformId>
     <AndroidLibraryPlatformId>monoDroid</AndroidLibraryPlatformId>
     <IosUnifiedLibraryPlatformId>xamarin.ios</IosUnifiedLibraryPlatformId>
     <IosClassicLibraryPlatformId>monoTouch</IosClassicLibraryPlatformId>
@@ -243,6 +282,16 @@
         <IsLeafPlatform>true</IsLeafPlatform>
         <DefineConstants>$(DefineConstants)UNPACK;</DefineConstants>
         <TargetProject>$(UnpackProjectId)</TargetProject>
+      </PropertyGroup>
+    </When>
+
+    <!--desktop-->
+    <When Condition="'$(Plat)'=='$(DesktopLibraryPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(DesktopLibraryPlatformId)</Plat>
+        <IsMetaPlatform>true</IsMetaPlatform>
+        <MetaPlatform>$(Plat)</MetaPlatform>
+        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
       </PropertyGroup>
     </When>
 
@@ -505,6 +554,13 @@
   <Choose>
 
     <!--library-->
+    <When Condition="'$(MetaPlatform)'=='$(DesktopLibraryPlatformId)'">
+      <PropertyGroup>
+        <MetaPlatform>$(DesktopLibraryPlatformId)</MetaPlatform>
+        <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
+        <TargetFramework>dotnet</TargetFramework>
+      </PropertyGroup>
+    </When>
     <When Condition="'$(MetaPlatform)'=='$(PortableLibraryPlatformId)'">
       <PropertyGroup>
         <MetaPlatform>$(PortableLibraryPlatformId)</MetaPlatform>
@@ -693,6 +749,12 @@
 
   <!--LibraryPlatform-->
   <Choose>
+    <When Condition="'$(LibraryPlatform)'=='$(DesktopLibraryPlatformId)'">
+      <PropertyGroup>
+        <TargetProject>$(DesktopProjectId)</TargetProject>
+        <TargetFramework>dotnet</TargetFramework>
+      </PropertyGroup>
+    </When>
     <When Condition="'$(LibraryPlatform)'=='$(PortableLibraryPlatformId)'">
       <PropertyGroup>
         <TargetProject>$(PortableProjectId)</TargetProject>
@@ -961,6 +1023,7 @@
     </MobilePlatformIds>
     <AllPlatformIds>$(MobilePlatformIds)</AllPlatformIds>
     <AllPlatformIds Condition="'$(IsLibraryProject)'=='true'">$(UnpackLeafPlatformId)</AllPlatformIds>
+    <AllPlatformIds Condition="'$(IsDesktopLibraryProject)'=='true'">$(DesktopLibraryPlatformId)</AllPlatformIds>
   </PropertyGroup>
   <PropertyGroup>
     <ChildPlatforms Condition="'$(Plat)'=='$(AllPlatformId)'">$(AllPlatformIds)</ChildPlatforms>
@@ -978,7 +1041,6 @@
   <!--ChildPlatform: Property -> Items-->
   <ItemGroup>
     <ChildPlatforms Include="$(ChildPlatforms)"/>
-    <CompositePlatforms Include="$(CompositePlatforms)" />
   </ItemGroup>
 
   <ItemDefinitionGroup>

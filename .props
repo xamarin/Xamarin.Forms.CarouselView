@@ -14,7 +14,7 @@
 
   <!--inject .targets-->
   <PropertyGroup>
-    <CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets</CustomAfterMicrosoftCommonTargets>
+    <!--<CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets</CustomAfterMicrosoftCommonTargets>-->
   </PropertyGroup>
 
   <!--cctor-->
