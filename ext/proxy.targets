@@ -76,10 +76,9 @@
 
   <!--Proxy-->
   <PropertyGroup>
-    <ProxyDependsOn>CoreProxy</ProxyDependsOn>
+    <ProxyDependsOn/>
   </PropertyGroup>
   <Target Name="Proxy" DependsOnTargets="$(ProxyDependsOn)" />
-  <Target Name="CoreProxy" />
 
   <!--inject Proxy before well known targets but after capturing target name-->
   <PropertyGroup>

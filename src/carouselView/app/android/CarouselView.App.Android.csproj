@@ -6,6 +6,7 @@
   -->
   <PropertyGroup>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <MetaProject>xf.app</MetaProject>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
   <!--
@@ -13,11 +14,11 @@
     Props
   -->
   <PropertyGroup>
-    <MetaProject>xf.app</MetaProject>
     <MetaPlatform>monodroid.app</MetaPlatform>
     <OutRelDir>$(MSBuildProjectDirectory)\..\</OutRelDir>
+    <ProjectGuid>{ACE75430-A8EC-489D-AEA9-C3D7708AACDC}</ProjectGuid>
   </PropertyGroup>
-  <Import Project="$(ExtDir)xf\xf.proj.app.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <!--
     
     Configurations
@@ -36,19 +37,11 @@
     
     Targets
   -->
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
   <Target Name="Build">
-    <MSBuild
-      Projects="..\CarouselView.App.csproj"
-      Targets="Package;Sign"
-      Properties="Platform=$(MetaPlatform)"
-    />
+    <MSBuild Projects="..\CarouselView.App.csproj" Targets="Package;Sign" Properties="Platform=$(MetaPlatform)" />
   </Target>
   <Target Name="Install">
-    <MSBuild 
-      Projects="..\CarouselView.App.csproj" 
-      Targets="Install" 
-      Properties="Platform=$(MetaPlatform)"
-    />
+    <MSBuild Projects="..\CarouselView.App.csproj" Targets="Install" Properties="Platform=$(MetaPlatform)" />
   </Target>
 </Project>

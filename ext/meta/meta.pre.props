@@ -25,6 +25,13 @@
   <PropertyGroup>
     <ExtMetaDir>$(MSBuildThisFileDirectory)</ExtMetaDir>
   </PropertyGroup>
+  
+  <!--Creates a clean "stack frame" for recursive calls by clearing out unwanted inherited properties-->
+  <!--see: https://github.com/Microsoft/msbuild/issues/902 -->
+  <PropertyGroup>
+    <MetaPlatform Condition="'$(_MetaPlatform)'!=''">$(_MetaPlatform)</MetaPlatform>
+    <ClearRecursiveFrame>$(ClearRecursiveFrame)_MetaPlatform=;</ClearRecursiveFrame>
+  </PropertyGroup>
 
   <ItemDefinitionGroup>
     <MetaProjectReference>

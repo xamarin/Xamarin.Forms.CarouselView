@@ -17,7 +17,6 @@
   </ItemDefinitionGroup>
   <Target 
     Name="ResolveMetaProjectReferences"
-    BeforeTargets="Proxy"
   >
     <Error
       Condition="'$(IsLeafPlatform)'!='true' AND '@(ChildPlatforms)|$(LeafPlatform)'==''"
@@ -62,20 +61,6 @@
       </_ChildProjectReference>
     </ItemGroup>
 
-    <!--MS.Common.targets logic: if "compile" leaf in VS then assume reference already compiled by VS intellisesne engine.
-        Incidentally, this is also why there is no intellisense for unloaded projects.
-    -->
-    <PropertyGroup>
-      <_Targets>$(BuildTarget)</_Targets>
-      <_Targets 
-        Condition="
-          '$(IsLeafPlatform)'=='true' AND 
-          '$(BuildTarget)'=='Compile' AND
-          '$(IsInVs)' == 'true'
-        "
-      >GetTargetPath</_Targets>
-    </PropertyGroup>
-
     <!--pre log-->
     <Message
       Text="MetaProjectReferences: @(_ChildProjectReference->Count())"
@@ -86,16 +71,6 @@
       Condition="'@(_ChildProjectReference)'!=''"
       Importance="$(ProjVerbosity)"
     />
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="MetaProjectReferences: @(_ChildProjectReference->Count())"
-      Condition="'@(_ChildProjectReference)'!=''"
-    />
-    <WriteLineToFile
-      File="f:\vs.log"
-      Line="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
-      Condition="'@(_ChildProjectReference)'!=''"
-    />-->
 
     <!--batch configurations-->
     <ItemGroup>
@@ -150,90 +125,4 @@
     />
   </Target>
 
-  <!--
-  
-    _DumpFrame
-  -->
-  <Target
-    Name="_DumpFrame"
-    BeforeTargets="ResolveMetaProjectReferences"
-    Condition="'$(BuildTarget)'=='DryRun' OR '$(Verbosity)'=='high'"
-  >
-
-    <PropertyGroup>
-      <Tag>BUILD</Tag>
-      <Tag Condition="'$(IsLeafPlatform)'!='true'">RECURSE</Tag>
-    </PropertyGroup>
-
-    <ItemGroup>
-      <_Property Include="BuildTarget" />
-      <_Property Include="ProjFile" />
-      <_Property Include="IsLeafPlatform" />
-      <_Property Include="IsMetaPlatform" />
-      <_Property Include="IsLibraryPlatform" />
-      <_Property Include="IsPartPlatform" />
-      <_Property Include="MobilePlatform" />
-      <_Property Include="MobileSubPlatform" />
-      <_Property Include="LibraryPlatform" />
-      <_Property Include="DefineConstants" />
-      <_Property Include="TargetProject" />
-      <_Property Include="TargetsFile" />
-      <_Property Include="CommonTargetsPath" />
-      <_Property Include="CSharpCoreTargetsPath" />
-      <_Property Include="BuildingInsideVisualStudio" />
-    </ItemGroup>
-    <ItemGroup Condition="'$(IsLeafPlatform)'=='true'">
-      <_Property Include="OutDirAbsolute" />
-      <_Property Include="IntermediateOutputPathAbsolute" />
-      <_Property Include="TargetsFile" />
-    </ItemGroup>
-
-    <Message 
-      Importance="high" 
-      Text="$(Tag) [$(Configuration)|$(Plat)|$(MetaPlatform)]: $(AssemblyName) -> { @(ChildPlatforms)$(LeafPlatform) }"
-    />
-    <Message
-      Importance="high"
-      Text="  %(_Property.Identity) -> $(%(Identity))"
-      Condition="'$(%(Identity))'!=''"
-    />
-    
-    <!--VS load logging-->
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="$(Tag) [$(Configuration)|$(Plat)|$(MetaPlatform)]: $(AssemblyName) -> { @(ChildPlatforms)$(LeafPlatform) }"
-    />-->
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="  %(_Property.Identity) -> $(%(Identity))"
-      Condition="'$(%(Identity))'!=''"
-    />-->
-
-    <!--<Message
-      Importance="high"
-      Text="    NugetReference: %(NugetReference.Identity)"
-      Condition="'@(NugetReference)'!=''"
-    />-->
-    <!--<Message
-      Importance="high"
-      Text="    Compile: %(Compile.Identity) -> %(FullPath)"
-      Condition="'@(Compile)'!=''"
-    />-->
-    <!--<Message
-      Importance="high"
-      Text="    None: %(None.Identity) -> %(FullPath)"
-      Condition="'@(None)'!=''"
-    />-->
-    <Message
-      Importance="high"
-      Text="    ProjectReference: %(ProjectReference.Identity) -> %(FullPath)"
-      Condition="'@(ProjectReference)'!=''"
-    />
-    <Message
-      Importance="high"
-      Text="    @(ExtractedJarImports): %(ExtractedJarImports.Identity) -> %(FullPath)"
-      Condition="'@(ExtractedJarImports)'!=''"
-    />
-  </Target>
-  
 </Project>

@@ -18,14 +18,11 @@
     </ItemGroup>
   </Target>
 
-  <!--
-  
-    ResolveMetaProjectReferences
-      Invokes msbuild on all types of project references before the well known target
-  -->
+  <!--ResolveMetaProjectReferences-->
   <Target 
     Name="ResolveMetaProjectReferences"
     BeforeTargets="Proxy"
+    DependsOnTargets="_DumpFrame"
     Condition="'$(IsLeafPlatform)'=='true'"
   >
     <Error
@@ -33,8 +30,8 @@
       Text="Multi-configuration builds not supported for LeafPlatform."
     />
     <Error
-      Condition="'@(ChildPlatforms)|$(LeafPlatform)'==''"
-      Text="Platform '$(Plat)' is not recognized."
+      Condition="'$(MetaPlatform)'==''"
+      Text="Platform '$(Plat)' defines no MetaPlatform."
     />
     <Error
       Condition="'$(IsAppPlatform)'=='true' AND '$(IsAppProject)'!='true'"
@@ -62,7 +59,7 @@
         Include="@(ProjectReference->'$(ProjDir)%(Identity)')" 
       >
         <ReferenceSource>ProjectReference</ReferenceSource>
-        <AdditionalProperties>MetaPlatform=$(LibraryPlatform)</AdditionalProperties>
+        <AdditionalProperties>_MetaPlatform=$(LibraryPlatform)</AdditionalProperties>
         <Name>%(Name)</Name>
         <RemoveProperties/>
       </MetaProjectReference>
@@ -74,7 +71,7 @@
         Include="$(ProjFile)" 
       >
         <ReferenceSource>SelfReference</ReferenceSource>
-        <AdditionalProperties>Platform=%(SelfReference.Identity)</AdditionalProperties>
+        <AdditionalProperties>$(ClearRecursiveFrame);Platform=%(SelfReference.Identity)</AdditionalProperties>
         <Name>$(AssemblyName)</Name>
       </MetaProjectReference>
       <SelfReference Remove="@(SelfReference)" />
@@ -86,10 +83,8 @@
           Incidentally, this is also why there is no intellisense for unloaded projects.
     -->
     <PropertyGroup>
-      <_Targets>$(BuildTarget)</_Targets>
-      <_Targets 
-        Condition="'$(BuildTarget)'=='Compile' AND '$(IsInVs)' == 'true'"
-      >GetTargetPath</_Targets>
+      <_BuildTarget>$(BuildTarget)</_BuildTarget>
+      <_BuildTarget Condition="'$(BuildTarget)'=='Compile'">GetTargetPath</_BuildTarget>
     </PropertyGroup>
 
     <!--pre log-->
@@ -102,21 +97,11 @@
       Condition="'@(MetaProjectReference)'!=''"
       Importance="$(ProjVerbosity)"
     />
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="MetaProjectReference: @(MetaProjectReference->Count())"
-      Condition="'@(MetaProjectReference)'!=''"
-    />
-    <WriteLineToFile
-      File="f:\vs.log"
-      Line="  %(MetaProjectReference.ReferenceSource): %(Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
-      Condition="'@(MetaProjectReference)'!=''"
-    />-->
 
     <!--build-->
     <MSBuild
-      Projects="@(MetaProjectReference)"
-      Targets="$(_Targets)"
+      Projects="@(MetaProjectReference)"      
+      Targets="$(_BuildTarget)"
       ContinueOnError="true"
       BuildInParallel="true"
     >
@@ -157,16 +142,58 @@
     />
   </Target>
 
+  <!--BuildMetaPlatform-->
+  <Target
+    Name="BuildMetaPlatform"
+    Condition="'$(IsMetaPlatform)'=='true'"
+    BeforeTargets="Proxy"
+    DependsOnTargets="_DumpFrame"
+    Outputs="%(Configuration.Identity)"
+  >
+    <Error
+      Condition="'$(LeafPlatform)'==''"
+      Text="MetaPlatform '$(Plat)' defines no LeafPlatform."
+    />
+
+    <!--_LeafPlatform-->
+    <ItemGroup>
+      <_LeafPlatform Include="$(ProjFile)">
+        <AdditionalProperties>Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <TargetFramework Condition="'$(IsLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
+      </_LeafPlatform>
+    </ItemGroup>
+
+    <Message
+      Text="LeafPlatform: %(_LeafPlatform.Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
+      Importance="$(ProjVerbosity)"
+    />
+
+    <!--build-->
+    <MSBuild
+      Projects="@(_LeafPlatform)"
+      Properties="Configuration=%(Configuration.Identity)"
+      Targets="$(BuildTarget)"
+      ContinueOnError="true"
+      BuildInParallel="true"
+    >
+      <Output ItemName="TargetResult" TaskParameter="TargetOutputs" />
+    </MSBuild>
+
+    <Message
+      Text="LeafPlatform: $(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;- %(TargetResult.Identity)"
+      Condition="'%(Identity)'!=''"
+      Importance="$(ProjVerbosity)"
+    />
+  </Target>
+
   <!--
   
     _DumpFrame
   -->
   <Target
     Name="_DumpFrame"
-    BeforeTargets="ResolveMetaProjectReferences"
     Condition="'$(BuildTarget)'=='DryRun' OR '$(Verbosity)'=='high'"
   >
-
     <PropertyGroup>
       <Tag>BUILD</Tag>
       <Tag Condition="'$(IsLeafPlatform)'!='true'">RECURSE</Tag>
@@ -178,6 +205,7 @@
       <_Property Include="IsLeafPlatform" />
       <_Property Include="IsMetaPlatform" />
       <_Property Include="IsLibraryPlatform" />
+      <_Property Include="IsAppPlatform" />
       <_Property Include="IsPartPlatform" />
       <_Property Include="MobilePlatform" />
       <_Property Include="MobileSubPlatform" />
@@ -204,42 +232,10 @@
       Text="  %(_Property.Identity) -> $(%(Identity))"
       Condition="'$(%(Identity))'!=''"
     />
-    
-    <!--VS load logging-->
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="$(Tag) [$(Configuration)|$(Plat)|$(MetaPlatform)]: $(AssemblyName) -> { @(ChildPlatforms)$(LeafPlatform) }"
-    />-->
-    <!--<WriteLineToFile
-      File="f:\vs.log"
-      Line="  %(_Property.Identity) -> $(%(Identity))"
-      Condition="'$(%(Identity))'!=''"
-    />-->
-
-    <!--<Message
-      Importance="high"
-      Text="    NugetReference: %(NugetReference.Identity)"
-      Condition="'@(NugetReference)'!=''"
-    />-->
-    <!--<Message
-      Importance="high"
-      Text="    Compile: %(Compile.Identity) -> %(FullPath)"
-      Condition="'@(Compile)'!=''"
-    />-->
-    <!--<Message
-      Importance="high"
-      Text="    None: %(None.Identity) -> %(FullPath)"
-      Condition="'@(None)'!=''"
-    />-->
     <Message
       Importance="high"
       Text="    ProjectReference: %(ProjectReference.Identity) -> %(FullPath)"
       Condition="'@(ProjectReference)'!=''"
-    />
-    <Message
-      Importance="high"
-      Text="    @(ExtractedJarImports): %(ExtractedJarImports.Identity) -> %(FullPath)"
-      Condition="'@(ExtractedJarImports)'!=''"
     />
   </Target>
   

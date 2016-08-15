@@ -7,10 +7,6 @@
   <PropertyGroup>
     <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <MetaProject>xf.app</MetaProject>
-    <MetaPlatform>xamarin.ios.sim</MetaPlatform>
-    <ProjectGuid>{09BD58E5-80C5-45F5-A506-663DA2FAB178}</ProjectGuid>
-  </PropertyGroup>
-  <PropertyGroup>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
   <!--
@@ -18,7 +14,9 @@
     Props
   -->
   <PropertyGroup>
+    <MetaPlatform>xamarin.ios.sim</MetaPlatform>
     <OutRelDir>$(MSBuildProjectDirectory)\..\</OutRelDir>
+    <ProjectGuid>{09BD58E5-80C5-45F5-A506-663DA2FAB178}</ProjectGuid>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <!--
@@ -41,7 +39,7 @@
     
     Targets
   -->
-  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
   <Target Name="Build">
     <Message Importance="high" Text="&gt;&gt;&gt;&gt; OutDirAbsolute: $(OutDirAbsolute)" />
     <MSBuild Projects="..\CarouselView.App.csproj" Targets="Build" Properties="Platform=$(MetaPlatform)" />
