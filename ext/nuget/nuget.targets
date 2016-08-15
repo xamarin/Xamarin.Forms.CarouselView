@@ -4,32 +4,16 @@
 
   <!--NugetRestore-->
   <PropertyGroup>
-    <NugetRestoreDependsOn >
-      NugetRestoreIfNecessary
-    </NugetRestoreDependsOn>
+    <NugetRestoreDependsOn />
   </PropertyGroup>
-  <Target Name="NugetRestore" DependsOnTargets="$(NugetRestoreDependsOn)" />
-
-  <Target 
-    Name="NugetRestoreIfNecessary" 
-    DependsOnTargets="$(CoreNugetRestore)" 
-    Condition="'@(NugetPackage)'!=''"
-  >
-    <Message
-      Importance="high"
-      Text="Download %(NugetPackage.Identity) -> $(NugetPackagesMetaDir)%(Identity)\packages.config"
-    />
-  </Target>
-  
-  <!--CoreNugetRestore-->
   <Target
-    Name="CoreNugetRestore"
+    Name="NugetRestore"
     Inputs="@(NugetPackage->'$(NugetPackagesMetaDir)%(Identity)\packages.config')"
     Outputs="$(NugetPackagesMetaDir)%(Identity)\packages.config"
     Condition="'@(NugetPackage)'!=''"
+    DependsOnTargets="$(NugetRestoreDependsOn)"
   >
-
-    <!--Download nuget.exe-->
+    <!--DownloadNugetExe-->
     <MSBuild
       Projects="$(ProjFile)"
       Targets="Download"
@@ -70,6 +54,10 @@
     <Exec Command="$(NugetRestoreExec) @(NugetTempConfigFile)" />
 
     <!--successfull restore; config file doubles as task input/output-->
+    <Message
+      Importance="high"
+      Text="Download %(NugetPackage.Identity) -> $(NugetPackagesMetaDir)%(Identity)\packages.config"
+    />
     <Copy
       SourceFiles="@(NugetTempConfigFile)"
       DestinationFiles="$(NugetPackagesMetaDir)%(NugetPackage.Identity)\packages.config"

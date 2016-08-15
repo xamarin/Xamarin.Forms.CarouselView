@@ -2,13 +2,12 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!--
     
-    _GitClean
+    Clean (substitute)
       quitely force removal of only ignored files including directories
   -->
   <Target 
-    Name="_GitClean"
-    AfterTargets="Clean"
-    Condition="'$(IsLeafPlatform)'=='true'"
+    Name="Clean"
+    DependsOnTargets="$(CleanDependsOn)"
   >
     <PropertyGroup>
       <CleanCommand>git clean -fdXq</CleanCommand>

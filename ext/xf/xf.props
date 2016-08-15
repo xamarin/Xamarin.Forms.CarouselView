@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(ExtCiDir)ci.props" />
 
   <!--ios build server-->
-  <PropertyGroup Condition="'$(iosServerAddress)'!='' AND '$(iosServerUser)'!='' AND '$(iosServerPassword)'!=''">
+  <!--only touch the iOS server when building an .ipa-->
+  <PropertyGroup Condition="
+    '$(iosServerAddress)'!='' AND 
+    '$(iosServerUser)'!='' AND 
+    '$(iosServerPassword)'!='' AND
+    $(IsAppPlatform)
+  ">
     <ServerAddress>$(iosServerAddress)</ServerAddress>
     <ServerUser>$(iosServerUser)</ServerUser>
     <ServerPassword>$(iosServerPassword)</ServerPassword>
@@ -14,13 +19,26 @@
     <!--only copy local when building test-->
     <PrivateReference>True</PrivateReference>
   </PropertyGroup>
+  
+  <!--
+  
+    IsLibraryProject ItemGroups & Properties
+  -->
 
-  <!--app-->
-  <PropertyGroup Condition="'$(IsAppPlatform)'=='true'">
-    <!--only touch the iOS server when building an .ipa-->
-    <ServerAddress>$(iOSServerAddress)</ServerAddress>
-    <ServerUser>$(iOSServerUser)</ServerUser>
-    <ServerPassword>$(iOSServerPassword)</ServerPassword>
-  </PropertyGroup>
+  <!--Nuget Pack-->
+  <ItemGroup Condition="$(IsLibraryProject) AND '$(Plat)' == '$(PackLeafPlatformId)' ">
+    <!--declare self-references outside of .csproj to prevent VS solution explorer from creating artifacts-->
+    <SelfReference Include="$(MobilePlatformId)" />
+  </ItemGroup>
+
+  <!--Nuget Unpack-->
+  <ItemGroup Condition="$(IsLibraryProject) AND '$(Plat)' == '$(UnpackLeafPlatformId)' ">
+    <SelfReference Include="$(PackLeafPlatformId)" />
+  </ItemGroup>
+
+  <!--Part ([platform].part)-->
+  <ItemGroup Condition="$(IsLibraryProject) AND '$(IsPartPlatform)' == 'true' ">
+    <SelfReference Include="$(PortableLibraryPlatformId)" />
+  </ItemGroup>
 
 </Project>

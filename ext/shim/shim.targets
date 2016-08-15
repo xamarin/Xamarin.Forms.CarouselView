@@ -22,11 +22,18 @@
     />
     
     <!--inject shim target(s)-->
+    <ItemGroup>
+      <_ShimTarget Include="$(ShimTarget)" />
+    </ItemGroup>
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=%(ShimTarget.Identity)"
-      Condition="$(IsShimStateSelf) AND !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))"
+      Properties="BuildTarget=%(_ShimTarget.Identity)"
+      Condition="
+        $(IsShimStateSelf) AND 
+        '$(ShimTarget)'!='' AND
+        !@(_ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
+      "
     />
 
     <!--dispatch build target-->

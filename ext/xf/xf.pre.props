@@ -26,24 +26,9 @@
       ItemGroups:
         ChildPlatforms
   -->
-  
-  <PropertyGroup>
-    <ExtProjDir>$(MSBuildThisFileDirectory)</ExtProjDir>
-  </PropertyGroup>
 
   <PropertyGroup>
-    <ProjVerbosity>$(Verbosity)</ProjVerbosity>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <Platform Condition="'$(Platform)'==''">all</Platform>
-    <Plat>$(Platform)</Plat>
-  </PropertyGroup>
-
-  <!--Creates a clean "stack frame" for recursive calls by clearing out unwanted inherited properties-->
-  <PropertyGroup>
-    <MetaPlatform Condition="'$(_MetaPlatform)'!=''">$(_MetaPlatform)</MetaPlatform>
-    <ClearRecursiveFrame>$(ClearRecursiveFrame)_MetaPlatform=;</ClearRecursiveFrame>
+    <ExtXfDir>$(MSBuildThisFileDirectory)</ExtXfDir>
   </PropertyGroup>
 
   <!--
@@ -135,7 +120,7 @@
 
   <!--library platform ids-->
   <PropertyGroup>
-    
+
     <!--desktop-->
     <DesktopLibraryPlatformId>desktop</DesktopLibraryPlatformId>
 
@@ -143,7 +128,7 @@
     <AndroidAutomationLibraryPlatformId>android.aut</AndroidAutomationLibraryPlatformId>
     <IosAutomationLibraryPlatformId>ios.aut</IosAutomationLibraryPlatformId>
     <WindowsAutomationLibraryPlatformId>windows.aut</WindowsAutomationLibraryPlatformId>
-    
+
     <!--mobile-->
     <PortableLibraryPlatformId>dotnet</PortableLibraryPlatformId>
     <AndroidLibraryPlatformId>monoDroid</AndroidLibraryPlatformId>
@@ -152,7 +137,7 @@
     <WindowsUniversalLibraryPlatformId>uap</WindowsUniversalLibraryPlatformId>
     <WindowsPhoneLibraryPlatformId>wpa</WindowsPhoneLibraryPlatformId>
     <WindowsTabletLibraryPlatformId>win</WindowsTabletLibraryPlatformId>
-    
+
     <!--part-->
     <AndroidPartLibraryPlatformId>monoDroid.part</AndroidPartLibraryPlatformId>
     <IosUnifiedPartLibraryPlatformId>xamarin.ios.part</IosUnifiedPartLibraryPlatformId>
@@ -456,7 +441,7 @@
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
       </PropertyGroup>
     </When>
-    
+
     <!--app-->
     <When Condition="'$(Plat)'=='$(AndroidAppPlatformId)'">
       <PropertyGroup>
@@ -673,7 +658,7 @@
         <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
-    
+
     <!--app-->
     <When Condition="'$(MetaPlatform)'=='$(AndroidAppPlatformId)'">
       <PropertyGroup>
@@ -963,7 +948,7 @@
     <When Condition="'$(IsAppProject)'=='true'" >
       <PropertyGroup>
         <PortablePlatformIds/>
-        
+
         <AndroidMobilePlatformIds>
           $(AndroidAppPlatformId)
         </AndroidMobilePlatformIds>
@@ -1031,22 +1016,4 @@
     <ChildPlatforms Condition="'$(Plat)'=='$(PackagePlatformId)'">$(PackagePlatformIds)</ChildPlatforms>
     <ChildPlatforms Condition="'$(Plat)'=='$(UnpackagePlatformId)'">$(UnpackagePlatformIds)</ChildPlatforms>
   </PropertyGroup>
-
-  <!--ad-hoc platform group-->
-  <PropertyGroup>
-    <!--list (e.g. monoTouch;monoDroid) -->
-    <ChildPlatforms Condition="$(Plat.Contains(';'))" >$(Plat)</ChildPlatforms>
-  </PropertyGroup>
-
-  <!--ChildPlatform: Property -> Items-->
-  <ItemGroup>
-    <ChildPlatforms Include="$(ChildPlatforms)"/>
-  </ItemGroup>
-
-  <ItemDefinitionGroup>
-    <MetaProjectReference>
-      <Properties/>
-      <AdditionalProperties/>
-    </MetaProjectReference>
-  </ItemDefinitionGroup>
 </Project>

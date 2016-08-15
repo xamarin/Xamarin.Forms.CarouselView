@@ -3,13 +3,14 @@
   <PropertyGroup>
     <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
     <!--VS project type is a function of the first ProjectTypeGuids found in the text of the project file-->
+    <MetaProject>xf.app</MetaProject>
   </PropertyGroup>
   <!--
 
     Properties
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
-  <Import Project="$(ExtDir)xf\xf.proj.app.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <!--
 
     Universal
@@ -278,7 +279,7 @@
 
     Targets
   -->
-  <Import Project="$(ExtDir)xf\xf.proj.app.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
   <!--
 
     Force android projects to package and sign during build instead of deploy

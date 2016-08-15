@@ -18,6 +18,7 @@
 
   <!--enumerate targets-->
   <PropertyGroup>
+    <SkipNugetImports>true</SkipNugetImports>
     <NugetImports>$(NugetImports.Trim(';'))</NugetImports>
     <NugetImportCount>$(NugetImports.Split(';').Length)</NugetImportCount>
     <NugetImportCount Condition="'$(NugetImports)'==''">0</NugetImportCount>

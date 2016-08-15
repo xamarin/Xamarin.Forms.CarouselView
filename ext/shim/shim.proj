@@ -9,10 +9,9 @@
 
   <ItemGroup>
     <ShimProjectFiles
-      Include="$(ShimInclude)"
+      Include="$(MSBuildStartupDirectory)\**\*.csproj"
       Exclude="$(ShimExclude)"
     />
-    <ShimTarget Include="$(ShimTarget)" />
   </ItemGroup>
 
   <!--shim state-->

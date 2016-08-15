@@ -28,7 +28,13 @@
   <PropertyGroup>
     <IsInVs>$(BuildingInsideVisualStudio)</IsInVs>
     <BuildingInsideVisualStudio Condition="'$(BuildingInsideVisualStudio)'==''">$(IsInVs)</BuildingInsideVisualStudio>
+    <Plat>$(Platform)</Plat>
   </PropertyGroup>
+  
+  <!--configuration-->
+  <ItemGroup>
+    <Configuration Include="$(Configuration)" />
+  </ItemGroup>
   
   <!--escaping-->
   <PropertyGroup>

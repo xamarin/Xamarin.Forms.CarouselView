@@ -2,119 +2,6 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <!--
-    
-    Rebuild
-  -->
-  <Target Name="Rebuild">
-    <MSBuild
-      Projects="$(ProjFile)"
-      Properties="IsCleaning=true"
-      Targets="clean"
-    />
-
-    <MSBuild
-      Projects="$(ProjFile)"
-      Properties="IsBuilding=true"
-      Targets="build"
-    />
-  </Target>
-
-  <!--
-    
-    DryRun
-  -->
-  <PropertyGroup>
-    <DryRunDependsOn />
-  </PropertyGroup>
-  <Target
-    Name="DryRun"
-    DependsOnTargets="$(DryRunDependsOn)"
-    Returns="@(DryRunReturns)"
-  >
-    <ItemGroup>
-      <DryRunReturns
-        Condition="'$(IsLeafPlatform)'=='true'"
-        Include="(path to $(ProjName) result [$(Configuration)|$(Plat)|$(MetaPlatform)])"
-      />
-      <DryRunReturns
-        Condition="'$(IsLeafPlatform)'!='true'"
-        Include="@(TargetResult)"
-      />
-    </ItemGroup>
-  </Target>
-  
-  <!--
-  
-    _BeforeTarget
-      A target that runs before Build, Clean, Install, NugetRestore, or DryRun.
-      The property WellKnownTargetName will be inscope for any targets injected to _BeforeTargtDependsOn
-      see also: https://github.com/Microsoft/msbuild/issues/851
-  -->
-
-  <!--capture target name-->
-  <Target Name="_SetTargetNameBuild">
-    <PropertyGroup>
-      <WellKnownTargetName>Build</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameClean">
-    <PropertyGroup>
-      <WellKnownTargetName>Clean</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameInstall">
-    <PropertyGroup>
-      <WellKnownTargetName>Install</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameNugetRestore">
-    <PropertyGroup>
-      <WellKnownTargetName>NugetRestore</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameDryRun">
-    <PropertyGroup>
-      <WellKnownTargetName>DryRun</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameCompile">
-    <PropertyGroup>
-      <WellKnownTargetName>Compile</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNamePackage">
-    <PropertyGroup>
-      <WellKnownTargetName>Package</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameSign">
-    <PropertyGroup>
-      <WellKnownTargetName>Sign</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-  <Target Name="_SetTargetNameGetTargetPath">
-    <PropertyGroup>
-      <WellKnownTargetName>GetTargetPath</WellKnownTargetName>
-    </PropertyGroup>
-  </Target>
-
-  <!--_BeforeTarget-->
-  <Target Name="_BeforeTarget" />
-
-  <!--inject _BeforeTarget before well known targets but after capturing target name-->
-  <PropertyGroup>
-    <BuildDependsOn>_SetTargetNameBuild;_BeforeTarget;$(BuildDependsOn)</BuildDependsOn>
-    <CleanDependsOn>_SetTargetNameClean;_BeforeTarget;$(CleanDependsOn)</CleanDependsOn>
-    <InstallDependsOn>_SetTargetNameInstall;_BeforeTarget;$(InstallDependsOn)</InstallDependsOn>
-    <NugetRestoreDependsOn>_SetTargetNameNugetRestore;_BeforeTarget;$(NugetRestoreDependsOn)</NugetRestoreDependsOn>
-    <DryRunDependsOn>_SetTargetNameDryRun;_BeforeTarget;$(DryRunDependsOn)</DryRunDependsOn>
-    <CompileDependsOn>_SetTargetNameCompile;_BeforeTarget;$(CompileDependsOn)</CompileDependsOn>
-    <GetTargetPathDependsOn>_SetTargetNameGetTargetPath;_BeforeTarget;$(GetTargetPathDependsOn)</GetTargetPathDependsOn>
-    <PackageDependsOn>_SetTargetNamePackage;_BeforeTarget;$(PackageDependsOn)</PackageDependsOn>
-    <SignDependsOn>_SetTargetNameSign;_BeforeTarget;$(SignDependsOn)</SignDependsOn>
-  </PropertyGroup>
-
-  <!--
   
     ResolveMetaProjectReferences
       Invokes msbuild on all types of project references before the well known target
@@ -130,7 +17,7 @@
   </ItemDefinitionGroup>
   <Target 
     Name="ResolveMetaProjectReferences"
-    BeforeTargets="_BeforeTarget"
+    BeforeTargets="Proxy"
   >
     <Error
       Condition="'$(IsLeafPlatform)'!='true' AND '@(ChildPlatforms)|$(LeafPlatform)'==''"
@@ -149,7 +36,7 @@
       Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
     />
     <Error
-      Condition="'$(WellKnownTargetName)'=='Compile' AND '$(IsInVS)'!='true'"
+      Condition="'$(BuildTarget)'=='Compile' AND '$(IsInVS)'!='true'"
       Text="Platform 'Compile' is only supported when building in VS during intellisesne loading."
     />
     
@@ -170,30 +57,8 @@
         Include="$(ProjFile)"
       >
         <ReferenceSource>LeafPlatform</ReferenceSource>
-        <AdditionalProperties>Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <AdditionalProperties>Platform=$(LeafPlatform);MetaPlatform=$(MetaPlatform)</AdditionalProperties>
         <TargetFramework Condition="'$(IsLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
-      </_ChildProjectReference>
-
-      <!--if (IsLeafPlatform) then ProjectReference -> Reference-->
-      <_ChildProjectReference 
-        Condition="'$(IsLeafPlatform)'=='true' AND '@(ProjectReference)'!=''" 
-        Include="@(ProjectReference->'$(ProjDir)%(Identity)')" 
-      >
-        <ReferenceSource>ProjectReference</ReferenceSource>
-        <AdditionalProperties>$(ClearRecursiveFrame)platform=$(LibraryPlatform)</AdditionalProperties>
-        <IncludeInReference>true</IncludeInReference>
-        <!--<Name>%(Name)</Name>-->
-      </_ChildProjectReference>
-
-      <!--if (IsLeafPlatform) then SelfReference -> Reference-->
-      <_ChildProjectReference 
-        Condition="'$(IsLeafPlatform)'=='true' AND '@(SelfReference)'!=''" 
-        Include="$(ProjFile)" 
-      >
-        <ReferenceSource>SelfReference</ReferenceSource>
-        <AdditionalProperties>$(ClearRecursiveFrame)Platform=%(SelfReference.Identity)</AdditionalProperties>
-        <IncludeInReference>true</IncludeInReference>
-        <Name>$(AssemblyName)</Name>
       </_ChildProjectReference>
     </ItemGroup>
 
@@ -201,11 +66,11 @@
         Incidentally, this is also why there is no intellisense for unloaded projects.
     -->
     <PropertyGroup>
-      <_Targets>$(WellKnownTargetName)</_Targets>
+      <_Targets>$(BuildTarget)</_Targets>
       <_Targets 
         Condition="
           '$(IsLeafPlatform)'=='true' AND 
-          '$(WellKnownTargetName)'=='Compile' AND
+          '$(BuildTarget)'=='Compile' AND
           '$(IsInVs)' == 'true'
         "
       >GetTargetPath</_Targets>
@@ -217,7 +82,7 @@
       Importance="$(ProjVerbosity)" 
     />
     <Message
-      Text="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(WellKnownTargetName) /+p:%(AdditionalProperties)"
+      Text="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
       Condition="'@(_ChildProjectReference)'!=''"
       Importance="$(ProjVerbosity)"
     />
@@ -228,7 +93,7 @@
     />
     <WriteLineToFile
       File="f:\vs.log"
-      Line="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(WellKnownTargetName) /+p:%(AdditionalProperties)"
+      Line="  %(_ChildProjectReference.ReferenceSource): %(Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
       Condition="'@(_ChildProjectReference)'!=''"
     />-->
 
@@ -292,7 +157,7 @@
   <Target
     Name="_DumpFrame"
     BeforeTargets="ResolveMetaProjectReferences"
-    Condition="'$(WellKnownTargetName)'=='DryRun' OR '$(Verbosity)'=='high'"
+    Condition="'$(BuildTarget)'=='DryRun' OR '$(Verbosity)'=='high'"
   >
 
     <PropertyGroup>
@@ -301,7 +166,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <_Property Include="WellKnownTargetName" />
+      <_Property Include="BuildTarget" />
       <_Property Include="ProjFile" />
       <_Property Include="IsLeafPlatform" />
       <_Property Include="IsMetaPlatform" />

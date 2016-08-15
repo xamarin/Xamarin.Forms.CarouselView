@@ -8,13 +8,14 @@
   <PropertyGroup>
     <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
     <!--VS project type is a function of the first ProjectTypeGuids found in the text of the project file-->
+    <MetaProject>xf.lib</MetaProject>
   </PropertyGroup>
   <!--
   
     Properties
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
-  <Import Project="$(ExtDir)xf\xf.proj.lib.props"/>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <Import Project="nuspec.props"/>
   <!--
   
@@ -209,5 +210,5 @@
 
     Targets
   -->
-  <Import Project="$(ExtDir)xf\xf.proj.lib.targets" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
 </Project>

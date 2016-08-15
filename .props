@@ -11,6 +11,7 @@
   />
   <Import Project="$(ExtDir)common.props"/>
   <Import Project="$(ExtNugetDir)nuget.props"/>
+  <Import Project="$(ExtXfDir)xf.props"/>
 
   <!--inject .targets-->
   <PropertyGroup>

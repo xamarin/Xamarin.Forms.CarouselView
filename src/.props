@@ -4,9 +4,8 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimBeforeProject>$(MetaProj)</ShimBeforeProject>
+    <ShimBeforeProject>$(VerProj)</ShimBeforeProject>
     <ShimTarget>NugetRestore</ShimTarget>
-    <ShimInclude>$(MSBuildThisFileDirectory)**\*.csproj</ShimInclude>
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
       $(MSBuildThisFileDirectory)**\android\**\*.csproj;

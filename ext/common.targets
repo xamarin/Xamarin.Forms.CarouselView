@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Main" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <Target Name="Download">
+  
+  <Target
+    Name="Download"
+    Condition="!Exists($(DestinationFile))" 
+  >
+    
     <ItemGroup>
       <DestinationFile Include="$(DestinationFile)"/>
     </ItemGroup>
@@ -10,16 +14,13 @@
       <_Command>@powershell -NoProfile -ExecutionPolicy Bypass -Command "$(_PsCommand)</_Command>
     </PropertyGroup>
 
+    <MakeDir Directories="@(DestinationFile->'%(RootDir)%(Directory)')" />
+    
     <Message 
       Text="Download %(DestinationFile.FileName)%(Extension) -> %(Identity)" 
       Importance="high" 
     />
-
-    <MakeDir Directories="@(DestinationFile->'%(RootDir)%(Directory)')" />
-    <Exec 
-      Command="$(_Command)" 
-      Condition="!Exists($(DestinationFile))" 
-    />
+    <Exec Command="$(_Command)" />
   </Target>
 
 </Project>
