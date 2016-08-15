@@ -28,8 +28,8 @@
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\empty.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\proj\proj.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\std\std.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\std\std.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.pre.props" />

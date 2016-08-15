@@ -76,7 +76,6 @@
         <ReferenceSource>SelfReference</ReferenceSource>
         <AdditionalProperties>Platform=%(SelfReference.Identity)</AdditionalProperties>
         <Name>$(AssemblyName)</Name>
-        <RemoveProperties>MetaPlatform</RemoveProperties>
       </MetaProjectReference>
       <SelfReference Remove="@(SelfReference)" />
     </ItemGroup>
