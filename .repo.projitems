@@ -51,8 +51,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.pack.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.unpack.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\tree\tree.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\tree\tree.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim.common.tasks" />

@@ -33,12 +33,12 @@
     <Message
       Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] ->"
       Condition="@(MetaReference->Count()) > 0"
-      Importance="$(ProjVerbosity)"
+      Importance="$(MetaVerbosity)"
     />
     <Message
       Text="  %(MetaReference.ReferenceSource): %(Identity) /t:$(MetaBuildTarget) /+p:%(AdditionalProperties)"
       Condition="@(MetaReference->Count()) > 0"
-      Importance="$(ProjVerbosity)"
+      Importance="$(MetaVerbosity)"
     />
 
     <!--build MetaReferences-->
@@ -62,12 +62,12 @@
     <Message
       Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;-"
       Condition="@(MetaReference->Count()) > 0"
-      Importance="$(ProjVerbosity)"
+      Importance="$(MetaVerbosity)"
     />
     <Message
       Text="  %(ReferenceSource): %(MetaReference.Identity)"
       Condition="@(MetaReference->Count()) > 0"
-      Importance="$(ProjVerbosity)"
+      Importance="$(MetaVerbosity)"
     />
   </Target>
 
@@ -78,7 +78,7 @@
     Condition="'$(PlatformType)'=='$(LeafPlatformId)'"
   >
     <Error
-      Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($(Amp)|;)'))"
+      Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($|;)'))"
       Text="Platform '$(MetaPlatform)' is not supported by '$(MetaProject)' project type."
     />
     <Error
@@ -162,7 +162,7 @@
     <Message 
       Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)]: Reference += %(Identity)"
       Condition="@(MetaReference->Count()) > 0"
-      Importance="$(ProjVerbosity)" 
+      Importance="$(MetaVerbosity)" 
     />
   </Target>
 

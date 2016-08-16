@@ -974,10 +974,10 @@
         </PortablePlatformIds>
 
         <PackagePlatformIds>
-          $(PackLeafPlatformId)
+          <!--$(PackLeafPlatformId)-->
         </PackagePlatformIds>
         <UnpackagePlatformIds>
-          $(UnpackLeafPlatformId)
+          <!--$(UnpackLeafPlatformId)-->
         </UnpackagePlatformIds>
 
         <AndroidMobilePlatformIds>
@@ -1118,7 +1118,7 @@
       $(WindowsMobilePlatformIds)
     </MobilePlatformIds>
     <AllPlatformIds>$(MobilePlatformIds)</AllPlatformIds>
-    <AllPlatformIds Condition="'$(IsMobileLibraryProject)'=='true'">$(UnpackLeafPlatformId)</AllPlatformIds>
+    <!--<AllPlatformIds Condition="'$(IsMobileLibraryProject)'=='true'">$(UnpackLeafPlatformId)</AllPlatformIds>-->
     <AllPlatformIds Condition="'$(IsDesktopLibraryProject)'=='true'">$(DesktopLibraryPlatformId)</AllPlatformIds>
   </PropertyGroup>
   <Choose>

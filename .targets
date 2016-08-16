@@ -10,7 +10,6 @@
   <Import Project="$(ExtNugetDir)nuget.targets" />
   <Import Project="$(ExtMetaDir)meta.targets" />
   <Import Project="$(ExtXfDir)xf.targets"/>
-  <!--<Import Project="$(ExtTreeDir)tree.targets" Condition="'$(IsLeafPlatform)'!='true'" />-->
 
   <Import Project="$(ExtDir)empty.targets" Condition="'$(IsLeafPlatform)'!='true'"/>
   <Import Project="$(ExtDir)proxy.targets" />

@@ -4,6 +4,14 @@
   <PropertyGroup>
     <ExtMetaDir>$(MSBuildThisFileDirectory)</ExtMetaDir>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <MetaVerbosity>$(Verbosity)</MetaVerbosity>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Platform Condition="'$(Platform)'==''">all</Platform>
+  </PropertyGroup>
   
   <!--Creates a clean "stack frame" for recursive calls by clearing out unwanted inherited properties-->
   <!--see: https://github.com/Microsoft/msbuild/issues/902 -->
@@ -27,11 +35,9 @@
     <PlatformType>$(GroupPlatformId)</PlatformType>
   </PropertyGroup>
 
-  <ItemDefinitionGroup>
-    <MetaProjectReference>
-      <Properties/>
-      <AdditionalProperties/>
-    </MetaProjectReference>
-  </ItemDefinitionGroup>
+  <!--ChildPlatform: Property -> Items-->
+  <ItemGroup>
+    <ChildPlatforms Include="$(ChildPlatforms)"/>
+  </ItemGroup>
 
 </Project>
