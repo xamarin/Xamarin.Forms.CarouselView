@@ -6,12 +6,12 @@
     
       Booleans:
         IsLeafPlatform
-        IsLibraryPlatform
-        IsAppPlatform
+        IsMobileLibraryPlatform
+        IsMobileAppPlatform
         IsMetaPlatform
         IsMobileLibraryPlatform
         IsPartPlatform
-        IsUiTestPlatform
+        IsMobileTestPlatform
       
       Properties:
         Plat
@@ -36,7 +36,7 @@
     Project Ids & Properties
   -->
 
-  <!--Standard Project Ids-->
+  <!--leaf project-->
   <PropertyGroup>
     <PortableProjectId>portable</PortableProjectId>
     <DesktopProjectId>desktop</DesktopProjectId>
@@ -54,11 +54,7 @@
     <UnpackProjectId>unpack</UnpackProjectId>
   </PropertyGroup>
 
-  <!--
-  
-    Meta Project Ids & Properties
-  -->
-
+  <!--meta projects-->
   <PropertyGroup>
     <DesktopLibraryMetaProjectId>desktop.lib</DesktopLibraryMetaProjectId>
 
@@ -71,35 +67,11 @@
   <!--Xamarin.Forms Project Predicates-->
   <PropertyGroup>
     <IsDesktopLibraryProject>false</IsDesktopLibraryProject>
-    <IsAppProject>false</IsAppProject>
-    <IsLibraryProject>false</IsLibraryProject>
-    <IsUiTestProject>false</IsUiTestProject>
+    <IsMobileAppProject>false</IsMobileAppProject>
+    <IsMobileLibraryProject>false</IsMobileLibraryProject>
+    <IsMobileTestProject>false</IsMobileTestProject>
     <IsTest>false</IsTest>
   </PropertyGroup>
-  <Choose>
-    <When Condition="'$(MetaProject)'=='$(DesktopLibraryMetaProjectId)'">
-      <PropertyGroup>
-        <IsDesktopLibraryProject>true</IsDesktopLibraryProject>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaProject)'=='$(MobileAppMetaProjectId)'">
-      <PropertyGroup>
-        <IsAppProject>true</IsAppProject>
-        <IsTest>True</IsTest>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaProject)'=='$(MobileLibraryMetaProjectId)'">
-      <PropertyGroup>
-        <IsLibraryProject>true</IsLibraryProject>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaProject)'=='$(MobileAutomationMetaProjectId)'">
-      <PropertyGroup>
-        <IsUiTestProject>True</IsUiTestProject>
-        <IsTest>True</IsTest>
-      </PropertyGroup>
-    </When>
-  </Choose>
 
   <!--
   
@@ -194,15 +166,75 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <IsMetaPlatform>false</IsMetaPlatform>
-    <IsAppPlatform>false</IsAppPlatform>
-    <IsUiTestPlatform>false</IsUiTestPlatform>
-    <IsLibraryPlatform>false</IsLibraryPlatform>
-    <IsGroupPlatform>false</IsGroupPlatform>
     <IsLeafPlatform>false</IsLeafPlatform>
-    <IsInternalPlatform>false</IsInternalPlatform>
+    <IsMetaPlatform>false</IsMetaPlatform>
+    <IsGroupPlatform>false</IsGroupPlatform>
+    
+    <IsMobileAppPlatform>false</IsMobileAppPlatform>
+    <IsMobileLibraryPlatform>false</IsMobileLibraryPlatform>
+    <IsMobileTestPlatform>false</IsMobileTestPlatform>
   </PropertyGroup>
 
+
+  <Choose>
+    <When Condition="'$(MetaProject)'=='$(DesktopLibraryMetaProjectId)'">
+      <PropertyGroup>
+        <IsDesktopLibraryProject>true</IsDesktopLibraryProject>
+        <SupportedPlatforms>
+          desktop
+        </SupportedPlatforms>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(MetaProject)'=='$(MobileAppMetaProjectId)'">
+      <PropertyGroup>
+        <IsMobileAppProject>true</IsMobileAppProject>
+        <IsTest>True</IsTest>
+        <SupportedPlatforms>
+          monodroid.app;
+          monotouch.phone;
+          monotouch.sim;
+          xamarin.ios.sim;
+          xamarin.ios.phone;
+          win.32;
+          win.64;
+          win.arm;
+          uap.32;
+          wpa.32;
+        </SupportedPlatforms>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(MetaProject)'=='$(MobileLibraryMetaProjectId)'">
+      <PropertyGroup>
+        <IsMobileLibraryProject>true</IsMobileLibraryProject>
+        <SupportedPlatforms>
+          dotnet;
+          monodroid;
+          monodroid.part;
+          monotouch;
+          monotouch.part;
+          xamarin.ios;
+          xamarin.ios.part;
+          win;
+          win.part;
+          uap;
+          uap.part;
+          wpa;
+          wpa.part;
+        </SupportedPlatforms>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(MetaProject)'=='$(MobileAutomationMetaProjectId)'">
+      <PropertyGroup>
+        <IsMobileTestProject>True</IsMobileTestProject>
+        <IsTest>True</IsTest>
+        <SupportedPlatforms>
+          android.aut;
+          ios.aut;
+        </SupportedPlatforms>
+      </PropertyGroup>
+    </When>
+  </Choose>
+  
   <!--platform properties-->
   <Choose>
 
@@ -212,6 +244,7 @@
         <When Condition="'$(Plat)'=='$(AnyCPULeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(AnyCPULeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)ANYCPU;</DefineConstants>
           </PropertyGroup>
@@ -219,6 +252,7 @@
         <When Condition="'$(Plat)'=='$(X86LeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(X86LeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)X86;</DefineConstants>
           </PropertyGroup>
@@ -226,6 +260,7 @@
         <When Condition="'$(Plat)'=='$(X64LeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(X64LeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)X64;</DefineConstants>
           </PropertyGroup>
@@ -233,6 +268,7 @@
         <When Condition="'$(Plat)'=='$(ArmLeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(ArmLeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)ARM;</DefineConstants>
           </PropertyGroup>
@@ -240,6 +276,7 @@
         <When Condition="'$(Plat)'=='$(IPhoneLeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(IPhoneLeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)IPHONE;</DefineConstants>
           </PropertyGroup>
@@ -247,6 +284,7 @@
         <When Condition="'$(Plat)'=='$(IPhoneSimulatorLeafPlatformId)'">
           <PropertyGroup>
             <Plat>$(IPhoneSimulatorLeafPlatformId)</Plat>
+            <PlatformType>$(LeafPlatformId)</PlatformType>
             <IsLeafPlatform>true</IsLeafPlatform>
             <DefineConstants>$(DefineConstants)IPHONE_SIMULATOR;</DefineConstants>
           </PropertyGroup>
@@ -256,6 +294,7 @@
     <When Condition="'$(Plat)'=='$(PackLeafPlatformId)'">
       <PropertyGroup>
         <Plat>$(PackLeafPlatformId)</Plat>
+        <PlatformType>$(LeafPlatformId)</PlatformType>
         <IsLeafPlatform>true</IsLeafPlatform>
         <DefineConstants>$(DefineConstants)PACK;</DefineConstants>
         <TargetProject>$(PackProjectId)</TargetProject>
@@ -264,6 +303,7 @@
     <When Condition="'$(Plat)'=='$(UnpackLeafPlatformId)'">
       <PropertyGroup>
         <Plat>$(UnpackLeafPlatformId)</Plat>
+        <PlatformType>$(LeafPlatformId)</PlatformType>
         <IsLeafPlatform>true</IsLeafPlatform>
         <DefineConstants>$(DefineConstants)UNPACK;</DefineConstants>
         <TargetProject>$(UnpackProjectId)</TargetProject>
@@ -274,6 +314,8 @@
     <When Condition="'$(Plat)'=='$(DesktopLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(DesktopLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
+        <ProjectType></ProjectType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
@@ -284,28 +326,31 @@
     <When Condition="'$(Plat)'=='$(AndroidAutomationLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(AndroidAutomationLibraryPlatformId)</Plat>
-        <IsUiTestPlatform>true</IsUiTestPlatform>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
+        <IsMobileTestPlatform>true</IsMobileTestPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(Plat)'=='$(IosAutomationLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosAutomationLibraryPlatformId)</Plat>
-        <IsUiTestPlatform>true</IsUiTestPlatform>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
+        <IsMobileTestPlatform>true</IsMobileTestPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(Plat)'=='$(WindowsAutomationLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsAutomationLibraryPlatformId)</Plat>
-        <IsUiTestPlatform>true</IsUiTestPlatform>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
+        <IsMobileTestPlatform>true</IsMobileTestPlatform>
       </PropertyGroup>
     </When>
 
@@ -313,6 +358,7 @@
     <When Condition="'$(Plat)'=='$(PortableLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(PortableLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
@@ -321,6 +367,7 @@
     <When Condition="'$(Plat)'=='$(AndroidLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(AndroidLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -330,6 +377,7 @@
     <When Condition="'$(Plat)'=='$(IosUnifiedLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosUnifiedLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -339,6 +387,7 @@
     <When Condition="'$(Plat)'=='$(IosClassicLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosClassicLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -348,6 +397,7 @@
     <When Condition="'$(Plat)'=='$(WindowsUniversalLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsUniversalLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -357,6 +407,7 @@
     <When Condition="'$(Plat)'=='$(WindowsPhoneLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsPhoneLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -366,6 +417,7 @@
     <When Condition="'$(Plat)'=='$(WindowsTabletLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsTabletLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -377,6 +429,7 @@
     <When Condition="'$(Plat)'=='$(AndroidPartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(AndroidPartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -386,6 +439,7 @@
     <When Condition="'$(Plat)'=='$(IosUnifiedPartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosUnifiedPartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -395,6 +449,7 @@
     <When Condition="'$(Plat)'=='$(IosClassicPartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosClassicPartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -404,6 +459,7 @@
     <When Condition="'$(Plat)'=='$(WindowsUniversalPartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsUniversalPartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -413,6 +469,7 @@
     <When Condition="'$(Plat)'=='$(WindowsPhonePartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsPhonePartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -422,6 +479,7 @@
     <When Condition="'$(Plat)'=='$(WindowsTabletPartLibraryPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsTabletPartLibraryPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
@@ -433,6 +491,7 @@
     <When Condition="'$(Plat)'=='$(AndroidAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(AndroidAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
@@ -441,6 +500,7 @@
     <When Condition="'$(Plat)'=='$(IosUnifiedSimAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosUnifiedSimAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(IPhoneSimulatorLeafPlatformId)</LeafPlatform>
@@ -449,6 +509,7 @@
     <When Condition="'$(Plat)'=='$(IosUnifiedPhoneAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosUnifiedPhoneAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(IPhoneLeafPlatformId)</LeafPlatform>
@@ -457,6 +518,7 @@
     <When Condition="'$(Plat)'=='$(IosClassicSimAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosClassicSimAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(IPhoneSimulatorLeafPlatformId)</LeafPlatform>
@@ -465,6 +527,7 @@
     <When Condition="'$(Plat)'=='$(IosClassicPhoneAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(IosClassicPhoneAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(IPhoneLeafPlatformId)</LeafPlatform>
@@ -473,6 +536,7 @@
     <When Condition="'$(Plat)'=='$(WindowsUniversal32AppPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsUniversal32AppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(X86LeafPlatformId)</LeafPlatform>
@@ -481,6 +545,7 @@
     <When Condition="'$(Plat)'=='$(WindowsPhone32AppPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsPhone32AppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(X86LeafPlatformId)</LeafPlatform>
@@ -489,6 +554,7 @@
     <When Condition="'$(Plat)'=='$(WindowsTablet32AppPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsTablet32AppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(X86LeafPlatformId)</LeafPlatform>
@@ -497,6 +563,7 @@
     <When Condition="'$(Plat)'=='$(WindowsTablet64AppPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsTablet64AppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(X64LeafPlatformId)</LeafPlatform>
@@ -505,6 +572,7 @@
     <When Condition="'$(Plat)'=='$(WindowsTabletArmAppPlatformId)'">
       <PropertyGroup>
         <Plat>$(WindowsTabletArmAppPlatformId)</Plat>
+        <PlatformType>$(MetaPlatformId)</PlatformType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(ArmLeafPlatformId)</LeafPlatform>
@@ -520,7 +588,7 @@
       <PropertyGroup>
         <MetaPlatform>$(DesktopLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>dotnet</TargetFramework>
       </PropertyGroup>
     </When>
@@ -528,7 +596,7 @@
       <PropertyGroup>
         <MetaPlatform>$(PortableLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10</TargetFramework>
       </PropertyGroup>
     </When>
@@ -536,28 +604,28 @@
       <PropertyGroup>
         <MetaPlatform>$(AndroidAutomationLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(IosAutomationLibraryPlatformId)'">
       <PropertyGroup>
         <MetaPlatform>$(IosAutomationLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(WindowsAutomationLibraryPlatformId)'">
       <PropertyGroup>
         <MetaPlatform>$(WindowsAutomationLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(AndroidLibraryPlatformId)'">
       <PropertyGroup>
         <MetaPlatform>$(AndroidLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>monoDroid10</TargetFramework>
       </PropertyGroup>
     </When>
@@ -565,7 +633,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosUnifiedLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>Xamarin.iOS10</TargetFramework>
       </PropertyGroup>
     </When>
@@ -573,7 +641,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosClassicLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>MonoTouch10</TargetFramework>
       </PropertyGroup>
     </When>
@@ -581,7 +649,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsUniversalLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>uap10.0</TargetFramework>
         <ShimSubDir>windows\</ShimSubDir>
       </PropertyGroup>
@@ -590,7 +658,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsPhoneLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>wpa81</TargetFramework>
       </PropertyGroup>
     </When>
@@ -598,7 +666,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsTabletLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>win81</TargetFramework>
       </PropertyGroup>
     </When>
@@ -609,7 +677,7 @@
         <MetaPlatform>$(AndroidPartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(AndroidLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(IosUnifiedPartLibraryPlatformId)'">
@@ -617,7 +685,7 @@
         <MetaPlatform>$(IosUnifiedPartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(IosUnifiedLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(IosClassicPartLibraryPlatformId)'">
@@ -625,7 +693,7 @@
         <MetaPlatform>$(IosClassicPartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(IosClassicLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(WindowsUniversalPartLibraryPlatformId)'">
@@ -633,7 +701,7 @@
         <MetaPlatform>$(WindowsUniversalPartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(WindowsUniversalLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(WindowsPhonePartLibraryPlatformId)'">
@@ -641,7 +709,7 @@
         <MetaPlatform>$(WindowsPhonePartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(WindowsPhoneLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
     <When Condition="'$(MetaPlatform)'=='$(WindowsTabletPartLibraryPlatformId)'">
@@ -649,7 +717,7 @@
         <MetaPlatform>$(WindowsTabletPartLibraryPlatformId)</MetaPlatform>
         <IsPartPlatform>true</IsPartPlatform>
         <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
-        <IsLibraryPlatform>true</IsLibraryPlatform>
+        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
 
@@ -658,7 +726,7 @@
       <PropertyGroup>
         <MetaPlatform>$(AndroidAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(AndroidLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -666,7 +734,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosUnifiedSimAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(IosUnifiedLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -674,7 +742,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosUnifiedPhoneAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(IosUnifiedLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -682,7 +750,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosClassicSimAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(IosClassicLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -690,7 +758,7 @@
       <PropertyGroup>
         <MetaPlatform>$(IosClassicPhoneAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(IosClassicLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -698,7 +766,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsUniversal32AppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(WindowsUniversalLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -706,7 +774,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsPhone32AppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(WindowsPhoneLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -714,7 +782,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsTablet32AppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -722,7 +790,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsTablet64AppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -730,7 +798,7 @@
       <PropertyGroup>
         <MetaPlatform>$(WindowsTabletArmAppPlatformId)</MetaPlatform>
         <AppPlatform>$(MetaPlatform)</AppPlatform>
-        <IsAppPlatform>true</IsAppPlatform>
+        <IsMobileAppPlatform>true</IsMobileAppPlatform>
         <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
       </PropertyGroup>
     </When>
@@ -867,7 +935,7 @@
 
   <!--named mobile platform groups-->
   <Choose>
-    <When Condition="'$(IsUiTestProject)'=='true'" >
+    <When Condition="'$(IsMobileTestProject)'=='true'" >
       <PropertyGroup>
         <PortablePlatformIds/>
 
@@ -899,7 +967,7 @@
         </WindowsMobilePlatformIds>
       </PropertyGroup>
     </When>
-    <When Condition="'$(IsLibraryProject)'=='true'" >
+    <When Condition="'$(IsMobileLibraryProject)'=='true'" >
       <PropertyGroup>
         <PortablePlatformIds>
           $(PortableLibraryPlatformId)
@@ -949,7 +1017,7 @@
         </WindowsMobilePlatformIds>
       </PropertyGroup>
     </When>
-    <When Condition="'$(IsAppProject)'=='true'" >
+    <When Condition="'$(IsMobileAppProject)'=='true'" >
       <PropertyGroup>
         <PortablePlatformIds/>
 
@@ -989,18 +1057,57 @@
       </PropertyGroup>
     </When>
   </Choose>
-  <PropertyGroup>
-    <ChildPlatforms Condition="'$(Plat)'=='$(AndroidMobilePlatformId)'">$(AndroidMobilePlatformIds)</ChildPlatforms>
+  <Choose>
+    <When Condition="'$(Plat)'=='$(AndroidMobilePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(AndroidMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(IosMobilePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(IosMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(IosUnifiedMobileSubPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(IosUnifiedMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(IosClassicMobileSubPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(IosClassicMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
 
-    <ChildPlatforms Condition="'$(Plat)'=='$(IosMobilePlatformId)'">$(IosMobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(IosUnifiedMobileSubPlatformId)'">$(IosUnifiedMobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(IosClassicMobileSubPlatformId)'">$(IosClassicMobilePlatformIds)</ChildPlatforms>
-
-    <ChildPlatforms Condition="'$(Plat)'=='$(WindowsMobilePlatformId)'">$(WindowsMobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(WindowsUniversalMobileSubPlatformId)'">$(WindowsUniversalMobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(WindowsPhoneMobileSubPlatformId)'">$(WindowsPhoneMobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(WindowsTabletMobileSubPlatformId)'">$(WindowsTabletMobilePlatformIds)</ChildPlatforms>
-  </PropertyGroup>
+    <When Condition="'$(Plat)'=='$(WindowsMobilePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(WindowsMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(WindowsUniversalMobileSubPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(WindowsUniversalMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(WindowsPhoneMobileSubPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(WindowsPhoneMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(WindowsTabletMobileSubPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(WindowsTabletMobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+  </Choose>
 
   <!--named platform groups-->
   <PropertyGroup>
@@ -1011,13 +1118,33 @@
       $(WindowsMobilePlatformIds)
     </MobilePlatformIds>
     <AllPlatformIds>$(MobilePlatformIds)</AllPlatformIds>
-    <AllPlatformIds Condition="'$(IsLibraryProject)'=='true'">$(UnpackLeafPlatformId)</AllPlatformIds>
+    <AllPlatformIds Condition="'$(IsMobileLibraryProject)'=='true'">$(UnpackLeafPlatformId)</AllPlatformIds>
     <AllPlatformIds Condition="'$(IsDesktopLibraryProject)'=='true'">$(DesktopLibraryPlatformId)</AllPlatformIds>
   </PropertyGroup>
-  <PropertyGroup>
-    <ChildPlatforms Condition="'$(Plat)'=='$(AllPlatformId)'">$(AllPlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(MobilePlatformId)'">$(MobilePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(PackagePlatformId)'">$(PackagePlatformIds)</ChildPlatforms>
-    <ChildPlatforms Condition="'$(Plat)'=='$(UnpackagePlatformId)'">$(UnpackagePlatformIds)</ChildPlatforms>
-  </PropertyGroup>
+  <Choose>
+    <When Condition="'$(Plat)'=='$(AllPlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(AllPlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(MobilePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(MobilePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(PackagePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(PackagePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(UnpackagePlatformId)'">
+      <PropertyGroup>
+        <ChildPlatforms>$(UnpackagePlatformIds)</ChildPlatforms>
+        <PlatformType>$(GroupPlatformId)</PlatformType>
+      </PropertyGroup>
+    </When>
+  </Choose>
 </Project>

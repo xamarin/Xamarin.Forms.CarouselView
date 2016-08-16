@@ -18,26 +18,6 @@
   <Target 
     Name="ResolveMetaProjectReferences"
   >
-    <Error
-      Condition="'$(IsLeafPlatform)'!='true' AND '@(ChildPlatforms)|$(LeafPlatform)'==''"
-      Text="Platform '$(Plat)' is not recognized."
-    />
-    <Error
-      Condition="'$(IsAppPlatform)'=='true' AND '$(IsAppProject)'!='true'"
-      Text="Platform '$(Plat)' is an application platform and can only be used to build an application."
-    />
-    <Error
-      Condition="'$(IsLibraryPlatform)'=='true' AND '$(IsLibraryProject)'!='true'"
-      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
-    />
-    <Error
-      Condition="'$(IsUiTestPlatform)'=='true' AND '$(IsUiTestProject)'!='true'"
-      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
-    />
-    <Error
-      Condition="'$(BuildTarget)'=='Compile' AND '$(IsInVS)'!='true'"
-      Text="Platform 'Compile' is only supported when building in VS during intellisesne loading."
-    />
     
     <!--_ChildProjectReference-->
     <ItemGroup>
@@ -57,7 +37,7 @@
       >
         <ReferenceSource>LeafPlatform</ReferenceSource>
         <AdditionalProperties>Platform=$(LeafPlatform);MetaPlatform=$(MetaPlatform)</AdditionalProperties>
-        <TargetFramework Condition="'$(IsLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
+        <TargetFramework Condition="'$(IsMobileLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
       </_ChildProjectReference>
     </ItemGroup>
 
@@ -98,7 +78,7 @@
 
     <!--select results-->
     <ItemGroup>
-      <TargetResult Include="@(EveryResult)"/>
+      <!--<TargetResult Include="@(EveryResult)"/>-->
       <TargetResult 
         Condition="'$(IsPartPlatform)'=='' AND '%(TargetResult.IsPartPlatform)'=='true'" 
         Remove="%(Identity)"

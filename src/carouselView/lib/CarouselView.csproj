@@ -96,6 +96,7 @@
   <!--hide build output-->
   <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
     <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    
     <!--TODO: if CopyBuildOutputToOutputDirectory why is the following necessary?-->
     <OutDir>$(IntermediateOutputPath)portable\bin\</OutDir>
     <OutputPath>$(OutDir)</OutputPath>

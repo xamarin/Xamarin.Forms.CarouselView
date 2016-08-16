@@ -18,62 +18,99 @@
     </ItemGroup>
   </Target>
 
+  <!--ResolveMetaReferences-->
+  <Target
+    Name="ResolveMetaReferences"
+    BeforeTargets="Proxy"
+    DependsOnTargets="_DumpFrame"
+    Outputs="%(Configuration.Identity)"
+  >
+    <PropertyGroup>
+      <MetaBuildTarget Condition="'$(MetaBuildTarget)'==''">$(BuildTarget)</MetaBuildTarget>
+    </PropertyGroup>
+    
+    <!--input MetaReferences-->
+    <Message
+      Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] ->"
+      Condition="@(MetaReference->Count()) > 0"
+      Importance="$(ProjVerbosity)"
+    />
+    <Message
+      Text="  %(MetaReference.ReferenceSource): %(Identity) /t:$(MetaBuildTarget) /+p:%(AdditionalProperties)"
+      Condition="@(MetaReference->Count()) > 0"
+      Importance="$(ProjVerbosity)"
+    />
+
+    <!--build MetaReferences-->
+    <MSBuild
+      Projects="@(MetaReference)"
+      Targets="$(MetaBuildTarget)"
+      Properties="Configuration=%(Configuration.Identity)"
+      ContinueOnError="true"
+      BuildInParallel="true"
+    >
+      <Output ItemName="TargetResult" TaskParameter="TargetOutputs" />
+    </MSBuild>
+
+    <!--refresh MetaReferences-->
+    <ItemGroup>
+      <MetaReference Remove="@(MetaReference)"/>
+      <MetaReference Include="@(TargetResult)"/>
+    </ItemGroup>
+
+    <!--output MetaReferences-->
+    <Message
+      Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;-"
+      Condition="@(MetaReference->Count()) > 0"
+      Importance="$(ProjVerbosity)"
+    />
+    <Message
+      Text="  %(ReferenceSource): %(MetaReference.Identity)"
+      Condition="@(MetaReference->Count()) > 0"
+      Importance="$(ProjVerbosity)"
+    />
+  </Target>
+
   <!--ResolveMetaProjectReferences-->
   <Target 
     Name="ResolveMetaProjectReferences"
-    BeforeTargets="Proxy"
-    DependsOnTargets="_DumpFrame"
-    Condition="'$(IsLeafPlatform)'=='true'"
+    BeforeTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'=='$(LeafPlatformId)'"
   >
     <Error
-      Condition="@(Configuration->Count()) > 1"
-      Text="Multi-configuration builds not supported for LeafPlatform."
-    />
-    <Error
-      Condition="'$(MetaPlatform)'==''"
-      Text="Platform '$(Plat)' defines no MetaPlatform."
-    />
-    <Error
-      Condition="'$(IsAppPlatform)'=='true' AND '$(IsAppProject)'!='true'"
-      Text="Platform '$(Plat)' is an application platform and can only be used to build an application."
-    />
-    <Error
-      Condition="'$(IsLibraryPlatform)'=='true' AND '$(IsLibraryProject)'!='true'"
-      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
-    />
-    <Error
-      Condition="'$(IsUiTestPlatform)'=='true' AND '$(IsUiTestProject)'!='true'"
-      Text="Platform '$(Plat)' is a library platform and can only be used to build a library."
+      Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($(Amp)|;)'))"
+      Text="Platform '$(MetaPlatform)' is not supported by '$(MetaProject)' project type."
     />
     <Error
       Condition="'$(BuildTarget)'=='Compile' AND '$(IsInVS)'!='true'"
       Text="Platform 'Compile' is only supported when building in VS during intellisesne loading."
     />
     
-    <!--MetaProjectReference-->
+    <!--MetaReference-->
     <ItemGroup>
 
-      <!--ProjectReference -> MetaProjectReference-->
-      <MetaProjectReference 
-        Condition="'@(ProjectReference)'!=''" 
-        Include="@(ProjectReference->'$(ProjDir)%(Identity)')" 
+      <!--ProjectReference -> MetaReference-->
+      <MetaReference
+        Condition="'@(ProjectReference)'!=''"
+        Include="@(ProjectReference->'$(ProjDir)%(Identity)')"
       >
         <ReferenceSource>ProjectReference</ReferenceSource>
-        <AdditionalProperties>_MetaPlatform=$(LibraryPlatform)</AdditionalProperties>
+        <AdditionalProperties>$(ClearRecursiveFrame);Platform=$(LibraryPlatform)</AdditionalProperties>
         <Name>%(Name)</Name>
-        <RemoveProperties/>
-      </MetaProjectReference>
+        <IsPartPlatform Condition="'$(IsPartPlatform)'=='true'">true</IsPartPlatform>
+      </MetaReference>
       <ProjectReference Remove="@(ProjectReference)" />
 
-      <!--SelfReference -> MetaProjectReference-->
-      <MetaProjectReference
+      <!--SelfReference -> MetaReference-->
+      <MetaReference
         Condition="'@(SelfReference)'!=''" 
         Include="$(ProjFile)" 
       >
         <ReferenceSource>SelfReference</ReferenceSource>
         <AdditionalProperties>$(ClearRecursiveFrame);Platform=%(SelfReference.Identity)</AdditionalProperties>
         <Name>$(AssemblyName)</Name>
-      </MetaProjectReference>
+        <IsPartPlatform Condition="'$(IsPartPlatform)'=='true'">true</IsPartPlatform>
+      </MetaReference>
       <SelfReference Remove="@(SelfReference)" />
     </ItemGroup>
 
@@ -83,61 +120,48 @@
           Incidentally, this is also why there is no intellisense for unloaded projects.
     -->
     <PropertyGroup>
-      <_BuildTarget>$(BuildTarget)</_BuildTarget>
-      <_BuildTarget Condition="'$(BuildTarget)'=='Compile'">GetTargetPath</_BuildTarget>
+      <MetaBuildTarget Condition="'$(BuildTarget)'=='Compile'">GetTargetPath</MetaBuildTarget>
     </PropertyGroup>
+  </Target>
 
-    <!--pre log-->
-    <Message
-      Text="MetaProjectReference: @(MetaProjectReference->Count())"
-      Importance="$(ProjVerbosity)" 
-    />
-    <Message
-      Text="  %(MetaProjectReference.ReferenceSource): %(Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
-      Condition="'@(MetaProjectReference)'!=''"
-      Importance="$(ProjVerbosity)"
-    />
-
-    <!--build-->
-    <MSBuild
-      Projects="@(MetaProjectReference)"      
-      Targets="$(_BuildTarget)"
-      ContinueOnError="true"
-      BuildInParallel="true"
-    >
-      <Output ItemName="BuildResult" TaskParameter="TargetOutputs" />
-    </MSBuild>
-
-    <!--tag results-->
-    <ItemGroup>
-      <BuildResult Condition="true">
-        <IsPartPlatform Condition="'$(IsPartPlatform)'=='true'">true</IsPartPlatform>
-      </BuildResult>
-    </ItemGroup>
-
+  <!--RemovePart-->
+  <Target
+    Name="RemovePart"
+    AfterTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'=='$(LeafPlatformId)'"
+  >
     <!--select results-->
-    <ItemGroup>
-      <TargetResult Include="@(BuildResult)"/>
+    <!--<ItemGroup>
       <TargetResult 
         Condition="'$(IsPartPlatform)'=='' AND '%(TargetResult.IsPartPlatform)'=='true'" 
         Remove="%(Identity)"
       />
-    </ItemGroup>
-    <Message
-      Text="%(ReferenceSource): $(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;- %(TargetResult.Identity)"
-      Condition="@(TargetResult->Count()) > 0"
-      Importance="$(ProjVerbosity)" 
-    />
+    </ItemGroup>-->
+  </Target>
 
-    <!--MetaProjectReference -> Reference-->
+  <!--MetaProjectReferencesToReferences-->
+  <Target
+    Name="MetaProjectReferencesToReferences"
+    AfterTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'=='$(LeafPlatformId)'"
+  >
+    <!--select results-->
+    <!--<ItemGroup>
+      <TargetResult 
+        Condition="'$(IsPartPlatform)'=='' AND '%(TargetResult.IsPartPlatform)'=='true'" 
+        Remove="%(Identity)"
+      />
+    </ItemGroup>-->
+
+    <!--MetaReference -> Reference-->
     <ItemGroup>
-      <Reference Include="@(BuildResult->'%(Name)')" >
+      <Reference Include="@(MetaReference->'%(Name)')" >
         <HintPath>%(Identity)</HintPath>
       </Reference>
     </ItemGroup>
     <Message 
-      Text="  %(ReferenceSource): Reference += %(Identity)"
-      Condition="@(BuildResult->Count()) > 0"
+      Text="$(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)]: Reference += %(Identity)"
+      Condition="@(MetaReference->Count()) > 0"
       Importance="$(ProjVerbosity)" 
     />
   </Target>
@@ -145,46 +169,44 @@
   <!--BuildMetaPlatform-->
   <Target
     Name="BuildMetaPlatform"
-    Condition="'$(IsMetaPlatform)'=='true'"
-    BeforeTargets="Proxy"
-    DependsOnTargets="_DumpFrame"
-    Outputs="%(Configuration.Identity)"
+    BeforeTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'=='$(MetaPlatformId)'"
+  >
+    <ItemGroup>
+      <MetaReference Include="$(ProjFile)">
+        <ReferenceSource>LeafPlatform</ReferenceSource>
+        <AdditionalProperties>Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <TargetFramework Condition="'$(IsMobileLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
+      </MetaReference>
+    </ItemGroup>
+  </Target>
+
+  <!--BuildMetaPlatformGroup-->
+  <Target
+    Name="BuildMetaPlatformGroup"
+    BeforeTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'=='$(GroupPlatformId)'"
+  >
+    <ItemGroup>
+      <MetaReference Include="$(ProjFile)">
+        <ReferenceSource>GroupPlatform</ReferenceSource>
+        <AdditionalProperties>Platform=%(ChildPlatforms.Identity)</AdditionalProperties>
+      </MetaReference>
+    </ItemGroup>
+  </Target>
+
+  <!--BadMetaPlatform-->
+  <Target
+    Name="BadMetaPlatform"
+    BeforeTargets="ResolveMetaReferences"
+    Condition="'$(PlatformType)'==''"
   >
     <Error
       Condition="'$(LeafPlatform)'==''"
-      Text="MetaPlatform '$(Plat)' defines no LeafPlatform."
-    />
-
-    <!--_LeafPlatform-->
-    <ItemGroup>
-      <_LeafPlatform Include="$(ProjFile)">
-        <AdditionalProperties>Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
-        <TargetFramework Condition="'$(IsLibraryPlatform)'=='true'">$(TargetFramework)</TargetFramework>
-      </_LeafPlatform>
-    </ItemGroup>
-
-    <Message
-      Text="LeafPlatform: %(_LeafPlatform.Identity) /t:$(BuildTarget) /+p:%(AdditionalProperties)"
-      Importance="$(ProjVerbosity)"
-    />
-
-    <!--build-->
-    <MSBuild
-      Projects="@(_LeafPlatform)"
-      Properties="Configuration=%(Configuration.Identity)"
-      Targets="$(BuildTarget)"
-      ContinueOnError="true"
-      BuildInParallel="true"
-    >
-      <Output ItemName="TargetResult" TaskParameter="TargetOutputs" />
-    </MSBuild>
-
-    <Message
-      Text="LeafPlatform: $(ProjName) [$(Configuration)|$(Plat)|$(MetaPlatform)] &lt;- %(TargetResult.Identity)"
-      Condition="'%(Identity)'!=''"
-      Importance="$(ProjVerbosity)"
+      Text="Platform '$(Plat)' is unrecognized."
     />
   </Target>
+
 
   <!--
   
@@ -204,9 +226,14 @@
       <_Property Include="ProjFile" />
       <_Property Include="IsLeafPlatform" />
       <_Property Include="IsMetaPlatform" />
-      <_Property Include="IsLibraryPlatform" />
-      <_Property Include="IsAppPlatform" />
+      <_Property Include="IsMobileLibraryPlatform" />
+      <_Property Include="IsMobileAppPlatform" />
       <_Property Include="IsPartPlatform" />
+      <_Property Include="IsMobileAppProject" />
+      <_Property Include="IsMobileLibraryProject" />
+      <_Property Include="IsMobileTestProject" />
+      <_Property Include="IsDesktopLibraryProject" />
+      <_Property Include="LeafPlatform" />
       <_Property Include="MobilePlatform" />
       <_Property Include="MobileSubPlatform" />
       <_Property Include="LibraryPlatform" />

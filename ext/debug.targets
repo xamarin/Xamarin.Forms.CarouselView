@@ -13,7 +13,7 @@
     <Message Text="  LibraryPlatform: $(LibraryPlatform)" Importance="high" />
     <Message Text="  MobilePlatform: $(MobilePlatform)" Importance="high" />
     <Message Text="  MobileSubPlatform: $(MobileSubPlatform)" Importance="high" />
-    <Message Text="  IsLibraryPlatform: $(IsLibraryPlatform)" Importance="high" />
+    <Message Text="  IsMobileLibraryPlatform: $(IsMobileLibraryPlatform)" Importance="high" />
     <Message Text="  IsMetaPlatform: $(IsMetaPlatform)" Importance="high" />
     <Message Text="  DefineConstants: $(DefineConstants)" Importance="high" />
     <Message Text="  Reference: @(Reference)" Importance="high" />

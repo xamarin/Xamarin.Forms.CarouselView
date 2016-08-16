@@ -24,7 +24,7 @@
     Name="LayoutPackageToMatchPri"
     Condition="
       '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' AND 
-      '$(IsLibraryProject)'=='true' AND
+      '$(IsMobileLibraryProject)'=='true' AND
       '$(IsPartPlatform)'!='true' AND
       '$(IsLeafPlatform)'=='true'
     "

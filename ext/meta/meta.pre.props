@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <!--
-    Loads type information for the current platform. Platforms form a tree.
-    
-      Booleans:
-        IsLeafPlatform
-        IsLibraryPlatform
-        IsAppPlatform
-        IsMetaPlatform
-        IsMobileLibraryPlatform
-        IsPartPlatform
-        IsUiTestPlatform
-      
-      Properties:
-        Plat
-        DefineConstants
-        LeafPlatform
-        MetaPlatform
-        TargetFramwork
-        TargetProject
-  -->
-
   <PropertyGroup>
     <ExtMetaDir>$(MSBuildThisFileDirectory)</ExtMetaDir>
   </PropertyGroup>
@@ -31,6 +10,21 @@
   <PropertyGroup>
     <MetaPlatform Condition="'$(_MetaPlatform)'!=''">$(_MetaPlatform)</MetaPlatform>
     <ClearRecursiveFrame>$(ClearRecursiveFrame)_MetaPlatform=;</ClearRecursiveFrame>
+  </PropertyGroup>
+
+  <!--library platform ids-->
+  <PropertyGroup>
+
+    <!--abstract platform ids-->
+    <LeafPlatformId>leaf</LeafPlatformId>
+    <MetaPlatformId>meta</MetaPlatformId>
+    <GroupPlatformId>group</GroupPlatformId>
+  </PropertyGroup>
+
+  <!--ad-hoc platform group-->
+  <PropertyGroup Condition="$(Plat.Contains(';'))">
+    <ChildPlatforms>$(Plat)</ChildPlatforms>
+    <PlatformType>$(GroupPlatformId)</PlatformType>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

@@ -28,12 +28,6 @@
     <Platform Condition="'$(Platform)'==''">all</Platform>
   </PropertyGroup>
 
-  <!--ad-hoc platform group-->
-  <PropertyGroup>
-    <!--list (e.g. monoTouch;monoDroid) -->
-    <ChildPlatforms Condition="$(Plat.Contains(';'))" >$(Plat)</ChildPlatforms>
-  </PropertyGroup>
-
   <!--ChildPlatform: Property -> Items-->
   <ItemGroup>
     <ChildPlatforms Include="$(ChildPlatforms)"/>

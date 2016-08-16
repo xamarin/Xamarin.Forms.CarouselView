@@ -103,7 +103,7 @@
       
       <!--android app-->
       <Choose>
-        <When Condition="'$(IsAppProject)'=='true'">
+        <When Condition="'$(IsMobileAppProject)'=='true'">
           <PropertyGroup>
             <AndroidApplication>true</AndroidApplication>
             <AndroidStoreUncompressedFileExtensions />
@@ -152,7 +152,7 @@
   </PropertyGroup>
 
   <!--ios app-->
-  <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosMobilePlatformId)' AND '$(IsAppProject)'=='true'">
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosMobilePlatformId)' AND '$(IsMobileAppProject)'=='true'">
     <OutputType>Exe</OutputType>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
     <MtouchSdkVersion>9.3</MtouchSdkVersion>
@@ -192,9 +192,9 @@
   <!--windows platform-->
   <PropertyGroup Condition="'$(MobilePlatform)' == '$(WindowsMobilePlatformId)'">
     <!--TODO: Remove setting platform; find better/newer way to set platform-->
-    <Platform Condition="'$(Plat)'=='AnyCPU' AND '$(IsAppProject)'=='true'">x86</Platform>
+    <Platform Condition="'$(Plat)'=='AnyCPU' AND '$(IsMobileAppProject)'=='true'">x86</Platform>
     <PlatformTarget>$(Plat)</PlatformTarget>
-    <Prefer32Bit Condition="'$(IsAppProject)'=='true'">true</Prefer32Bit>
+    <Prefer32Bit Condition="'$(IsMobileAppProject)'=='true'">true</Prefer32Bit>
   </PropertyGroup>
 
 </Project>

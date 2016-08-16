@@ -18,7 +18,6 @@
   <Import Project="$(ExtDir)shim\shim.pre.props"/>
   <Import Project="$(ExtDir)meta\meta.pre.props"/>
   <Import Project="$(ExtDir)tree\tree.pre.props"/>
-  <Import Project="$(ExtDir)std\std.pre.props"/>
   <Import Project="$(ExtDir)xf\xf.pre.props"/>
   <Import Project="$(ExtDir)ver\ver.pre.props"/>
   <Import Project="$(ExtDir)nuget\nuget.pre.props"/>

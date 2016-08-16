@@ -39,9 +39,10 @@
     
     Targets
   -->
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
+  <!--Xamarin.iOS project system injects a references to Xamarin.iOS.CSharp.targets if it's missing so just start there.-->
+  <!--<Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />-->
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
   <Target Name="Build">
-    <Message Importance="high" Text="&gt;&gt;&gt;&gt; OutDirAbsolute: $(OutDirAbsolute)" />
     <MSBuild Projects="..\CarouselView.App.csproj" Targets="Build" Properties="Platform=$(MetaPlatform)" />
   </Target>
   <Target Name="Install">

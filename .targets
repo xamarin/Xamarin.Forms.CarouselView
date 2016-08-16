@@ -1,21 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(ExtStdDir)std.post.props" />
+  <Import Project="$(ExtMetaDir)meta.post.props" />
   <Import Project="$(ExtXfDir)xf.post.props" />
 
   <Import Project="$(TargetsFile)" Condition="Exists($(TargetsFile))"/>
-
-  <Import Project="$(ExtMetaDir)meta.targets" />
   <Import Project="$(ExtDir)debug.targets" />
   <Import Project="$(ExtDir)common.targets" />
-  <Import Project="$(ExtNugetDir)nuget.targets" />
   <Import Project="$(ExtCleanDir)clean.targets"/>
+  <Import Project="$(ExtNugetDir)nuget.targets" />
+  <Import Project="$(ExtMetaDir)meta.targets" />
   <Import Project="$(ExtXfDir)xf.targets"/>
+  <!--<Import Project="$(ExtTreeDir)tree.targets" Condition="'$(IsLeafPlatform)'!='true'" />-->
 
-  <ImportGroup Condition="'$(IsLeafPlatform)'!='true'" >
-    <Import Project="$(ExtDir)empty.targets" />
-    <Import Project="$(ExtTreeDir)tree.targets" />
-  </ImportGroup>
-  
+  <Import Project="$(ExtDir)empty.targets" Condition="'$(IsLeafPlatform)'!='true'"/>
   <Import Project="$(ExtDir)proxy.targets" />
 </Project>

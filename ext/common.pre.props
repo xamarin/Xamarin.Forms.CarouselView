@@ -40,6 +40,7 @@
   <PropertyGroup>
     <!--;-->
     <Sc>%3B</Sc>
+    <Amp>&amp;</Amp>
     <Cr>%0D</Cr>
     <Lf>%0A</Lf>
     <Nl>$(Cr)$(Lf)</Nl>
