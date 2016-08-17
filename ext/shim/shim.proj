@@ -40,7 +40,9 @@
     <BuildName Condition="$(IsShimStateInit)">Shim</BuildName>
     
     <BuildLogDir>$(BuildBinDir)</BuildLogDir>
-    <_BuildFile>$(BuildLogDir)$(BuildName).$(BuildTarget)</_BuildFile>
+    <_BuildFile>$(BuildLogDir)$(BuildName)</_BuildFile>
+    <_BuildFile Condition="'$(IsConfigBuild)'=='true'">$(_BuildFile).$(Configuration)</_BuildFile>
+    <_BuildFile>$(_BuildFile).$(BuildTarget)</_BuildFile>
 
     <BuildSummaryFile>$(_BuildFile).summary</BuildSummaryFile>
     <BuildLogFile>$(_BuildFile).log</BuildLogFile>
@@ -57,6 +59,8 @@
   <!--shim command line-->
   <PropertyGroup>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
+    <EscapedPlatform>$(Platform.Replace(";","$(Sc)"))</EscapedPlatform>
+    <EscapedConfiguration>$(Configuration.Replace(";","$(Sc)"))</EscapedConfiguration>
   </PropertyGroup>
   <ItemGroup>
     <BuildCommand Include="msbuild.exe" />
@@ -65,10 +69,10 @@
     
     <!--properties-->
     <ShimProperties Include="$(ShimProperties)" />
-    <BuildCommand Include="/p:BuildTarget=$(BuildTarget)" />
-    <BuildCommand Include="/p:ShimState=$(NextShimState)" />
-    <BuildCommand Include="/p:Platform=$(Platform)" />
-    <BuildCommand Include="/p:Configuration=$(Configuration)" />
+    <BuildCommand Include='/p:BuildTarget="$(BuildTarget)"' />
+    <BuildCommand Include='/p:ShimState="$(NextShimState)"' />
+    <BuildCommand Include='/p:Platform="$(EscapedPlatform)"' />
+    <BuildCommand Include='/p:Configuration="$(EscapedConfiguration)"' />
     <BuildCommand Include="@(ShimProperties->'/p:%(Identity)')" Condition="'$(ShimProperties)'!=''" />
   </ItemGroup>
   <ItemGroup Condition="$(IsShimStateInit)">

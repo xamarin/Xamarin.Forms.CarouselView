@@ -36,11 +36,18 @@
       "
     />
 
+    <CreateItem
+      Include="@(ProjFile)"
+      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)"
+    >
+      <Output ItemName="ProjFileConfig" TaskParameter="Include"/>
+    </CreateItem>
+
     <!--dispatch build target-->
     <MSBuild
       Targets="_ExecDispatch"
-      Projects="@(ProjFile)"
-      Properties="BuildTarget=$(BuildTarget)"
+      Projects="@(ProjFileConfig)"
+      Properties="BuildTarget=$(BuildTarget);IsConfigBuild=true"
       Condition="$(IsShimStateSelf)"
     />
 
@@ -61,7 +68,11 @@
 
   <!--_ExecDispatch-->
   <Target Name="_ExecDispatch">
-    <Message Importance="high" Text="$(BuildName) ($(BuildTarget)) -> $(BuildLogFile)" />
+    <PropertyGroup>
+      <_BuildId>$(BuildTarget)</_BuildId>
+      <_BuildId Condition="'$(IsConfigBuild)'=='true'">$(_BuildId).$(Configuration)</_BuildId>
+    </PropertyGroup>
+    <Message Importance="high" Text="$(BuildName) ($(_BuildId)) -> $(BuildLogFile)" />
     <Message Importance="$(Verbosity)" Text="Command:" />
     <Message Importance="$(Verbosity)" Text="  %(BuildCommand.Identity)" />
 
