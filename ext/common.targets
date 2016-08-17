@@ -23,4 +23,47 @@
     <Exec Command="$(_Command)" />
   </Target>
 
+  <Target
+    Name="GetLogArguments"
+    Returns="@(TargetResult)"
+  >
+    <!--inputs: BuildProcessName (e.g. Shim), BuildName (e.g. NugetRestore or Build.Debug)-->
+    <Message Importance="$(Verbosity)" Text="Command:" />
+    <Message Importance="$(Verbosity)" Text="  %(_BuildCommandLog.Identity)" />
+
+    <PropertyGroup>
+      <_BuildLogDir>$(BuildBinDir)</_BuildLogDir>
+      <_BuildFile>$(_BuildLogDir)$(BuildProcessName).$(BuildName)</_BuildFile>
+
+      <_BuildSummaryFile>$(_BuildFile).summary</_BuildSummaryFile>
+      <_BuildLogFile>$(_BuildFile).log</_BuildLogFile>
+      <_BuildDetailsFile>$(_BuildFile).detailed</_BuildDetailsFile>
+      <_BuildDiagnosticFile>$(_BuildFile).diag</_BuildDiagnosticFile>
+      <_BuildWarningFile>$(_BuildFile).warning</_BuildWarningFile>
+      <_BuildErrorFile>$(_BuildFile).error</_BuildErrorFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+
+      <!--console logging-->
+      <_BuildCommandLog Include="/nologo" />
+      <_BuildCommandLog Include="/clp:v=m" />
+
+      <!--file logging-->
+      <_BuildCommandLog Condition="'$(_BuildSummaryFile)'!=''" Include="/flp:v=m$(Sc)logfile=$(_BuildSummaryFile)$(Sc)showeventId" />
+      <_BuildCommandLog Condition="'$(_BuildLogFile)'!=''" Include="/flp1:v=n$(Sc)logfile=$(_BuildLogFile)$(Sc)showeventId$(Sc)summary" />
+      <_BuildCommandLog Condition="'$(_BuildDetailsFile)'!=''" Include="/flp2:v=d$(Sc)logfile=$(_BuildDetailsFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
+      <_BuildCommandLog Condition="'$(_BuildWarningFile)'!=''" Include="/flp3:v=d$(Sc)warningsonly$(Sc)logfile=$(_BuildWarningFile)$(Sc)showeventId" />
+      <_BuildCommandLog Condition="'$(_BuildErrorFile)'!=''" Include="/flp4:v=d$(Sc)errorsonly$(Sc)logfile=$(_BuildErrorFile)$(Sc)showeventId" />
+      <_BuildCommandLog Condition="'$(_BuildDiagnosticFile)'!=''" Include="/flp5:v=diag$(Sc)logfile=$(_BuildDiagnosticFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <TargetResult Include="@(_BuildCommandLog)"/>
+    </ItemGroup>
+    
+    <MakeDir Directories="$(_BuildLogDir)"/>
+    <Message Importance="high" Text="$(BuildProcessName) ($(BuildName)) -> $(_BuildLogFile)" />
+  </Target>
+
 </Project>

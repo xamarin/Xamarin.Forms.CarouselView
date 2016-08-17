@@ -25,7 +25,7 @@
 
   <!--meta-->
   <PropertyGroup>
-    <BuildName>Core</BuildName>
+    <BuildProcessName>Core</BuildProcessName>
   </PropertyGroup>
 
   <PropertyGroup>

@@ -14,7 +14,7 @@
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=$(BuildTarget);BuildId=$(BuildTarget)"
+      Properties="BuildTarget=$(BuildTarget);BuildName=$(BuildTarget)"
     />
   </Target>
   
@@ -64,7 +64,7 @@
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=%(ShimTarget.Identity);BuildId=%(Identity)"
+      Properties="BuildTarget=%(ShimTarget.Identity);BuildName=%(Identity)"
       Condition="
         '$(ShimTarget)'!='' AND
         !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
@@ -74,7 +74,7 @@
     <!--expand configurations-->
     <CreateItem
       Include="@(ProjFile)"
-      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)$(Sc)BuildId=$(BuildTarget).%(Configuration.Identity)"
+      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)$(Sc)BuildName=$(BuildTarget).%(Configuration.Identity)"
     >
       <Output ItemName="ProjFileWithConfig" TaskParameter="Include"/>
     </CreateItem>
@@ -95,18 +95,24 @@
     <Message Importance="$(Verbosity)" Text="ShimProjectFiles:" />
     <Message Importance="$(Verbosity)" Text="  %(ShimProjectFiles.FullPath)" />
   </Target>
-
+  
   <!--_ExecDispatch-->
   <Target Name="_ExecDispatch">
-    <Message Importance="high" Text="$(BuildName) ($(BuildId)) -> $(BuildLogFile)" />
+    
+    <!--BuildCommand += GetLogArguments-->
+    <MSBuild 
+      Projects="$(ProjFile)"
+      Targets="GetLogArguments"
+    >
+      <Output ItemName="BuildCommand" TaskParameter="TargetOutputs" />
+    </MSBuild>
     <Message Importance="$(Verbosity)" Text="Command:" />
     <Message Importance="$(Verbosity)" Text="  %(BuildCommand.Identity)" />
 
+    <!--exec msbuild.exe-->
     <PropertyGroup>
       <BuildCommand>@(BuildCommand, ' ')</BuildCommand>
     </PropertyGroup>
-
-    <MakeDir Directories="$(BuildLogDir)"/>
     <Exec 
       Command="$(BuildCommand)" 
       WorkingDirectory="$(MSBuildStartupDirectory)"

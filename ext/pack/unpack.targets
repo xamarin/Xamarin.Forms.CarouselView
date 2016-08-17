@@ -24,6 +24,14 @@
     Name="_UnpackBuild"
     DependsOnTargets="_UnpackUpdate" >
 
+    <MSBuild 
+      Projects="$(ProjFile)"
+      Targets="GetLogArguments"
+      Properties="BuildProcessName=Unpack;BuildName=Build.$(Configuration)"
+    >
+      <Output ItemName="UnpackBuildLogs" TaskParameter="TargetOutputs" />
+    </MSBuild>
+
     <PropertyGroup>
       <_LogFileType>build.unpack</_LogFileType>
 
@@ -33,7 +41,7 @@
       <_CommandLine>$(_CommandLine) /p:Configuration=$(Configuration)</_CommandLine>
       <_CommandLine>$(_CommandLine) /m</_CommandLine>
       <_CommandLine>$(_CommandLine) $(Properties)</_CommandLine>
-      <_CommandLine>$(_CommandLine) $(DefaultArgs.Replace("$(BuildLogPrefix)", "$(_LogFileType)"))</_CommandLine>
+      <_CommandLine>$(_CommandLine) @(UnpackBuildLogs, ' ')</_CommandLine>
     </PropertyGroup>
 
     <Exec Command="$(_CommandLine)" WorkingDirectory="$(UnpackAfterDir)" />
@@ -113,7 +121,6 @@
   <!--resolve-->
   <Target 
     Name="_UnpackResolve" 
-    DependsOnTargets="ResolveMetaProjectReferences"
   >
     <PropertyGroup>
       <UnpackSourceDir>@(TargetResult->DirectoryName())\</UnpackSourceDir>

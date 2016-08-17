@@ -14,6 +14,7 @@
   <ItemGroup>
     <ShimTarget Include="$(ShimTarget)" />
     <ShimReference Include="$(ShimReference)" />
+    <Configuration Include="$(Configuration)"/>
   </ItemGroup>
 
   <PropertyGroup>
@@ -46,27 +47,9 @@
     <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateLoggingId)'" Include="@(ShimProjectFiles)" />
   </ItemGroup>
 
-  <!--build log files-->
-  <PropertyGroup>
-    <BuildName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</BuildName>
-    
-    <BuildLogDir>$(BuildBinDir)</BuildLogDir>
-    <_BuildFile>$(BuildLogDir)$(BuildName).$(BuildId)</_BuildFile>
-
-    <BuildSummaryFile>$(_BuildFile).summary</BuildSummaryFile>
-    <BuildLogFile>$(_BuildFile).log</BuildLogFile>
-    <BuildDetailsFile>$(_BuildFile).detailed</BuildDetailsFile>
-    <BuildDiagnosticFile>$(_BuildFile).diag</BuildDiagnosticFile>
-    <BuildWarningFile>$(_BuildFile).warning</BuildWarningFile>
-    <BuildErrorFile>$(_BuildFile).error</BuildErrorFile>
-  </PropertyGroup>
-
-  <ItemGroup>
-    <Configuration Include="$(Configuration)"/>
-  </ItemGroup>
-  
   <!--shim command line-->
   <PropertyGroup>
+    <BuildProcessName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</BuildProcessName>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
     <EscapedPlatform>$(Platform.Replace(";","$(Sc)"))</EscapedPlatform>
     <EscapedConfiguration>$(Configuration.Replace(";","$(Sc)"))</EscapedConfiguration>
@@ -85,25 +68,12 @@
     <BuildCommand Include='/p:Configuration="$(EscapedConfiguration)"' />
     <BuildCommand Include="@(ShimProperties->'/p:%(Identity)')" Condition="'$(ShimProperties)'!=''" />
     <BuildCommand Include='/p:ShimProperties="$(EscapedShimProperties)"' Condition="'$(ShimProperties)'!=''" />
-  </ItemGroup>
-  <ItemGroup>
     
     <!--misc-->
     <BuildCommand Include="/nodeReuse:false" />
-
-    <!--console logging-->
-    <BuildCommand Include="/nologo" />
-    <BuildCommand Include="/clp:v=m" />
-
-    <!--file logging-->
-    <BuildCommand Condition="'$(BuildSummaryFile)'!=''" Include="/flp:v=m$(Sc)logfile=$(BuildSummaryFile)$(Sc)showeventId" />
-    <BuildCommand Condition="'$(BuildLogFile)'!=''" Include="/flp1:v=n$(Sc)logfile=$(BuildLogFile)$(Sc)showeventId$(Sc)summary" />
-    <BuildCommand Condition="'$(BuildDetailsFile)'!=''" Include="/flp2:v=d$(Sc)logfile=$(BuildDetailsFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
-    <BuildCommand Condition="'$(BuildWarningFile)'!=''" Include="/flp3:v=d$(Sc)warningsonly$(Sc)logfile=$(BuildWarningFile)$(Sc)showeventId" />
-    <BuildCommand Condition="'$(BuildErrorFile)'!=''" Include="/flp4:v=d$(Sc)errorsonly$(Sc)logfile=$(BuildErrorFile)$(Sc)showeventId" />
-    <BuildCommand Condition="'$(BuildDiagnosticFile)'!=''" Include="/flp5:v=diag$(Sc)logfile=$(BuildDiagnosticFile)$(Sc)showeventId$(Sc)summary$(Sc)performanceSummary" />
   </ItemGroup>
 
+  <Import Project="$(ExtDir)common.targets" />
   <Import Project="$(ExtDir)empty.targets" />
   <Import Project="$(ExtDir)proxy.targets" />
   <Import Project="shim.targets" />
