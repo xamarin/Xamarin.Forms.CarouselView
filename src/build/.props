@@ -9,6 +9,7 @@
   <!--shim-->
   <PropertyGroup>
     <ShimExclude/>
+    <ShimReference/>
   </PropertyGroup>
 
   <!--meta-->

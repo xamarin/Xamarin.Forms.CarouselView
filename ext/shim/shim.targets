@@ -3,76 +3,102 @@
   ToolsVersion="12.0" 
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
-  <!--Proxy-->
-  <Target Name="Proxy">
-    
+  <!--InitShim-->
+  <Target 
+    Name="InitShim"
+    BeforeTargets="Proxy"
+    Condition="'$(ShimState)'=='$(ShimStateInitId)'"
+  >
+
     <!--self dispatch (to enable logging)-->
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=$(BuildTarget)"
-      Condition="$(IsShimStateInit)"
+      Properties="BuildTarget=$(BuildTarget);BuildId=$(BuildTarget)"
     />
+  </Target>
+  
+  <!--PrePostShim-->
+  <Target 
+    Name="PrePostShim"
+    BeforeTargets="Proxy"
+    Condition="'$(ShimState)'=='$(ShimStatePrePostId)'"
+  >
 
     <!--before shim target-->
     <MSBuild
       Projects="$(ShimBeforeProject)"
       Targets="$(ShimBeforeTarget)"
-      Condition="$(IsShimStateSelf)"
     />
-    
-    <!--inject shim target(s)-->
-    <ItemGroup>
-      <_ShimTarget Include="$(ShimTarget)" />
-    </ItemGroup>
+
+    <!--self dispatch-->
     <MSBuild
-      Targets="_ExecDispatch"
+      Targets="$(BuildTarget)"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=%(_ShimTarget.Identity)"
-      Condition="
-        $(IsShimStateSelf) AND 
-        '$(ShimTarget)'!='' AND
-        !@(_ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
-      "
-    />
-
-    <CreateItem
-      Include="@(ProjFile)"
-      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)"
-    >
-      <Output ItemName="ProjFileConfig" TaskParameter="Include"/>
-    </CreateItem>
-
-    <!--dispatch build target-->
-    <MSBuild
-      Targets="_ExecDispatch"
-      Projects="@(ProjFileConfig)"
-      Properties="BuildTarget=$(BuildTarget);IsConfigBuild=true"
-      Condition="$(IsShimStateSelf)"
+      Properties="ShimState=$(NextShimState)"
     />
 
     <!--after shim target-->
     <MSBuild
       Projects="$(ShimAfterProject)"
       Targets="$(ShimAfterTarget)"
-      Condition="$(IsShimStateSelf)"
+    />
+  </Target>
+
+  <!--Shim-->
+  <Target 
+    Name="Shim"
+    BeforeTargets="Proxy"
+    Condition="'$(ShimState)'=='$(ShimStateSelfId)'"
+  >
+
+    <!--shim references-->
+    <MSBuild
+      Targets="$(BuildTarget)"
+      Projects="$(ProjFile)"
+      Properties="ShimDir=%(ShimReference.Identity)"
+      Condition="@(ShimReference->Count()) > 0"
     />
 
+    <!--inject shim target(s)-->
+    <MSBuild
+      Targets="_ExecDispatch"
+      Projects="$(ProjFile)"
+      Properties="BuildTarget=%(ShimTarget.Identity);BuildId=%(Identity)"
+      Condition="
+        '$(ShimTarget)'!='' AND
+        !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
+      "
+    />
+
+    <!--expand configurations-->
+    <CreateItem
+      Include="@(ProjFile)"
+      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)$(Sc)BuildId=$(BuildTarget).%(Configuration.Identity)"
+    >
+      <Output ItemName="ProjFileWithConfig" TaskParameter="Include"/>
+    </CreateItem>
+
+    <!--dispatch build target-->
+    <MSBuild
+      Targets="_ExecDispatch"
+      Projects="@(ProjFileWithConfig)"
+      Properties="BuildTarget=$(BuildTarget)"
+    />
   </Target>
 
   <!--DumpProjects-->
   <Target Name="DumpProjects">
+    <Message Importance="$(Verbosity)" Text="ShimDir: $(ShimDir)" />
+    <Message Importance="$(Verbosity)" Text="ShimInclude: $(ShimInclude)" />
+    <Message Importance="$(Verbosity)" Text="ShimExclude: $(ShimExclude)" />
     <Message Importance="$(Verbosity)" Text="ShimProjectFiles:" />
     <Message Importance="$(Verbosity)" Text="  %(ShimProjectFiles.FullPath)" />
   </Target>
 
   <!--_ExecDispatch-->
   <Target Name="_ExecDispatch">
-    <PropertyGroup>
-      <_BuildId>$(BuildTarget)</_BuildId>
-      <_BuildId Condition="'$(IsConfigBuild)'=='true'">$(_BuildId).$(Configuration)</_BuildId>
-    </PropertyGroup>
-    <Message Importance="high" Text="$(BuildName) ($(_BuildId)) -> $(BuildLogFile)" />
+    <Message Importance="high" Text="$(BuildName) ($(BuildId)) -> $(BuildLogFile)" />
     <Message Importance="$(Verbosity)" Text="Command:" />
     <Message Importance="$(Verbosity)" Text="  %(BuildCommand.Identity)" />
 
@@ -89,7 +115,6 @@
 
   <!--_Dispatch-->
   <Target Name="_Dispatch">
-
     <MSBuild
       Projects="@(DispatchProjectFiles)"
       Targets="$(BuildTarget)"

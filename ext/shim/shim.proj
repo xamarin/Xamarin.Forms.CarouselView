@@ -1,48 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(StartupDir), .props))\.props" />
+  
+  <PropertyGroup>
+    <ShimDir Condition="'$(ShimDir)'==''">$(StartupDir)</ShimDir>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(ShimDir), .props))\.props" />
 
   <PropertyGroup>
     <ProjectGuid>{0410505A-9E46-48B7-A1A1-ACA80AEA0013}</ProjectGuid>
   </PropertyGroup>
 
   <ItemGroup>
+    <ShimTarget Include="$(ShimTarget)" />
+    <ShimReference Include="$(ShimReference)" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
+  </PropertyGroup>
+  <ItemGroup>
     <ShimProjectFiles
-      Include="$(MSBuildStartupDirectory)\**\*.csproj"
+      Include="$(ShimInclude)"
       Exclude="$(ShimExclude)"
     />
   </ItemGroup>
 
   <!--shim state-->
   <PropertyGroup>
-    <ShimState Condition="'$(ShimState)'==''">init</ShimState>
+    <ShimStateInitId>init</ShimStateInitId>
+    <ShimStatePrePostId>prepost</ShimStatePrePostId>
+    <ShimStateSelfId>self</ShimStateSelfId>
+    <ShimStateLoggingId>logging</ShimStateLoggingId>
+    
+    <ShimState Condition="'$(ShimState)'==''">$(ShimStateInitId)</ShimState>
 
-    <NextShimState Condition="'$(ShimState)'=='init'">self</NextShimState>
-    <NextShimState Condition="'$(ShimState)'=='self'">logging</NextShimState>
-    <NextShimState Condition="'$(ShimState)'=='logging'">logging</NextShimState>
-
-    <IsShimStateInit>false</IsShimStateInit>
-    <IsShimStateSelf>false</IsShimStateSelf>
-    <IsShimStateLogging>false</IsShimStateLogging>
-
-    <IsShimStateInit Condition="'$(ShimState)'=='init'">true</IsShimStateInit>
-    <IsShimStateSelf Condition="'$(ShimState)'=='self'">true</IsShimStateSelf>
-    <IsShimStateLogging Condition="'$(ShimState)'=='logging'">true</IsShimStateLogging>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStateInitId)'">$(ShimStatePrePostId)</NextShimState>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStatePrePostId)'">$(ShimStateSelfId)</NextShimState>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStateSelfId)'">$(ShimStateLoggingId)</NextShimState>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStateLoggingId)'">$(ShimStateLoggingId)</NextShimState>
   </PropertyGroup>
   <ItemGroup>
-    <DispatchProjectFiles Condition="$(IsShimStateSelf)" Include="$(ProjFile)" />
-    <DispatchProjectFiles Condition="$(IsShimStateLogging)" Include="@(ShimProjectFiles)" />
+    <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateSelfId)'" Include="$(ProjFile)" />
+    <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStatePrePostId)'" Include="$(ProjFile)" />
+    <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateLoggingId)'" Include="@(ShimProjectFiles)" />
   </ItemGroup>
 
   <!--build log files-->
   <PropertyGroup>
-    <BuildName Condition="$(IsShimStateInit)">Shim</BuildName>
+    <BuildName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</BuildName>
     
     <BuildLogDir>$(BuildBinDir)</BuildLogDir>
-    <_BuildFile>$(BuildLogDir)$(BuildName)</_BuildFile>
-    <_BuildFile Condition="'$(IsConfigBuild)'=='true'">$(_BuildFile).$(Configuration)</_BuildFile>
-    <_BuildFile>$(_BuildFile).$(BuildTarget)</_BuildFile>
+    <_BuildFile>$(BuildLogDir)$(BuildName).$(BuildId)</_BuildFile>
 
     <BuildSummaryFile>$(_BuildFile).summary</BuildSummaryFile>
     <BuildLogFile>$(_BuildFile).log</BuildLogFile>
@@ -71,16 +80,11 @@
     <ShimProperties Include="$(ShimProperties)" />
     <BuildCommand Include='/p:BuildTarget="$(BuildTarget)"' />
     <BuildCommand Include='/p:ShimState="$(NextShimState)"' />
+    <BuildCommand Include='/p:ShimDir=$(ShimDir)' />
     <BuildCommand Include='/p:Platform="$(EscapedPlatform)"' />
     <BuildCommand Include='/p:Configuration="$(EscapedConfiguration)"' />
     <BuildCommand Include="@(ShimProperties->'/p:%(Identity)')" Condition="'$(ShimProperties)'!=''" />
-  </ItemGroup>
-  <ItemGroup Condition="$(IsShimStateInit)">
     <BuildCommand Include='/p:ShimProperties="$(EscapedShimProperties)"' Condition="'$(ShimProperties)'!=''" />
-    <BuildCommand Include='/p:ShimBeforeProject="$(ShimBeforeProject)"' Condition="'$(ShimBeforeProject)'!=''" />
-    <BuildCommand Include='/p:ShimBeforeTarget="$(ShimBeforeTarget)"' Condition="'$(ShimBeforeTarget)'!=''" />
-    <BuildCommand Include='/p:ShimAfterProject="$(ShimAfterProject)"' Condition="'$(ShimAfterProject)'!=''" />
-    <BuildCommand Include='/p:ShimAfterTarget="$(ShimAfterTarget)"' Condition="'$(ShimAfterTarget)'!=''" />
   </ItemGroup>
   <ItemGroup>
     
