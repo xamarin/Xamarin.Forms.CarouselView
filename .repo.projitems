@@ -38,11 +38,11 @@
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ver\BuildInfoTemplate.cs" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.git.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.proj" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\BuildInfoTemplate.cs" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.git.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.props" />

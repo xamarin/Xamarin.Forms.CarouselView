@@ -4,7 +4,7 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimBeforeProject>$(VerProj)</ShimBeforeProject>
+    <ShimBeforeProject>$(IdProj)</ShimBeforeProject>
     <ShimTarget>NugetRestore</ShimTarget>
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
