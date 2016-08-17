@@ -29,8 +29,15 @@
     <None Include="$(MSBuildThisFileDirectory)ext\common.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\empty.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\node\node.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\node\node.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\node\node.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\part\part.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\ver\BuildInfoTemplate.cs" />
     <None Include="$(MSBuildThisFileDirectory)ext\ver\ver.git.targets" />

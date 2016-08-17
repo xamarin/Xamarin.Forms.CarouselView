@@ -9,8 +9,6 @@
         IsMobileLibraryPlatform
         IsMobileAppPlatform
         IsMetaPlatform
-        IsMobileLibraryPlatform
-        IsPartPlatform
         IsMobileTestPlatform
       
       Properties:
@@ -96,13 +94,10 @@
     <!--desktop-->
     <DesktopLibraryPlatformId>desktop</DesktopLibraryPlatformId>
 
-    <!--aut-->
-    <AndroidAutomationLibraryPlatformId>android.aut</AndroidAutomationLibraryPlatformId>
-    <IosAutomationLibraryPlatformId>ios.aut</IosAutomationLibraryPlatformId>
-    <WindowsAutomationLibraryPlatformId>windows.aut</WindowsAutomationLibraryPlatformId>
-
-    <!--mobile-->
+    <!--portable-->
     <PortableLibraryPlatformId>dotnet</PortableLibraryPlatformId>
+    
+    <!--mobile-->
     <AndroidLibraryPlatformId>monoDroid</AndroidLibraryPlatformId>
     <IosUnifiedLibraryPlatformId>xamarin.ios</IosUnifiedLibraryPlatformId>
     <IosClassicLibraryPlatformId>monoTouch</IosClassicLibraryPlatformId>
@@ -110,13 +105,10 @@
     <WindowsPhoneLibraryPlatformId>wpa</WindowsPhoneLibraryPlatformId>
     <WindowsTabletLibraryPlatformId>win</WindowsTabletLibraryPlatformId>
 
-    <!--part-->
-    <AndroidPartLibraryPlatformId>monoDroid.part</AndroidPartLibraryPlatformId>
-    <IosUnifiedPartLibraryPlatformId>xamarin.ios.part</IosUnifiedPartLibraryPlatformId>
-    <IosClassicPartLibraryPlatformId>monoTouch.part</IosClassicPartLibraryPlatformId>
-    <WindowsUniversalPartLibraryPlatformId>uap.part</WindowsUniversalPartLibraryPlatformId>
-    <WindowsPhonePartLibraryPlatformId>wpa.part</WindowsPhonePartLibraryPlatformId>
-    <WindowsTabletPartLibraryPlatformId>win.part</WindowsTabletPartLibraryPlatformId>
+    <!--mobile automation-->
+    <AndroidAutomationLibraryPlatformId>android.aut</AndroidAutomationLibraryPlatformId>
+    <IosAutomationLibraryPlatformId>ios.aut</IosAutomationLibraryPlatformId>
+    <WindowsAutomationLibraryPlatformId>windows.aut</WindowsAutomationLibraryPlatformId>
   </PropertyGroup>
 
   <!--app platform ids-->
@@ -209,17 +201,11 @@
         <SupportedPlatforms>
           dotnet;
           monodroid;
-          monodroid.part;
           monotouch;
-          monotouch.part;
           xamarin.ios;
-          xamarin.ios.part;
           win;
-          win.part;
           uap;
-          uap.part;
           wpa;
-          wpa.part;
         </SupportedPlatforms>
       </PropertyGroup>
     </When>
@@ -315,7 +301,6 @@
       <PropertyGroup>
         <Plat>$(DesktopLibraryPlatformId)</Plat>
         <PlatformType>$(MetaPlatformId)</PlatformType>
-        <ProjectType></ProjectType>
         <IsMetaPlatform>true</IsMetaPlatform>
         <MetaPlatform>$(Plat)</MetaPlatform>
         <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
@@ -425,68 +410,6 @@
       </PropertyGroup>
     </When>
 
-    <!--library parts-->
-    <When Condition="'$(Plat)'=='$(AndroidPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(AndroidPartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(Plat)'=='$(IosUnifiedPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(IosUnifiedPartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(Plat)'=='$(IosClassicPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(IosClassicPartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(Plat)'=='$(WindowsUniversalPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(WindowsUniversalPartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(Plat)'=='$(WindowsPhonePartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(WindowsPhonePartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(Plat)'=='$(WindowsTabletPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <Plat>$(WindowsTabletPartLibraryPlatformId)</Plat>
-        <PlatformType>$(MetaPlatformId)</PlatformType>
-        <IsMetaPlatform>true</IsMetaPlatform>
-        <MetaPlatform>$(Plat)</MetaPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-        <LeafPlatform>$(AnyCPULeafPlatformId)</LeafPlatform>
-      </PropertyGroup>
-    </When>
-
     <!--app-->
     <When Condition="'$(Plat)'=='$(AndroidAppPlatformId)'">
       <PropertyGroup>
@@ -588,7 +511,6 @@
       <PropertyGroup>
         <MetaPlatform>$(DesktopLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>dotnet</TargetFramework>
       </PropertyGroup>
     </When>
@@ -596,7 +518,6 @@
       <PropertyGroup>
         <MetaPlatform>$(PortableLibraryPlatformId)</MetaPlatform>
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10</TargetFramework>
       </PropertyGroup>
     </When>
@@ -668,56 +589,6 @@
         <LibraryPlatform>$(MetaPlatform)</LibraryPlatform>
         <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
         <TargetFramework>win81</TargetFramework>
-      </PropertyGroup>
-    </When>
-
-    <!--part library-->
-    <When Condition="'$(MetaPlatform)'=='$(AndroidPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(AndroidPartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(AndroidLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaPlatform)'=='$(IosUnifiedPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(IosUnifiedPartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(IosUnifiedLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaPlatform)'=='$(IosClassicPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(IosClassicPartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(IosClassicLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaPlatform)'=='$(WindowsUniversalPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(WindowsUniversalPartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(WindowsUniversalLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaPlatform)'=='$(WindowsPhonePartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(WindowsPhonePartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(WindowsPhoneLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(MetaPlatform)'=='$(WindowsTabletPartLibraryPlatformId)'">
-      <PropertyGroup>
-        <MetaPlatform>$(WindowsTabletPartLibraryPlatformId)</MetaPlatform>
-        <IsPartPlatform>true</IsPartPlatform>
-        <LibraryPlatform>$(WindowsTabletLibraryPlatformId)</LibraryPlatform>
-        <IsMobileLibraryPlatform>true</IsMobileLibraryPlatform>
       </PropertyGroup>
     </When>
 
@@ -981,16 +852,13 @@
         </UnpackagePlatformIds>
 
         <AndroidMobilePlatformIds>
-          $(AndroidPartLibraryPlatformId);
           $(AndroidLibraryPlatformId);
         </AndroidMobilePlatformIds>
 
         <IosUnifiedMobilePlatformIds>
-          $(IosUnifiedPartLibraryPlatformId);
           $(IosUnifiedLibraryPlatformId);
         </IosUnifiedMobilePlatformIds>
         <IosClassicMobilePlatformIds>
-          $(IosClassicPartLibraryPlatformId);
           $(IosClassicLibraryPlatformId);
         </IosClassicMobilePlatformIds>
         <IosMobilePlatformIds>
@@ -999,15 +867,12 @@
         </IosMobilePlatformIds>
 
         <WindowsUniversalMobilePlatformIds>
-          $(WindowsUniversalPartLibraryPlatformId);
           $(WindowsUniversalLibraryPlatformId);
         </WindowsUniversalMobilePlatformIds>
         <WindowsPhoneMobilePlatformIds>
-          $(WindowsPhonePartLibraryPlatformId);
           $(WindowsPhoneLibraryPlatformId);
         </WindowsPhoneMobilePlatformIds>
         <WindowsTabletMobilePlatformIds>
-          $(WindowsTabletPartLibraryPlatformId);
           $(WindowsTabletLibraryPlatformId)
         </WindowsTabletMobilePlatformIds>
         <WindowsMobilePlatformIds>

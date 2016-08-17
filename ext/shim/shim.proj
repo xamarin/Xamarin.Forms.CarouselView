@@ -50,6 +50,10 @@
     <BuildErrorFile>$(_BuildFile).error</BuildErrorFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Configuration Include="$(Configuration)"/>
+  </ItemGroup>
+  
   <!--shim command line-->
   <PropertyGroup>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
@@ -62,9 +66,9 @@
     <!--properties-->
     <ShimProperties Include="$(ShimProperties)" />
     <BuildCommand Include="/p:BuildTarget=$(BuildTarget)" />
+    <BuildCommand Include="/p:ShimState=$(NextShimState)" />
     <BuildCommand Include="/p:Platform=$(Platform)" />
     <BuildCommand Include="/p:Configuration=$(Configuration)" />
-    <BuildCommand Include="/p:ShimState=$(NextShimState)" />
     <BuildCommand Include="@(ShimProperties->'/p:%(Identity)')" Condition="'$(ShimProperties)'!=''" />
   </ItemGroup>
   <ItemGroup Condition="$(IsShimStateInit)">

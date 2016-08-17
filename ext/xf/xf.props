@@ -36,9 +36,4 @@
     <SelfReference Include="$(PackLeafPlatformId)" />
   </ItemGroup>
 
-  <!--Part ([platform].part)-->
-  <ItemGroup Condition="$(IsMobileLibraryProject) AND '$(IsPartPlatform)' == 'true' ">
-    <SelfReference Include="$(PortableLibraryPlatformId)" />
-  </ItemGroup>
-
 </Project>

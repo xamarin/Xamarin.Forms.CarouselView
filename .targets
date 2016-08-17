@@ -8,7 +8,9 @@
   <Import Project="$(ExtDir)common.targets" />
   <Import Project="$(ExtCleanDir)clean.targets"/>
   <Import Project="$(ExtNugetDir)nuget.targets" />
+  <Import Project="$(ExtNodeDir)node.targets" />
   <Import Project="$(ExtMetaDir)meta.targets" />
+  <Import Project="$(ExtPartDir)part.targets" />
   <Import Project="$(ExtXfDir)xf.targets"/>
 
   <Import Project="$(ExtDir)empty.targets" Condition="'$(IsLeafPlatform)'!='true'"/>

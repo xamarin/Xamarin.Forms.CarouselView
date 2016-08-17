@@ -16,7 +16,9 @@
   <!--ext paths-->
   <Import Project="$(ExtDir)clean\clean.pre.props"/>
   <Import Project="$(ExtDir)shim\shim.pre.props"/>
+  <Import Project="$(ExtDir)node\node.pre.props"/>
   <Import Project="$(ExtDir)meta\meta.pre.props"/>
+  <Import Project="$(ExtDir)part\part.pre.props"/>
   <Import Project="$(ExtDir)xf\xf.pre.props"/>
   <Import Project="$(ExtDir)ver\ver.pre.props"/>
   <Import Project="$(ExtDir)nuget\nuget.pre.props"/>

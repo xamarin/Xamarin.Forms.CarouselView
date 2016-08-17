@@ -39,7 +39,7 @@
     <!--dispatch build target-->
     <MSBuild
       Targets="_ExecDispatch"
-      Projects="$(ProjFile)"
+      Projects="@(ProjFile)"
       Properties="BuildTarget=$(BuildTarget)"
       Condition="$(IsShimStateSelf)"
     />
@@ -61,13 +61,13 @@
 
   <!--_ExecDispatch-->
   <Target Name="_ExecDispatch">
+    <Message Importance="high" Text="$(BuildName) ($(BuildTarget)) -> $(BuildLogFile)" />
     <Message Importance="$(Verbosity)" Text="Command:" />
     <Message Importance="$(Verbosity)" Text="  %(BuildCommand.Identity)" />
 
     <PropertyGroup>
       <BuildCommand>@(BuildCommand, ' ')</BuildCommand>
     </PropertyGroup>
-    <Message Importance="high" Text="$(BuildName) ($(BuildTarget)) -> $(BuildLogFile)" />
 
     <MakeDir Directories="$(BuildLogDir)"/>
     <Exec 

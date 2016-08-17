@@ -13,11 +13,10 @@
     <Platform Condition="'$(Platform)'==''">all</Platform>
   </PropertyGroup>
   
-  <!--Creates a clean "stack frame" for recursive calls by clearing out unwanted inherited properties-->
-  <!--see: https://github.com/Microsoft/msbuild/issues/902 -->
   <PropertyGroup>
     <MetaPlatform Condition="'$(_MetaPlatform)'!=''">$(_MetaPlatform)</MetaPlatform>
     <ClearRecursiveFrame>$(ClearRecursiveFrame)_MetaPlatform=;</ClearRecursiveFrame>
+    <KeepRecursiveFrame>$(KeepRecursiveFrame)_MetaPlatform=$(_MetaPlatform);</KeepRecursiveFrame>
   </PropertyGroup>
 
   <!--library platform ids-->
@@ -39,5 +38,12 @@
   <ItemGroup>
     <ChildPlatforms Include="$(ChildPlatforms)"/>
   </ItemGroup>
+
+  <ItemDefinitionGroup>
+    <SelfReference>
+      <!--prevents VS from creating an artifact in the solution explorer-->
+      <InProject>false</InProject>
+    </SelfReference>
+  </ItemDefinitionGroup>
 
 </Project>

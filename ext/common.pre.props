@@ -6,6 +6,11 @@
     <VisualStudioVersion>12.0</VisualStudioVersion>
   </PropertyGroup>
 
+  <!--default configuration-->
+  <PropertyGroup>
+    <Configuration Condition="'$(Configuration)'==''">debug</Configuration>
+  </PropertyGroup>
+
   <!--msbuild paths-->
   <PropertyGroup>
     <StartupDir>$(MSBuildStartupDirectory)\</StartupDir>

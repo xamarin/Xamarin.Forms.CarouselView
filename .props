@@ -9,6 +9,9 @@
     Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" 
     Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" 
   />
+  <Import Project="$(ExtNodeDir)node.props"/>
+  <Import Project="$(ExtMetaDir)meta.props"/>
+  <Import Project="$(ExtPartDir)part.props"/>
   <Import Project="$(ExtDir)common.props"/>
   <Import Project="$(ExtNugetDir)nuget.props"/>
   <Import Project="$(ExtXfDir)xf.props"/>

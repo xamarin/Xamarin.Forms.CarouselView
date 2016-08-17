@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project 
   ToolsVersion="12.0" 
   DefaultTargets="Build" 
@@ -66,7 +66,6 @@
     <!--This assembly is only referenced and never executed so there is no need for symbols-->
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
-    <IsPortablePlatform>true</IsPortablePlatform>
   </PropertyGroup>
   <ItemGroup Condition=" '$(IsPartPlatform)' != 'true' ">
     <Compile Include="portable\AssemblyInfo.cs" />
@@ -82,11 +81,6 @@
   -->
   <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
     <AssemblyName>$(PortableAssemblyName)</AssemblyName>
-    <IsPortablePlatform>true</IsPortablePlatform>
-  </PropertyGroup>
-  <PropertyGroup>
-    <DefineConstants Condition=" '$(IsPortablePlatform)' == 'true' ">$(DefineConstants)PORTABLE;</DefineConstants>
-    <DefineConstants Condition=" '$(IsPortablePlatform)' != 'true' ">$(DefineConstants)COMPOSITE;</DefineConstants>
   </PropertyGroup>
   <!--This assembly is only referenced and never executed so there is no need for symbols-->
   <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
@@ -102,6 +96,18 @@
     <OutputPath>$(OutDir)</OutputPath>
     <AppxPackageDir>$(OutputPath)</AppxPackageDir>
     <IntermediateOutputPath>$(IntermediateOutputPath)portable\obj\</IntermediateOutputPath>
+  </PropertyGroup>
+  <!--self reference portable library-->
+  <ItemGroup Condition="$(IsMobileLibraryPlatform) AND '$(IsPartPlatform)' == 'true' ">
+    <SelfReference Include="$(PortableLibraryPlatformId)" />
+  </ItemGroup>
+  <!--
+  
+    Mobile
+  -->
+  <PropertyGroup Condition="$(IsMobileLibraryPlatform) AND '$(IsPartPlatform)' != 'true' AND '$(IsLeafPlatform)'=='true' ">
+    <IsCompositePlatform>true</IsCompositePlatform>
+    <DefineConstants>$(DefineConstants)COMPOSITE;</DefineConstants>
   </PropertyGroup>
   <!--
   
@@ -212,4 +218,5 @@
     Targets
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
+
 </Project>
