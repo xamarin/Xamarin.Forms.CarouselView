@@ -11,14 +11,4 @@
     <TargetsFile>$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets</TargetsFile>
   </PropertyGroup>
 
-  <!--pack-->
-  <PropertyGroup Condition="'$(TargetProject)' == '$(PackProjectId)'">
-    <TargetsFile>$(ExtDir)nuget.pack.targets</TargetsFile>
-  </PropertyGroup>
-
-  <!--unpack-->
-  <PropertyGroup Condition="'$(TargetProject)' == '$(UnpackProjectId)'">
-    <TargetsFile>$(ExtDir)nuget.unpack.targets</TargetsFile>
-  </PropertyGroup>
-
 </Project>

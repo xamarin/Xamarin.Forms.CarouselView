@@ -16,6 +16,13 @@
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
   </PropertyGroup>
 
+  <!--tasks-->
+  <PropertyGroup>
+    <!--shim will build task assembly in a separate process-->
+    <TaskAssemblyPath>$(BuildBinConfigDir)build\dev\build\desktop\Xamarin.Forms.Build.dll</TaskAssemblyPath>
+  </PropertyGroup>
+  <Import Project=".tasks" Condition="Exists($(TaskAssemblyPath))" />
+
   <!--meta-->
   <PropertyGroup>
     <BuildName>Core</BuildName>

@@ -22,7 +22,6 @@
     <None Include="$(MSBuildThisFileDirectory)env\vcvarsallShim.bat" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\common.tasks" />
     <None Include="$(MSBuildThisFileDirectory)ext\debug.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
@@ -35,6 +34,7 @@
     <None Include="$(MSBuildThisFileDirectory)ext\node\node.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.post.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
@@ -55,12 +55,11 @@
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.TestCloud.Agent.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.UITest.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.pack.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\pack\nuget.unpack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\pack\unpack.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
-    <None Include="$(MSBuildThisFileDirectory)ext\shim.common.tasks" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.pre.props" />
@@ -92,6 +91,7 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselView.Test.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)src\.tasks" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)env\doskey.txt" />
