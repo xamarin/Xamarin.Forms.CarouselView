@@ -5,10 +5,27 @@
 
   <Target Name="Build" DependsOnTargets="_GenerateBuildInfo" />
   <Target Name="Clean" >
-    <!--TODO-->
+    <Delete
+      Files="
+        @(BuildInfoFile);
+        @(BuildNumberFile);
+        @(EnlistmentStatusFile);
+        @(EnlistmentRevisionFile);
+        @(EnlistmentBranchFile);
+        @(EnlistmentUrlFile);
+      "
+    />
   </Target>
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+  <Target Name="Publish"
+    DependsOnTargets="
+      _PublishFailIfDirty;
+      _PublishBuildNumber;
+      _PublishRevisionNumber;
+    "
+  />
 
+  <!--_GenerateBuildInfo-->
   <Target
     Name="_GenerateBuildInfo"
     DependsOnTargets="_GenerateBuildInfoIfNeeded">
@@ -19,6 +36,7 @@
     />
   </Target>
 
+  <!--_GenerateBuildInfoIfNeeded-->
   <Target
     Name="_GenerateBuildInfoIfNeeded"
     Inputs="@(EnlistmentStatusFile);@(EnlistmentRevisionFile);@(BuildNumberFile)"
@@ -97,7 +115,6 @@
 
     <!--enlistment is clean if status file is empty-->
     <PropertyGroup>
-      <IsEnlistmentClean>false</IsEnlistmentClean>
       <IsEnlistmentClean Condition="@(_Lines->Count()) == 0">true</IsEnlistmentClean>
     </PropertyGroup>
   </Target>
@@ -178,7 +195,7 @@
       <_Fresh>$([MSBuild]::Add(1, $(_Fresh)))</_Fresh>
     </PropertyGroup>
     <Warning
-      Condition="!$(IsEnlistmentClean)"
+      Condition="'$(IsEnlistmentClean)'!='true'"
       Text="No build number assigned because enslitment contains modified, new, or untracked files."
     />
     
@@ -220,14 +237,15 @@
     </PropertyGroup>
   </Target>
 
-  <!--Publish-->
   <Target
-    Name="Publish"
-    DependsOnTargets="
-      _LoadEnlistmentStatus;
-      _PublishBuildNumber;
-      _PublishRevisionNumber;
-    "/>
+    Name="_PublishFailIfDirty"
+    DependsOnTargets="_LoadEnlistmentStatus"
+  >
+    <Error 
+      Condition="'$(IsEnlistmentClean)'!='true'" 
+      Text="Publish aborted; Repository dirty at time of build. See: @(EnlistmentStatusFile)" 
+    />
+  </Target>
 
   <!--_PublishBuildNumber-->
   <Target 
@@ -257,7 +275,7 @@
       _PublishBuildNumber;
       _LoadEnlistmentRevision;
     "
-    Condition="$(IsEnlistmentClean)"
+    Condition="'$(IsEnlistmentClean)'=='true'"
   >
     <MakeDir Directories="$(BuildByRevisionDir)" />
    
@@ -266,7 +284,7 @@
       Text="Publication directory '$(BuildRevisionDir)' already exists."
     />
 
-    <Message Importance="high" Text="$(BuildNumberDir) -> $(BuildRevisionDir)" />
+    <Message Importance="high" Text="$(BuildRevisionDir) -> $(BuildNumberDir)" />
     <Exec Command="mklink /J $(BuildRevisionDir) $(BuildNumberDir) >NUL" />
   </Target>
 </Project>

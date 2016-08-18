@@ -16,7 +16,6 @@
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
-  <Import Project="nuspec.props"/>
   <!--
   
     Universal
@@ -45,13 +44,10 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|pack' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|pack' " />
   <PropertyGroup Condition=" '$(Plat)' == '$(PackLeafPlatformId)' " />
-  <!--
-
-    Nuget Unpack
-  -->
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|unpack' " />
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|unpack' " />
-  <PropertyGroup Condition=" '$(Plat)' == '$(UnpackLeafPlatformId)' "/>
+  <Import Project="nuspec.props" Condition=" '$(Plat)' == '$(PackLeafPlatformId)' "/>
+  <ItemGroup Condition="'$(Plat)' == '$(PackLeafPlatformId)' ">
+    <SelfReference Include="$(MobilePlatformId)" />
+  </ItemGroup>
   <!--
   
     Portable

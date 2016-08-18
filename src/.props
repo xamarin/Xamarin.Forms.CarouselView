@@ -4,7 +4,9 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimBeforeProject>$(IdProj)</ShimBeforeProject>
+    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
+    <ShimAfterProject>$(PublishProj)</ShimAfterProject>
+    <ShimAfterTarget>Publish</ShimAfterTarget>
     <ShimTarget>NugetRestore</ShimTarget>
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
@@ -14,7 +16,7 @@
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
-  </PropertyGroup>
+</PropertyGroup>
 
   <!--tasks-->
   <PropertyGroup>

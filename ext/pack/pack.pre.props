@@ -4,4 +4,9 @@
   <PropertyGroup>
     <ExtPackDir>$(MSBuildThisFileDirectory)</ExtPackDir>
   </PropertyGroup>
+
+  <PropertyGroup>
+    <NuspecPackageExt>.nuspec</NuspecPackageExt>
+    <NugetPackageExt>.nupkg</NugetPackageExt>
+  </PropertyGroup>
 </Project>

@@ -14,7 +14,7 @@ set repoDir=%cd%\
 set srcDir=%repoDir%src\
 set extDir=%repoDir%ext\
 set shimProj=%extDir%shim\shim.proj
-set idProj=%extDir%id\id.proj
+set publishProj=%extDir%publish\publish.proj
 set shellProj=%extDir%shell\shell.proj
 
 :: variables

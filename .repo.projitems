@@ -38,11 +38,11 @@
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\id\id.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\id\BuildInfoTemplate.cs" />
-    <None Include="$(MSBuildThisFileDirectory)ext\id\id.git.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\id\id.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\id\id.proj" />
+    <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\publish\BuildInfoTemplate.cs" />
+    <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.git.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.props" />
@@ -56,8 +56,7 @@
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.TestCloud.Agent.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.UITest.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\pack\unpack.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.proj" />

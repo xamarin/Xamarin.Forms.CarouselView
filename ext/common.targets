@@ -23,17 +23,53 @@
     <Exec Command="$(_Command)" />
   </Target>
 
+  <!--GetProperty-->
+  <Target 
+    Name="GetProperty"
+    Returns="@(_Value)"
+  >
+    <ItemGroup>
+      <_Name Include="$(Property)"/>
+    </ItemGroup>
+    <CreateItem 
+      Include="$(%(_Name.Identity))"
+      AdditionalMetadata="Name=%(Identity)">
+      <Output ItemName="_Values" TaskParameter="Include"/>
+    </CreateItem>
+    
+    <Message Importance="$(Verbosity)" Text="%(_Values.Name) -> %(Identity)" />
+  </Target>
+
   <Target
-    Name="GetLogArguments"
+    Name="ExecBat"
     Returns="@(TargetResult)"
   >
-    <!--inputs: BuildProcessName (e.g. Shim), BuildName (e.g. NugetRestore or Build.Debug)-->
+    <Exec
+      Command="$(BatFile)"
+      WorkingDirectory="$(WorkingDir)"
+    />
+  </Target>
+
+  <Target
+    Name="MakeLogDir"
+    Returns="@(TargetResult)"
+  >
+    <!--
+      inputs: 
+        BuildProcessName (e.g. Core)
+        BuildTarget (e.g. NugetRestore or Build)
+        [Configuration (e.g. Debug or Release)]
+        
+      outputs e.g.:
+        bld\bin\Core.NugetRestore.log
+        bld\bin\debug\Core.Build.log
+        bld\bin\release\Core.Build.log
+    -->
     <Message Importance="$(Verbosity)" Text="Command:" />
     <Message Importance="$(Verbosity)" Text="  %(_BuildCommandLog.Identity)" />
 
     <PropertyGroup>
-      <_BuildLogDir>$(BuildBinDir)</_BuildLogDir>
-      <_BuildFile>$(_BuildLogDir)$(BuildProcessName).$(BuildName)</_BuildFile>
+      <_BuildFile>$(BuildLogDir)$(BuildProcessName).$(BuildTarget)</_BuildFile>
 
       <_BuildSummaryFile>$(_BuildFile).summary</_BuildSummaryFile>
       <_BuildLogFile>$(_BuildFile).log</_BuildLogFile>
@@ -62,8 +98,8 @@
       <TargetResult Include="@(_BuildCommandLog)"/>
     </ItemGroup>
     
-    <MakeDir Directories="$(_BuildLogDir)"/>
-    <Message Importance="high" Text="$(BuildProcessName) ($(BuildName)) -> $(_BuildLogFile)" />
+    <MakeDir Directories="$(BuildLogDir)"/>
+    <Message Importance="high" Text="$(BuildProcessName) ($(BuildTarget)) -> $(_BuildLogFile)" />
   </Target>
 
 </Project>

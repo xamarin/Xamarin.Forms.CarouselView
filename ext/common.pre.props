@@ -63,6 +63,7 @@
     <!--buildDir-->
     <BuildBinSubDir>bin\</BuildBinSubDir>
     <BuildBinDir>$(BuildDir)$(BuildBinSubDir)</BuildBinDir>
+    <BuildLogDir>$(BuildBinDir)</BuildLogDir>
 
     <!--tempDir-->
     <BuildTempSubDir>obj\</BuildTempSubDir>

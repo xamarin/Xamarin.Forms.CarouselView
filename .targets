@@ -2,6 +2,7 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(ExtMetaDir)meta.post.props" />
   <Import Project="$(ExtXfDir)xf.post.props" />
+  <Import Project="$(ExtPackDir)pack.post.props" />
 
   <Import Project="$(TargetsFile)" Condition="'$(TargetsFile)'!=''"/>
   <Import Project="$(ExtDir)debug.targets" />

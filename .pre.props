@@ -21,6 +21,6 @@
   <Import Project="$(ExtDir)part\part.pre.props"/>
   <Import Project="$(ExtDir)pack\pack.pre.props"/>
   <Import Project="$(ExtDir)xf\xf.pre.props"/>
-  <Import Project="$(ExtDir)id\id.pre.props"/>
+  <Import Project="$(ExtDir)publish\publish.pre.props"/>
   <Import Project="$(ExtDir)nuget\nuget.pre.props"/>
 </Project>

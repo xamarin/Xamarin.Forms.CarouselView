@@ -6,11 +6,6 @@
     <TargetsFile>$(ExtPackDir)pack.targets</TargetsFile>
   </PropertyGroup>
 
-  <!--unpack-->
-  <PropertyGroup Condition="'$(TargetProject)' == '$(UnpackProjectId)'">
-    <TargetsFile>$(ExtPackDir)unpack.targets</TargetsFile>
-  </PropertyGroup>
-
   <!--android-->
   <PropertyGroup Condition="'$(TargetProject)' == '$(AndroidProjectId)'">
     <TargetsFile>$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets</TargetsFile>

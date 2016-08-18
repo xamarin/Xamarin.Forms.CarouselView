@@ -1,16 +1,143 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
-  <Import Project="pack.props" />
+<Project 
+  ToolsVersion="4.0"
+  DefaultTargets="Build" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
   <Import Project="$(ExtDir)empty.targets" />
 
   <PropertyGroup>
     <BuildDependsOn>
-      _PackCreate;
+      _UnpackBuild;
       $(BuildDependsOn)
     </BuildDependsOn>
   </PropertyGroup>
+
+  <!--_UnpackBuild-->
+  <Target
+    Name="_UnpackBuild"
+    DependsOnTargets="_UnpackStage" >
+
+    <MSBuild
+      Projects="$(ProjFile)"
+      Targets="MakeLogDir"
+      Properties="BuildProcessName=Unpack;BuildTarget=Build;BuildLogDir=$(UnpackLogDir)"
+    >
+      <Output ItemName="UnpackBuildLogs" TaskParameter="TargetOutputs" />
+    </MSBuild>
+
+    <PropertyGroup>
+      <_LogFileType>build.unpack</_LogFileType>
+
+      <_CommandLine>$(MSBuildExe) $(UnpackBuildDir)NugetUpdate.sln</_CommandLine>
+      <_CommandLine>$(_CommandLine) /t:Build</_CommandLine>
+      <_CommandLine>$(_CommandLine) /p:Platform=AnyCPU</_CommandLine>
+      <_CommandLine>$(_CommandLine) /p:Configuration=$(Configuration)</_CommandLine>
+      <_CommandLine>$(_CommandLine) /m</_CommandLine>
+      <_CommandLine>$(_CommandLine) $(Properties)</_CommandLine>
+      <_CommandLine>$(_CommandLine) @(UnpackBuildLogs, ' ')</_CommandLine>
+    </PropertyGroup>
+
+    <Exec Command="$(_CommandLine)" WorkingDirectory="$(UnpackAfterDir)" />
+  </Target>
+
+  <!--_UnpackStage-->
+  <Target
+    Name="_UnpackStage"
+    DependsOnTargets="_UnpackUpdate"
+  >
+    <ItemGroup>
+      <_SourceFiles Include="$(UnpackAfterDir)**\*" />
+    </ItemGroup>
+
+    <!--before-->
+    <MakeDir Directories="$(UnpackBeforeDir)" />
+    <Copy
+      SourceFiles="@(_SourceFiles)"
+      DestinationFolder="$(UnpackBuildDir)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+    />
+
+    <Message Importance="high" Text="$(MSBuildProjectName) -> $(UnpackAfterDir) => $(UnpackBuildDir)" />
+  </Target>
+
+  <!--_UnpackUpdate-->
+  <Target
+    Name="_UnpackUpdate"
+    DependsOnTargets="_UnpackRestore" >
+
+    <PropertyGroup>
+      <_Command>$(NugetExe) update NugetUpdate.sln</_Command>
+      <_Command>$(_Command) -id Xamarin.Forms.CarouselView</_Command>
+      <_Command>$(_Command) -RepositoryPath packages</_Command>
+      <_Command>$(_Command) -Source $(PackDir)</_Command>
+      <_Command>$(_Command) -Source $(NugetFeed)</_Command>
+      <_Command>$(_Command) -Verbosity detailed</_Command>
+      <_Command>$(_Command) -Prerelease</_Command>
+
+      <_Log>$(UnpackLogDir)update.log</_Log>
+    </PropertyGroup>
+
+    <WriteLinesToFile Lines="$(_Command)" File="$(_Log)" Overwrite="true" />
+    <Exec
+      Command="$(_Command) &gt;&gt; $(_Log)"
+      WorkingDirectory="$(UnpackAfterDir) "
+    />
+    <Message Importance="$(PackVerbosity)" Text="nuget.exe update -&gt; $(_Log)" />
+  </Target>
+
+  <!--_UnpackRestore-->
+  <Target
+    Name="_UnpackRestore"
+    DependsOnTargets="_UnpackCopy" >
+
+    <PropertyGroup>
+      <_Command>$(NugetExe) restore NugetUpdate.sln</_Command>
+      <_Command>$(_Command) -Source $(PackDir)</_Command>
+      <_Command>$(_Command) -Source $(NugetFeed)</_Command>
+      <_Command>$(_Command) -Verbosity detailed</_Command>
+      <_Command>$(_Command) -NoCache</_Command>
+
+      <_Log>$(UnpackLogDir)restore.log</_Log>
+    </PropertyGroup>
+    
+    <WriteLinesToFile Lines="$(_Command)" File="$(_Log)" Overwrite="true" />
+    <Exec
+      Command="$(_Command) &gt;&gt; $(_Log)"
+      WorkingDirectory="$(UnpackAfterDir)"
+    />
+    <Message Importance="$(PackVerbosity)" Text="nuget.exe restore -&gt; $(_Log)" />
+  </Target>
+
+  <!--_UnpackCopy-->
+  <Target
+    Name="_UnpackCopy"
+    DependsOnTargets="_PackCreate"
+  >
+    <ItemGroup>
+      <UnpackSolutionFiles Include="$(ProjDir)Unpack\**\*" />
+    </ItemGroup>
+
+    <!--before-->
+    <MakeDir Directories="$(UnpackBeforeDir)" />
+    <Copy
+      SourceFiles="@(UnpackSolutionFiles)"
+      DestinationFolder="$(UnpackBeforeDir)\%(RecursiveDir)"
+      SkipUnchangedFiles="true"
+    />
+
+    <!--after-->
+    <MakeDir Directories="$(UnpackAfterDir)" />
+    <Copy 
+      SourceFiles="@(UnpackSolutionFiles)" 
+      DestinationFolder="$(UnpackAfterDir)\%(RecursiveDir)"
+      SkipUnchangedFiles="true" 
+    />
+
+    <Message Importance="high" Text="$(MSBuildProjectName) -> $(UnpackBeforeDir) => $(UnpackAfterDir)" />
+  </Target>
   
+  <!--_PackCreate-->
   <Target
     Name="_PackCreate"
     DependsOnTargets="
@@ -18,10 +145,10 @@
       _PackCreateIfNecessary
     "
   >
-    <Message Importance="High" Text="$(MSBuildProjectName) -> $(NugetPackagePath)" />
+    <Message Importance="high" Text="$(MSBuildProjectName) -> $(NugetPackagePath)" />
   </Target>
 
-  <!--exec-->
+  <!--_PackCreateIfNecessary-->
   <Target
     Name="_PackCreateIfNecessary"
     Inputs="$(NuspecPath)"
@@ -42,22 +169,18 @@
     Name="_PackCreateNuspec"
     DependsOnTargets="_PackCreateNuspecIfNecessary"
   >
-    <Message Importance="$(PackVerbosity)" Text="$(MSBuildProjectName) -> $(NuspecPath)" />
+    <Message Importance="high" Text="$(MSBuildProjectName) -> $(NuspecPath)" />
   </Target>
   
-  <!--nuspec-->
+  <!--_PackCreateNuspecIfNecessary-->
   <Target
     Name="_PackCreateNuspecIfNecessary"
     Inputs="@(TargetResult)"
     Outputs="$(NuspecPath)"
   >
+    <Message Importance="$(PackVerbosity)" Text="OutputPath: $(NuspecPath)" />
     <Message Importance="$(PackVerbosity)" Text="NuspecReferences:" />
     <Message Importance="$(PackVerbosity)" Text="  %(TargetResult.Identity)" />
-
-    <ItemGroup>
-      <_NuspecPath Include="$(NuspecPath)" />
-    </ItemGroup>
-    <Message Importance="high" Text="%(_NuspecPath.FileName) -> %(_NuspecPath.Identity)" />
 
     <CreateNuspec
       Id="$(NuspecId)"
@@ -79,4 +202,5 @@
       OutputPath="$(NuspecPath)"
     />
   </Target>
+
 </Project>

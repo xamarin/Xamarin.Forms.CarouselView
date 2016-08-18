@@ -14,7 +14,7 @@
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=$(BuildTarget);BuildName=$(BuildTarget)"
+      Properties="BuildTarget=$(BuildTarget)"
     />
   </Target>
   
@@ -64,7 +64,7 @@
     <MSBuild
       Targets="_ExecDispatch"
       Projects="$(ProjFile)"
-      Properties="BuildTarget=%(ShimTarget.Identity);BuildName=%(Identity)"
+      Properties="BuildTarget=%(ShimTarget.Identity)"
       Condition="
         '$(ShimTarget)'!='' AND
         !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
@@ -74,7 +74,7 @@
     <!--expand configurations-->
     <CreateItem
       Include="@(ProjFile)"
-      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)$(Sc)BuildName=$(BuildTarget).%(Configuration.Identity)"
+      AdditionalMetadata="AdditionalProperties=Configuration=%(Configuration.Identity)"
     >
       <Output ItemName="ProjFileWithConfig" TaskParameter="Include"/>
     </CreateItem>
@@ -99,10 +99,10 @@
   <!--_ExecDispatch-->
   <Target Name="_ExecDispatch">
     
-    <!--BuildCommand += GetLogArguments-->
+    <!--BuildCommand += MakeLogDir-->
     <MSBuild 
       Projects="$(ProjFile)"
-      Targets="GetLogArguments"
+      Targets="MakeLogDir"
     >
       <Output ItemName="BuildCommand" TaskParameter="TargetOutputs" />
     </MSBuild>

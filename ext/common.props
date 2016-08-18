@@ -16,6 +16,7 @@
     <!--buildConfigurationDir-->
     <BuildConfigurationDir>$(Configuration)\</BuildConfigurationDir>
     <BuildBinConfigDir>$(BuildBinDir)$(BuildConfigurationDir)</BuildBinConfigDir>
+    <BuildLogDir>$(BuildBinConfigDir)</BuildLogDir>
 
     <!--outDir-->
     <OutRelDir Condition="'$(OutRelDir)'==''">$(ProjDir)</OutRelDir>

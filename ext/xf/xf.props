@@ -19,21 +19,5 @@
     <!--only copy local when building test-->
     <PrivateReference>True</PrivateReference>
   </PropertyGroup>
-  
-  <!--
-  
-    IsMobileLibraryProject ItemGroups & Properties
-      declare self-references outside of .csproj to prevent VS solution explorer from creating artifacts
-  -->
-
-  <!--Nuget Pack-->
-  <ItemGroup Condition="$(IsMobileLibraryProject) AND '$(Plat)' == '$(PackLeafPlatformId)' ">
-    <SelfReference Include="$(MobilePlatformId)" />
-  </ItemGroup>
-
-  <!--Nuget Unpack-->
-  <ItemGroup Condition="$(IsMobileLibraryProject) AND '$(Plat)' == '$(UnpackLeafPlatformId)' ">
-    <SelfReference Include="$(PackLeafPlatformId)" />
-  </ItemGroup>
 
 </Project>

@@ -4,14 +4,18 @@
 
   <!--NugetRestore-->
   <PropertyGroup>
-    <NugetRestoreDependsOn />
+    <NugetRestoreDependsOn>_NugetRestore</NugetRestoreDependsOn>
   </PropertyGroup>
   <Target
     Name="NugetRestore"
+    DependsOnTargets="$(NugetRestoreDependsOn)"
+  />
+  
+  <Target
+    Name="_NugetRestore"
     Inputs="@(NugetPackage->'$(NugetPackagesMetaDir)%(Identity)\packages.config')"
     Outputs="$(NugetPackagesMetaDir)%(Identity)\packages.config"
     Condition="'@(NugetPackage)'!=''"
-    DependsOnTargets="$(NugetRestoreDependsOn)"
   >
     <!--DownloadNugetExe-->
     <MSBuild
