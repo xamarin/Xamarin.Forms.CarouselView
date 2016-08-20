@@ -27,6 +27,8 @@
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\empty.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\gen\gen.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\gen\gen.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\node\node.props" />
@@ -39,7 +41,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\publish\BuildInfoTemplate.cs" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.git.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.proj" />
@@ -66,7 +67,10 @@
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\BuildInfo.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\build\.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\build\.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\build\dev\Build\Build.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\build\test\Unit\Build.Unit.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\build\test\Unit\test.targets" />
@@ -83,12 +87,18 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Entitlements.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Info.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Properties\AssemblyVersion.cs" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Properties\AssemblyVersion.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\Properties\AssemblyVersion.cs" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\Properties\AssemblyVersion.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselView.Test.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Properties\AssemblyVersion.t.cs" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Properties\AssemblyVersion.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
     <None Include="$(MSBuildThisFileDirectory)src\.tasks" />
   </ItemGroup>
@@ -118,6 +128,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)src\BuildInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>

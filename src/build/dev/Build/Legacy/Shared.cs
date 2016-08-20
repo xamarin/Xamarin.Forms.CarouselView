@@ -81,16 +81,16 @@ namespace Xamarin.Forms.Build
 			"MSBuildSourceTargetName",
 		};
 
-		TaskItem m_taskItem;
+		MyTaskItem m_taskItem;
 		string m_name;
 
-		public TaskMetadata(TaskItem taskItem, string name)
+		public TaskMetadata(MyTaskItem taskItem, string name)
 		{
 			m_taskItem = taskItem;
 			m_name = name;
 		}
 
-		public TaskItem TaskItem => m_taskItem;
+		public MyTaskItem TaskItem => m_taskItem;
 		public string Name => m_name;
 		public string Value => m_taskItem.Get(Name);
 		public bool IsNullOrEmpty => string.IsNullOrEmpty(Value);
@@ -98,11 +98,11 @@ namespace Xamarin.Forms.Build
 
 		public override string ToString() => $"{Name}: {Value}";
 	}
-	public sealed class TaskItem
+	public sealed class MyTaskItem
 	{
 		ITaskItem m_taskItem;
 
-		public TaskItem(ITaskItem taskItem)
+		public MyTaskItem(ITaskItem taskItem)
 		{
 			m_taskItem = taskItem;
 		}
@@ -142,13 +142,13 @@ namespace Xamarin.Forms.Build
 
 	public class ProjectReference
 	{
-		TaskItem m_taskItem;
+		MyTaskItem m_taskItem;
 
 		public ProjectReference(ITaskItem taskItem)
-			: this(new TaskItem(taskItem))
+			: this(new MyTaskItem(taskItem))
 		{
 		}
-		public ProjectReference(TaskItem taskItem)
+		public ProjectReference(MyTaskItem taskItem)
 		{
 			m_taskItem = taskItem;
 		}
@@ -176,10 +176,10 @@ namespace Xamarin.Forms.Build
 	public class ResolvedProjectReference : ProjectReference
 	{
 		public ResolvedProjectReference(ITaskItem taskItem)
-			: this(new TaskItem(taskItem))
+			: this(new MyTaskItem(taskItem))
 		{
 		}
-		public ResolvedProjectReference(TaskItem taskItem)
+		public ResolvedProjectReference(MyTaskItem taskItem)
 			: base(taskItem)
 		{
 		}

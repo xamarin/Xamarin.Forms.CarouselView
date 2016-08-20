@@ -61,7 +61,6 @@
       Projects="@(MetaReference)"
       Targets="$(MetaBuildTarget)"
       Properties="Configuration=%(Configuration.Identity)"
-      ContinueOnError="true"
       BuildInParallel="true"
     >
       <Output ItemName="TargetResult" TaskParameter="TargetOutputs" />

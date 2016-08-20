@@ -24,15 +24,17 @@
     <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RegexReplace.cs" />
+    <Compile Include="RegexMatches.cs" />
     <Compile Include="WriteLineToFile.cs" />
-    <Compile Include="SwitchFile.cs" />
+    <Compile Include="Legacy\SwitchFile.cs" />
     <Compile Include="DumpTaskItems.cs" />
-    <Compile Include="GenerateAssemblyInfo.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="WebCopy.cs" />
-    <Compile Include="Shared.cs" />
+    <Compile Include="Legacy\GenerateAssemblyInfo.cs" />
+    <Compile Include="Legacy\Logger.cs" />
+    <Compile Include="Legacy\WebCopy.cs" />
+    <Compile Include="Legacy\Shared.cs" />
     <Compile Include="CreateNuspec.cs" />
-    <Compile Include="PublishTask.cs" />
+    <Compile Include="Legacy\PublishTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />

@@ -33,7 +33,7 @@ namespace Xamarin.Forms.Build
 			var sc = StringComparer.InvariantCultureIgnoreCase;
 
 			var items = Items;
-			foreach (var item in items.Select(o => new TaskItem(o)))
+			foreach (var item in items.Select(o => new MyTaskItem(o)))
 			{
 				Log.LogMessage(DefaultMessageImportance, $"{indent}{item}");
 

@@ -44,13 +44,9 @@
       Targets="$(ShimAfterTarget)"
     />
   </Target>
-
+  
   <!--Shim-->
-  <Target 
-    Name="Shim"
-    BeforeTargets="Proxy"
-    Condition="'$(ShimState)'=='$(ShimStateSelfId)'"
-  >
+  <Target Name="Shim">
 
     <!--shim references-->
     <MSBuild
@@ -70,7 +66,15 @@
         !@(ShimTarget->AnyHaveMetadataValue('Identity','$(BuildTarget)'))
       "
     />
+  </Target>
 
+  <!--BuildProjects-->
+  <Target
+    Name="BuildProjects"
+    DependsOnTargets="Shim"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)'"
+    BeforeTargets="Proxy"
+  >
     <!--expand configurations-->
     <CreateItem
       Include="@(ProjFile)"
@@ -78,7 +82,7 @@
     >
       <Output ItemName="ProjFileWithConfig" TaskParameter="Include"/>
     </CreateItem>
-
+    
     <!--dispatch build target-->
     <MSBuild
       Targets="_ExecDispatch"

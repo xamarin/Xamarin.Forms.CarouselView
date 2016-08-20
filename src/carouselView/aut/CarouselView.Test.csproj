@@ -40,6 +40,16 @@
     <Compile Include="CarouselViewUITest.cs" />
   </ItemGroup>
   <!--
+  
+    AssemblyVersion
+  -->
+  <ItemGroup>
+    <None Include="Properties\AssemblyVersion.t.cs">
+      <DependentUpon>AssemblyVersion.cs</DependentUpon>
+    </None>
+    <Compile Include="Properties\AssemblyVersion.cs" />
+  </ItemGroup>
+  <!--
 
     Android
   -->

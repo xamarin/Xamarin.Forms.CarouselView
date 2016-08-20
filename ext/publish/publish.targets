@@ -3,7 +3,7 @@
   ToolsVersion="12.0" 
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="Build" DependsOnTargets="_GenerateBuildInfo" />
+  <Target Name="Build" DependsOnTargets="_RefreshEnlistmentInfo" />
   <Target Name="Clean" >
     <Delete
       Files="
@@ -25,53 +25,14 @@
     "
   />
 
-  <!--_GenerateBuildInfo-->
+  <!--_RefreshEnlistmentInfo-->
   <Target
-    Name="_GenerateBuildInfo"
-    DependsOnTargets="_GenerateBuildInfoIfNeeded">
-
-    <Message
-      Text="BuildInfo.cs -> @(BuildInfoFile)"
-      Importance="high"
-    />
-  </Target>
-
-  <!--_GenerateBuildInfoIfNeeded-->
-  <Target
-    Name="_GenerateBuildInfoIfNeeded"
-    Inputs="@(EnlistmentStatusFile);@(EnlistmentRevisionFile);@(BuildNumberFile)"
-    Outputs="@(BuildInfoFile)"
+    Name="_RefreshEnlistmentInfo"
     DependsOnTargets="
       _RefreshEnlistmentStatus;
       _RefreshEnlistmentRevision;
-      _RefreshBuildNumber
+      _RefreshBuildNumber;
     ">
-
-    <!--enlistment revision-->
-    <ReadLinesFromFile File="@(EnlistmentRevisionFile)">
-      <Output TaskParameter="Lines" PropertyName="_EnlistmentRevision" />
-    </ReadLinesFromFile>
-
-    <!--build number-->
-    <ReadLinesFromFile File="@(BuildNumberFile)">
-      <Output TaskParameter="Lines" PropertyName="_BuildNumber" />
-    </ReadLinesFromFile>
-
-    <!--generate buildInfo.cs-->
-    <PropertyGroup>
-      <_BuildInfo>$([System.IO.File]::ReadAllText('BuildInfoTemplate.cs'))</_BuildInfo>
-    </PropertyGroup>
-    <PropertyGroup>
-      <_BuildInfo>$(_BuildInfo.Replace('[NUMBER]', '$(_BuildNumber)'))</_BuildInfo>
-      <_BuildInfo>$(_BuildInfo.Replace('[REVISION]', '$(_EnlistmentRevision)'))</_BuildInfo>
-      <_BuildInfo>$(_BuildInfo.Replace('[URL]', 'todo-find-branch'))</_BuildInfo>
-      <_BuildInfo>$(_BuildInfo.Replace('[BRANCH]', 'todo-find-url'))</_BuildInfo>
-    </PropertyGroup>
-    <WriteLinesToFile 
-      File="@(BuildInfoFile)" 
-      Lines="$(_BuildInfo)" 
-      Overwrite="true" 
-    />
   </Target>
 
   <!--_RefreshEnlistmentStatus-->
@@ -140,7 +101,7 @@
     </ReadLinesFromFile>
     <Warning 
       Condition="'$(IsEnlistmentClean)'!='true'" 
-      Text="No build revision assigned because enslitment contains modified, new, or untracked files."
+      Text="No build revision assigned because enslitment contains modified, new, or untracked files. See: @(EnlistmentStatusFile)"
     />
     
     <Message
@@ -196,7 +157,7 @@
     </PropertyGroup>
     <Warning
       Condition="'$(IsEnlistmentClean)'!='true'"
-      Text="No build number assigned because enslitment contains modified, new, or untracked files."
+      Text="No build number assigned because enslitment contains modified, new, or untracked files. See: @(EnlistmentStatusFile)"
     />
     
     <Message

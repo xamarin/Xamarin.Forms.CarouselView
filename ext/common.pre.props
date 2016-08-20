@@ -43,8 +43,8 @@
   
   <!--escaping-->
   <PropertyGroup>
-    <!--;-->
-    <Sc>%3B</Sc>
+    <Sc>%3B</Sc><!--;-->
+    <Ds>%24</Ds><!--$-->
     <Amp>&amp;</Amp>
     <Cr>%0D</Cr>
     <Lf>%0A</Lf>

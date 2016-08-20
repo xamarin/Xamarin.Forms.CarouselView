@@ -8,6 +8,7 @@
   <Import Project="$(ExtDir)debug.targets" />
   <Import Project="$(ExtDir)common.targets" />
   <Import Project="$(ExtCleanDir)clean.targets"/>
+  <Import Project="$(ExtGenDir)gen.targets" />
   <Import Project="$(ExtNugetDir)nuget.targets" />
   <Import Project="$(ExtNodeDir)node.targets" />
   <Import Project="$(ExtMetaDir)meta.targets" />

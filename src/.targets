@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  DefaultTargets="Build" 
+  InitialTargets="LoadBuildInfo"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., .targets))\.targets" />
+
+  <!--LoadBuildInfo-->
+  <Target Name="LoadBuildInfo">
+    <ItemGroup>
+      <_BuildInfo Include="@(BuildNumberFile)">
+        <Name>BuildNumber</Name>
+      </_BuildInfo>
+      <_BuildInfo Include="@(EnlistmentRevisionFile)">
+        <Name>EnlistmentRevision</Name>
+      </_BuildInfo>
+      <_BuildInfo Include="@(EnlistmentBranchFile)">
+        <Name>EnlistmentBranch</Name>
+      </_BuildInfo>
+      <_BuildInfo Include="@(EnlistmentUrlFile)">
+        <Name>EnlistmentUrl</Name>
+      </_BuildInfo>
+    </ItemGroup>
+    
+    <ReadLinesFromFile 
+      File="%(_BuildInfo.Identity)"
+      Condition="Exists(%(Identity))"
+    >
+      <Output TaskParameter="Lines" PropertyName="%(Name)" />
+    </ReadLinesFromFile>
+  </Target>
+
+</Project>

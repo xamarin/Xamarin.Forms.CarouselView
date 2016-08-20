@@ -9,5 +9,8 @@
   <UsingTask TaskName="$(TaskRootNamespace)DumpTaskItems" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="$(TaskRootNamespace)WebCopy" AssemblyFile="$(TaskAssemblyPath)" />
   <UsingTask TaskName="$(TaskRootNamespace)GenAssemblyInfoFile" AssemblyFile="$(TaskAssemblyPath)" />
-  <UsingTask TaskName="$(TaskRootNamespace)WriteLineToFile" AssemblyFile="$(TaskAssemblyPath)" /> 
+  <UsingTask TaskName="$(TaskRootNamespace)WriteTextToFile" AssemblyFile="$(TaskAssemblyPath)" />
+  
+  <UsingTask TaskName="$(TaskRootNamespace)RegexMatches" AssemblyFile="$(TaskAssemblyPath)" /> 
+  <UsingTask TaskName="$(TaskRootNamespace)RegexReplace" AssemblyFile="$(TaskAssemblyPath)" /> 
 </Project>

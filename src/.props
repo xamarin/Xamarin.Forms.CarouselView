@@ -5,8 +5,8 @@
   <!--shim-->
   <PropertyGroup>
     <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
-    <ShimAfterProject>$(PublishProj)</ShimAfterProject>
-    <ShimAfterTarget>Publish</ShimAfterTarget>
+    <!--<ShimAfterProject>$(PublishProj)</ShimAfterProject>
+    <ShimAfterTarget>Publish</ShimAfterTarget>-->
     <ShimTarget>NugetRestore</ShimTarget>
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
@@ -16,7 +16,7 @@
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
-</PropertyGroup>
+  </PropertyGroup>
 
   <!--tasks-->
   <PropertyGroup>
@@ -30,11 +30,17 @@
     <BuildProcessName>Core</BuildProcessName>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <!--TODO: discover dynamically-->
-    <SourceControlBranch>master</SourceControlBranch>
-    <SourceControlUrl>https://github.com/xamarin/Xamarin.Forms.Carousel.git</SourceControlUrl>
+  <!--BuildInfo-->
+  <ItemGroup>
+    <Template Include="$(SrcDir)BuildInfo.t.cs">
+      <DependentUpon>BuildInfo.cs</DependentUpon>
+      <SubstituteExpandedResult>true</SubstituteExpandedResult>
+    </Template>
+    <Compile Include="$(SrcDir)BuildInfo.cs" />
+  </ItemGroup>
 
+  <!--AssemblyVersion-->
+  <PropertyGroup>
     <BuildMajorVersion>2</BuildMajorVersion>
     <BuildMinorVersion>3</BuildMinorVersion>
     <BuildPatchVersion>0</BuildPatchVersion>

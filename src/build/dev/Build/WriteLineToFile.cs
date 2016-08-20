@@ -11,15 +11,17 @@ using System.Diagnostics;
 
 namespace Xamarin.Forms.Build
 {
-	public sealed class WriteLineToFile : AbstractTask
+	public sealed class WriteTextToFile : AbstractTask
 	{
-		public string Line { get; set; }
 		public string File { get; set; }
+		public string Text { get; set; }
+		public bool Overwrite { get; set; }
 
 		protected override void Run()
 		{
-			using (var sw = new StreamWriter(File, append: true))
-				sw.WriteLine(Line);
+			var append = !Overwrite;
+			using (var sw = new StreamWriter(File, append: append))
+				sw.Write(Text);
 		}
 	}
 }

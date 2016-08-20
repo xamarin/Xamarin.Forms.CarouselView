@@ -1,0 +1,1 @@
+[assembly: System.Reflection.AssemblyVersion("$(BuildVersion)." + BuildInfo.Number)]

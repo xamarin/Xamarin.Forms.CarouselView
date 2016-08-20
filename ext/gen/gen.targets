@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <BuildDependsOn>
+      RefreshTemplateExpansions;
+      $(BuildDependsOn)
+    </BuildDependsOn>
+  </PropertyGroup>
+  
+  <!--RefreshTemplateExpansions-->
+  <Target
+    Name="RefreshTemplateExpansions"
+    Outputs="%(Template.Identity)"
+    Condition="'@(Template)'!=''"
+  >
+    <!--get path to tempalte-->
+    <PropertyGroup>
+      <TemplateIdentity>%(Template.Identity)</TemplateIdentity>
+      <TemplatePath>$([System.IO.Path]::GetFullPath('%(Template.Identity)'))</TemplatePath>
+      <TemplateText>$([System.IO.File]::ReadAllText($(TemplatePath)))</TemplateText>
+    </PropertyGroup>
+
+    <!--get path to expansion-->
+    <PropertyGroup>
+      <ExpansionPath>$(TemplatePath.Replace('.t',''))</ExpansionPath>
+      <ExpansionIdentity>@(Compile->WithMetadataValue('FullPath', '$(ExpansionPath)')->'%(Identity)')</ExpansionIdentity>
+      <ExpansionText>$([System.IO.File]::ReadAllText($(ExpansionIdentity)))</ExpansionText>
+      <ExpansionFileName>$([System.IO.Path]::GetFileName($(ExpansionPath)))</ExpansionFileName>
+      <ExpansionPathFresh>$(IntermediateOutputPathAbsolute)$(ExpansionFileName)</ExpansionPathFresh>
+    </PropertyGroup>
+    <Message Importance="$(Verbosity)" Text="  TemplatePath: $(TemplatePath)" />
+    <Message Importance="$(Verbosity)" Text="  ExpansionFileName: $(ExpansionFileName)" />
+    <Message Importance="$(Verbosity)" Text="  ExpansionPath: $(ExpansionPath)" />
+
+    <!--find variables of form: $(Name)-->
+    <RegexMatches
+      Input="$(TemplateText)"
+      Pattern="(?&lt;=[$][(]).*?(?=[)])"
+    >
+      <Output ItemName="Match" TaskParameter="Matches" />
+    </RegexMatches>
+
+    <!--load replacement values-->
+    <ItemGroup>
+      <Pattern Include="@(Match->'[$(Ds)][(]%(Identity)[)]')">
+        <Name>%(Identity)</Name>
+        <Replacement>$(%(Identity))</Replacement>
+      </Pattern>
+    </ItemGroup>
+    <Message Importance="$(Verbosity)" Text="  Replacements:" />
+    <Message Importance="$(Verbosity)" Text="    %(Pattern.Name) -> %(Replacement)" />
+
+    <!--replace variables with values-->
+    <RegexReplace
+      Input="$(TemplateText)"
+      Pattern="@(Pattern)"
+    >
+      <Output PropertyName="ExpansionTextFresh" TaskParameter="Result" />
+    </RegexReplace>
+
+    <!--write fresh expansion-->
+    <MakeDir Directories="$(IntermediateOutputPathAbsolute)" />
+    <WriteTextToFile
+      File="$(ExpansionPathFresh)"
+      Text="$(ExpansionTextFresh)"
+      Overwrite="true"
+    />
+    <Message Importance="$(Verbosity)" Text="  ExpansionFileName -> $(ExpansionPathFresh)" />
+
+    <!--test if expansion is stale-->
+    <PropertyGroup>
+      <IsExpansionStale Condition="'$(ExpansionTextFresh)'!='$(ExpansionText)'">true</IsExpansionStale>
+      <SubstituteExpandedResult>%(Template.SubstituteExpandedResult)</SubstituteExpandedResult>
+    </PropertyGroup>
+    <Message Importance="$(Verbosity)" Text="  IsExpansionStale: $(IsExpansionStale)" />
+    <Message Importance="$(Verbosity)" Text="    SubstituteExpandedResult: $(SubstituteExpandedResult)" />
+
+    <!--error if expansion is false-->
+    <Error 
+      Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'!='true'"
+      Text="Expansion of template '$(TemplatePath)' is stale."
+    />
+
+    <!--replace result-->
+    <ItemGroup Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'=='true'">
+      <Compile Remove="$(ExpansionIdentity)"/>
+      <Compile Include="$(ExpansionPathFresh)"/>
+    </ItemGroup>
+    <Message
+      Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'=='true'"
+      Importance="$(Verbosity)" Text="$(ExpansionIdentity) -> $(ExpansionPathFresh)" 
+    />
+  </Target>
+
+</Project>
