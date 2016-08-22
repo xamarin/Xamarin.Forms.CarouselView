@@ -1,3 +1,7 @@
+Dry run build of CarouselView library generated using the following command
+
+    \src\carouselView\lib> msbuild /v:m /t:dryrun /p:platform=mobile
+
 ````
 Microsoft (R) Build Engine version 14.0.25420.1
 Copyright (C) Microsoft Corporation. All rights reserved.
