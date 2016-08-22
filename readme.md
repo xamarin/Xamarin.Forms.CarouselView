@@ -1,17 +1,72 @@
-# Build Environment
-Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build enviroment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now the following commands should get you off the ground:
+# Quick Start
+Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now the following commands should get you off the ground:
 
 ## Opening Solution
 
-1. open cmd.exe using `\env\env.lnk`
+1. launch shell via `\env\env.lnk`
 2. type `restore` to restore nuget files
 3. type `\src\Xamarin.Forms.CarouselView.sln`
 
-## Building Everything
+## Building like CI does
 
 1. open `cmd.exe` \env\env.lnk
 2. type `build` to build both debug and release package
-3. package will be at `\bin\bld\release\carouselView\nuget\`
+3. nuget package will be at `\bin\bld\release\carouselView\nuget\`
+
+# Xamarin.Forms Build System
+The Xamarin.Forms library build environment addresses challenges encountered while developing CarouselView with the goal of simplifying the creation of Xamarin.Forms libraries in general. 
+
+## Highlights
+This section enumerates selected achievements of this effort specific to Xamarin.Forms library creation (as opposed to general build enhancements).
+
+Consumption of libraries is siplified. The number of binaries a Xamarin.Forms app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable (and shim) logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring).
+
+Creation of libraries is similarly simplified. The number of C# projects required for building a library which supports all Xamarin.Forms platforms is reduced from 7 (e.g. a project for Portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] to 1. This is achieved by "merging" the 7 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
+
+    src\carouselView\lib> msbuild myLibrary.csproj /p:platform=monodroid
+
+To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group platform `mobile`. To peek under the hood, pass `/t:dryRun` to dump the tree traversal used to build these "meta-platforms". 
+
+The number of C# projects required to build an app (as is necessary for library testing) is similarly reduced from 7 to 1 and also has a corrisponding seta of meta-platforms.
+
+## Platform Tree
+The full "platform tree" for library and app projects is as follows:
+
+````
+▌ all
+├──▌ pack (references mobile)
+└──▌ mobile
+   ├──▌portable
+   |  └──▌ dotnet (library)
+   ├──▌android
+   |  ├──▌ monodroid (library)
+   |  └──▌ monodroid.app (app)
+   ├──▌ios
+   |  └──▌ ios.unified
+   |  |  ├──▌ xamarin.ios (library)
+   |  |  ├──▌ xamarin.ios.phone (app)
+   |  |  └──▌ xamarin.ios.sim (app)
+   |  └──▌ ios.classic
+   |     ├──▌monotouch (library)
+   |     ├──▌monotouch.phone (app)
+   |     └──▌monotouch.sim (app)
+   └──▌windows
+      ├──▌ windows.universal
+      |  ├──▌ uap (library)
+      |  └──▌ uap.32 (app)
+      ├──▌ windows.phone
+      |  ├──▌ wpa (library)
+      |  └──▌ wpa.32 (app)
+      └──▌ windows.tablet
+         ├──▌ win (library)
+         ├──▌ win.32 (app)
+         ├──▌ win.64 (app)
+         └──▌ wpa.arm (app)
+````
+
+The unified Xamarin.Forms library and app projects contain a folder for each platform the contents of which will only be compiled (and have correct intellisense) when the corresponding platform is specified. Debugging is gently hacked in with the addition of CarouselView.App.[Platform] C# projects. These projects could, should, and hopefully will, be merged into the unified app project via the creation of a VSIP plugin. 
+
+Reflecting over project settings in Visual Studio has been made to work (e.g. when Properties is opened the compilation symbols will be correct) however edits to the unified project via the UI are generally not supported (e.g. adding a new file for a specific platform via the UI will require editing the project file by hand and moving the Compile element under the [ItemGroup][3] with the correct Condition for the platform in which it's expected to be compiled). Again, a VSIP plugin would make this experiance more "delightful".
 
 # Directories
 The following directories are well known to the build system and shell. Navigate to most well known directories by typing its name into the shell (just try type the name to see if there is an alias). Type `r` to navigate to the root directory.
@@ -19,8 +74,8 @@ The following directories are well known to the build system and shell. Navigate
 ## Enlistment
 The following well-known directories are under source control. Build artifacts are placed outside of these directories which allows for a vastly simplified \.gitignore file.
 ````
-▌ root of enlistement
-├──▌ src - filescontribute to build output
+▌ root of enlistment
+├──▌ src – files that contribute to build output
 ├──▌ ext - files that extend msbuild
 ├──▌ env - files that initialize the shell; misc .bat files
 └──▌ doc - files that document the system
@@ -29,7 +84,7 @@ The following well-known directories are under source control. Build artifacts a
 ## Artifacts
 The following well-known directories are under generated by the build and are not under source control.
 ````
-▌ root of enlistement
+▌ root of enlistment
 ├──▌ bld - output of build
 │  ├──▌ bin - resultant binaries of build
 │  └──▌ obj - temporary build files
@@ -79,21 +134,6 @@ build - build both release and debug
 rbuild - build release
 dbuild - build debug
 
-# History
-
-The Xamarin.Forms library build environment addresses challenges encountered while developing CarouselView with the goal of simplifying the creation of Xamarin.Forms libraries in general. 
-
-The number of binaries an app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achived by compiling the portable (and shim) logic into the platform library. This allows a `RenderWithAttribute` applied to the portable renderer to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated if the platform logic references internal portable logic. Under the hood, this is achived by kicking off additional compilations of the project. The code can check for the the `COMPOSITE` compilation symbol to know what type of compilation is occuring.
-
-The number of C# projects required for building a library is been reduced from 7 (e.g. a project for Portable, Android, iOS [Classic & Unified], and Windows [tablet, phone, uap] to 1. This is achived (with some effort!) by "merging" the 7 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
-
-    src\carouselView\lib> msbuild myLibrary.csproj /p:platform=monodroid
-
-To build the iOS version substitute `monodroid` with `monotouch`. To build all platforms at once use the platform `mobile`. To peek under the hood, pass `/t:dryRun` to dump the tree traversal used to build these "meta-platforms".
-
-Tooling support for the unified project is as best as can be done without creating a VSIP project system. Intellisense, debugging, and reflecting over some the project settings can be made to work (e.g. when Properties is opened the compilation symbols will be correct) however edits to the unified project via the UI are generally not supported (e.g. adding a new file for a specific platform via the UI will require editing the project file by hand and moving the Compile reference under the [ItemGroup][3] which the correct Condition for the platform in which it's expected to be compiled). Again, to support UI operations a Xamarin.Forms VSIP plugin will need to be developed.
-
-The project contains a folder for each platform the contents of which will only be compiled (and have correct intellisense) when the corrisponding platform is selected. Debugging is gently hacked in; Ideally, to debug the android application select the CarouselView.App.Android csproj.
 
 __ 
 
