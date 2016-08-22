@@ -38,28 +38,28 @@ The full "platform tree" for library, app, and test projects are shown below (co
 ├──▌ pack (references mobile)
 └──▌ mobile
    ├──▌portable
-   |  └──▌ dotnet (library)
+   │  └──▌ dotnet (library)
    ├──▌android [ANDROID]
-   |  ├──▌ monodroid (library)
-   |  ├──▌ monodroid.app (app)
-   |  └──▌ android.aut (automation)
+   │  ├──▌ monodroid (library)
+   │  ├──▌ monodroid.app (app)
+   │  └──▌ android.aut (automation)
    ├──▌ios [IOS]
-   |  └──▌ ios.unified [IOS_UNIFIED]
-   |  |  ├──▌ xamarin.ios (library)
-   |  |  ├──▌ xamarin.ios.phone (app)
-   |  |  └──▌ xamarin.ios.sim (app)
-   |  ├──▌ ios.classic [IOS_CLASSIC]
-   |  |  ├──▌ monotouch (library)
-   |  |  ├──▌ monotouch.phone (app)
-   |  |  └──▌ monotouch.sim (app)
-   |  └──▌ ios.aut (automation)
+   │  └──▌ ios.unified [IOS_UNIFIED]
+   │  │  ├──▌ xamarin.ios (library)
+   │  │  ├──▌ xamarin.ios.phone (app)
+   │  │  └──▌ xamarin.ios.sim (app)
+   │  ├──▌ ios.classic [IOS_CLASSIC]
+   │  │  ├──▌ monotouch (library)
+   │  │  ├──▌ monotouch.phone (app)
+   │  │  └──▌ monotouch.sim (app)
+   │  └──▌ ios.aut (automation)
    └──▌windows [WINDOWS]
       ├──▌ windows.universal [WINDOWS_UWP]
-      |  ├──▌ uap (library)
-      |  └──▌ uap.32 (app)
+      │  ├──▌ uap (library)
+      │  └──▌ uap.32 (app)
       ├──▌ windows.phone [WINDOWS_PHONE_APP]
-      |  ├──▌ wpa (library)
-      |  └──▌ wpa.32 (app)
+      │  ├──▌ wpa (library)
+      │  └──▌ wpa.32 (app)
       └──▌ windows.tablet [WINDOWS_APP]
          ├──▌ win (library)
          ├──▌ win.32 (app)
@@ -99,7 +99,7 @@ As viewed from the Visual Studio Solution Explorer the unified project for Carou
 ├──▌ CarouselView.csproj
 │  ├──▌ Properties
 │  │  └─ AssemblyVersion.cs - Contains AssemblyVersion attribute
-│  |     └─ AssemblyVersion.t.cs - Template expaded with msbuild variables; build fails if expansion doesn't match
+│  │     └─ AssemblyVersion.t.cs - Template expaded with msbuild variables; build fails if expansion doesn't match
 │  ├──▌ Portable
 │  │  └─ AssemblyInfo.cs - Typical AssemblyInfo.cs minus AssemblyVersion attribute
 │  ├──▌ Android [ANDROID]
@@ -107,28 +107,28 @@ As viewed from the Visual Studio Solution Explorer the unified project for Carou
 │  └──▌ Windows [WINDOWS]
 │
 ├──▌ CarouselView.App.csproj
-|  ├──▌ Properties
-|  │  └─ AssemblyVersion.cs
-|  |     └─ AssemblyVersion.t.cs
-|  ├──▌ Portable
-|  │  └─ AssemblyInfo.cs
-|  ├──▌ Android [ANDROID]
-|  ├──▌ iOS [IOS]
-|  ├──▌ Windows [WINDOWS]
-|  |  ├──▌ Phone [WINDOWS_PHONE_APP]
-|  |  ├──▌ Tablet [WINDOWS_APP]
-|  |  └──▌ Universal [WINDOWS_UWP]
-|  ├──▌ Resources (Xamarin Android project insists, for the moment, it's resource directory live at the project root)
-|  ├─ Info.plist (Xamarin iOS project insists, for the moment, they live at the project root)
-|  └─ Entitlements.plist (Xamarin iOS project insists, for the moment, they live at the project root)
-|
+│  ├──▌ Properties
+│  │  └─ AssemblyVersion.cs
+│  │     └─ AssemblyVersion.t.cs
+│  ├──▌ Portable
+│  │  └─ AssemblyInfo.cs
+│  ├──▌ Android [ANDROID]
+│  ├──▌ iOS [IOS]
+│  ├──▌ Windows [WINDOWS]
+│  │  ├──▌ Phone [WINDOWS_PHONE_APP]
+│  │  ├──▌ Tablet [WINDOWS_APP]
+│  │  └──▌ Universal [WINDOWS_UWP]
+│  ├──▌ Resources (Xamarin Android project insists, for the moment, it's resource directory live at the project root)
+│  ├─ Info.plist (Xamarin iOS project insists, for the moment, they live at the project root)
+│  └─ Entitlements.plist (Xamarin iOS project insists, for the moment, they live at the project root)
+│
 ├──▌ debugger - make one of the following projects current to enable debugging of CarouselView.App
 │  ├──▌ CarouselView.App.Android
 │  ├──▌ CarouselView.App.iOS
 │  ├──▌ CarouselView.App.Windows.UAP
 │  ├──▌ CarouselView.App.Windows.Phone
 │  └──▌ CarouselView.App.Windows.Tablet
-|
+│
 └──▌ CarouselView.Test
 ````
 
