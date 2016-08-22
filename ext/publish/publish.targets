@@ -204,7 +204,7 @@
   >
     <Error 
       Condition="'$(IsEnlistmentClean)'!='true'" 
-      Text="Publish aborted; Repository dirty at time of build. See: @(EnlistmentStatusFile)" 
+      Text="Publish aborted; Repository dirty at time of build. Set IsEnlistmentClean=true to override. See: @(EnlistmentStatusFile)" 
     />
   </Target>
 

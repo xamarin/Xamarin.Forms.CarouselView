@@ -36,11 +36,12 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimName>Publish</ShimName>
     <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
+    <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
     <ShimAfterProject>$(PublishProj)</ShimAfterProject>
     <ShimAfterTarget>Publish</ShimAfterTarget>
-    <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
   </PropertyGroup>
 
 </Project>

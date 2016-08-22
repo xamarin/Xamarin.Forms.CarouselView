@@ -44,3 +44,7 @@ color 1f
 
 :: use unicode
 chcp 65001 >NUL
+
+:: check environment
+call where git.exe  > nul 2>&1
+if %errorlevel% neq 0 (echo 'git.exe' not found on path. Please add git.exe to path.)

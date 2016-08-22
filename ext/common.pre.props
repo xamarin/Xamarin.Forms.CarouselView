@@ -74,4 +74,9 @@
   <PropertyGroup>
     <ToolsDir>$(DlsDir)tools\</ToolsDir>
   </PropertyGroup>
+  
+  <!--nuget-->
+  <PropertyGroup>
+    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
+  </PropertyGroup>
 </Project>

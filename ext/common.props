@@ -4,7 +4,6 @@
   <!--nuget-->
   <PropertyGroup>
     <NugetExeVersion>v3.4.4</NugetExeVersion>
-    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
     <NugetPackagesDir>$([MSBuild]::MakeRelative($(ProjDir), $(NugetPackagesDirAbsolute)))</NugetPackagesDir>
     <NugetPackagesMetaDir>$(NugetPackagesDirAbsolute)meta\</NugetPackagesMetaDir>
     <NugetExe>$(ToolsDir)Nuget.exe</NugetExe>

@@ -46,7 +46,11 @@
   </Target>
   
   <!--Shim-->
-  <Target Name="Shim">
+  <Target 
+    Name="Shim"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)'"
+    BeforeTargets="Proxy"
+  >
 
     <!--shim references-->
     <MSBuild
@@ -72,7 +76,7 @@
   <Target
     Name="BuildProjects"
     DependsOnTargets="Shim"
-    Condition="'$(ShimState)'=='$(ShimStateProjectsId)'"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND '$(ShimName)'!=''"
     BeforeTargets="Proxy"
   >
     <!--expand configurations-->

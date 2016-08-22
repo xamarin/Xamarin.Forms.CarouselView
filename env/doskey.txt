@@ -46,12 +46,12 @@ fpublish=msbuild %publishProj% /v:m /t:publish /p:IsEnlistmentClean=true
 shim=msbuild %shimProj% /t:dumpProjects
 restore=msbuild %shimProj% /v:m /t:nugetRestore
 dryRun=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="debug" /p:ShimProperties="$*"
-build=msbuild %shimProj% /v:m /t:build /p:Configuration="debug" /p:ShimProperties="$*"
-clean=msbuild %shimProj% /v:m /t:clean /p:Configuration="debug" /p:ShimProperties="$*"
+build=msbuild %shimProj% /v:m /t:build /p:Configuration="release;debug" /p:ShimProperties="$*"
+clean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release;debug" /p:ShimProperties="$*"
+dbuild=msbuild %shimProj% /v:m /t:build /p:Configuration="debug" /p:ShimProperties="$*"
+dclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="debug" /p:ShimProperties="$*"
 rbuild=msbuild %shimProj% /v:m /t:build /p:Configuration="release" /p:ShimProperties="$*"
 rclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release" /p:ShimProperties="$*"
-abuild=msbuild %shimProj% /v:m /t:build /p:Configuration="release;debug" /p:ShimProperties="$*"
-aclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release;debug" /p:ShimProperties="$*"
 
 ;= link
 linkdir=mklink /j $1 $2
@@ -59,12 +59,17 @@ diruse=subst $1 $2
 
 ;= go
 r=go rootDir
-src=go srcDir
-env=go envDir
-bin=go buildBinDir
-tmp=go tempDir
-bld=go buildDir
-dls=go dlsDir
+src=go SrcDir
+env=go EnvDir
+bin=go BuildBinDir
+obj=go BuildTempDir
+tmp=go TempDir
+bld=go BuildDir
+dls=go DlsDir
+packages=go NugetPackagesDirAbsolute
+tools=go ToolsDir
+drp=go DropDir
+ext=go ExtDir
 
 ;= carouselView
 cv=pushd %srcDir%carouselView
@@ -72,7 +77,6 @@ lib=pushd %srcDir%carouselView\lib
 app=pushd %srcDir%carouselView\app
 aut=pushd %srcDir%carouselView\aut
 after=pushd %tstDir%nugetTest\after
-sln=call sln.bat
 
 ;= tools
 diff=p4merge -C utf8 $1 $2
