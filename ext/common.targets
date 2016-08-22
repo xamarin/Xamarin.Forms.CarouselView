@@ -56,7 +56,7 @@
   >
     <!--
       inputs: 
-        BuildProcessName (e.g. Core)
+        ShimName (e.g. Core)
         BuildTarget (e.g. NugetRestore or Build)
         [Configuration (e.g. Debug or Release)]
         
@@ -69,7 +69,7 @@
     <Message Importance="$(Verbosity)" Text="  %(_BuildCommandLog.Identity)" />
 
     <PropertyGroup>
-      <_BuildFile>$(BuildLogDir)$(BuildProcessName).$(BuildTarget)</_BuildFile>
+      <_BuildFile>$(BuildLogDir)$(ShimName).$(BuildTarget)</_BuildFile>
 
       <_BuildSummaryFile>$(_BuildFile).summary</_BuildSummaryFile>
       <_BuildLogFile>$(_BuildFile).log</_BuildLogFile>
@@ -99,7 +99,7 @@
     </ItemGroup>
     
     <MakeDir Directories="$(BuildLogDir)"/>
-    <Message Importance="high" Text="$(BuildProcessName) ($(BuildTarget)) -> $(_BuildLogFile)" />
+    <Message Importance="high" Text="$(ShimName) ($(BuildTarget)) -> $(_BuildLogFile)" />
   </Target>
 
 </Project>

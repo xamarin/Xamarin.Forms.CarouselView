@@ -212,9 +212,7 @@
   <Target 
     Name="_PublishBuildNumber"
     DependsOnTargets="_LoadBuildNumber"
-  >
-    <MakeDir Directories="$(BuildByNumberDir)" />
-   
+  >  
     <Error
       Condition="Exists($(BuildNumberDir))"
       Text="Publication directory '$(BuildNumberDir)' already exists."

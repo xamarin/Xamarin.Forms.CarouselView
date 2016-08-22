@@ -33,5 +33,14 @@
       <DefineConstants>$(DefineConstants)HAS_BUILD_INFO;</DefineConstants>
     </PropertyGroup>
   </Target>
-  
+
+  <!--shim-->
+  <PropertyGroup>
+    <ShimName>Publish</ShimName>
+    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
+    <ShimAfterProject>$(PublishProj)</ShimAfterProject>
+    <ShimAfterTarget>Publish</ShimAfterTarget>
+    <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
+  </PropertyGroup>
+
 </Project>

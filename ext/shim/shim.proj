@@ -17,9 +17,6 @@
     <Configuration Include="$(Configuration)"/>
   </ItemGroup>
 
-  <PropertyGroup>
-    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
-  </PropertyGroup>
   <ItemGroup>
     <ShimProjectFiles
       Include="$(ShimInclude)"
@@ -49,7 +46,7 @@
 
   <!--shim command line-->
   <PropertyGroup>
-    <BuildProcessName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</BuildProcessName>
+    <ShimName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</ShimName>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
     <EscapedPlatform>$(Platform.Replace(";","$(Sc)"))</EscapedPlatform>
     <EscapedConfiguration>$(Configuration.Replace(";","$(Sc)"))</EscapedConfiguration>

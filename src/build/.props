@@ -8,12 +8,9 @@
 
   <!--shim-->
   <PropertyGroup>
+    <ShimName>Setup</ShimName>
     <ShimExclude/>
     <ShimReference/>
   </PropertyGroup>
 
-  <!--meta-->
-  <PropertyGroup>
-    <BuildProcessName>Setup</BuildProcessName>
-  </PropertyGroup>
 </Project>

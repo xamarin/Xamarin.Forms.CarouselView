@@ -4,10 +4,10 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
-    <!--<ShimAfterProject>$(PublishProj)</ShimAfterProject>
-    <ShimAfterTarget>Publish</ShimAfterTarget>-->
+    <ShimName>Core</ShimName>
     <ShimTarget>NugetRestore</ShimTarget>
+    <ShimAfterProject />
+    <ShimAfterTarget />
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
       $(MSBuildThisFileDirectory)**\android\**\*.csproj;
@@ -15,6 +15,7 @@
       $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
   </PropertyGroup>
 
@@ -24,11 +25,6 @@
     <TaskAssemblyPath>$(BuildBinConfigDir)build\dev\build\desktop\Xamarin.Forms.Build.dll</TaskAssemblyPath>
   </PropertyGroup>
   <Import Project=".tasks" Condition="Exists($(TaskAssemblyPath))" />
-
-  <!--meta-->
-  <PropertyGroup>
-    <BuildProcessName>Core</BuildProcessName>
-  </PropertyGroup>
 
   <!--BuildInfo-->
   <ItemGroup>
