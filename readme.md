@@ -1,11 +1,12 @@
 # Quick Start
-Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now the following commands should get you off the ground:
+Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now, the following commands should get you off the ground:
 
 ## Opening Solution
 
 1. launch shell via `\env\env.lnk`
 2. type `restore` to restore nuget files
-3. type `\src\Xamarin.Forms.CarouselView.sln`
+3. cd `src\build` and type 'build' to build task assembly
+3. open `\src\Xamarin.Forms.CarouselView.sln`
 
 ## Building like CI does
 
@@ -26,9 +27,9 @@ Consumption of Xamarin.Forms libraries is simplified. The number of binaries a X
 
 Creation of libraries is simplified. The number of C# projects required for building a library which supports all Xamarin.Forms platforms is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
 
-    src\carouselView\lib> msbuild myLibrary.csproj /p:platform=monodroid
+    src\carouselView\lib> msbuild /p:platform=monodroid
 
-To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group platform `mobile`. To peek under the hood, pass `/t:dryRun` (see [example](doc/dryRun.md)) to dump the tree traversal used to build these "meta-platforms". 
+To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group platform `mobile`. 
 
 Creation of apps is simplified. The number of C# projects required to build an app (as is necessary for library testing) is similarly reduced from 6 (Android, iOS [classic & unified], and Windows [tablet, phone, uap]) to 1 and also has a corresponding set of meta-platforms.
 
@@ -231,8 +232,47 @@ Typically, solutions with multiple projects suffer from duplication of project s
 
 Those `.props` files "closest" to the project override those files further away. For example, the [`.props`](.props) file in root directory is included before any other simultaneously making its definitions available to those files and allowing them to override those settings. For example, the `.props` files processed when loading [`CarouselView.csproj`][2] are, [`\.props`](.props), then [`src\.props`](src/.props), then [`src\carouselView\.props`](src/carouselview/.props), then finally the project itself. Note that they are included in the reverse order but, because the first thing they each do is import their parent `.props` file they are logically processed in the reverse of the include order. Don't think too hard about it; It works as you'd expect.
 
-### Project and Platform Types
+Some settings gathered into `.props` files are common to all projects (e.g. `WarningLevel` and `TreatWarningsAsErrors`) however most are common to a specific _type_ of platform or project. For example, [`src/.props'](src/.props) (where most of settings extracted from various types of projects end up) contains the following section describing debug settings:
+````
+  <!--debug-->
+  <PropertyGroup Condition="'$(Configuration)'=='debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>$(DefineConstants)TRACE;DEBUG;</DefineConstants>
+  </PropertyGroup>
+````
+In general, such sections take the following form:
+````
+  <!--common setting for type-->
+  <PropertyGroup Condition="'$(Type)'=='TypeId'">
+    <TypeSetting>setting</TypeSetting>
+  </PropertyGroup>
+````
+Before a `.props` file can determine the type of project loaded, and so what settings are appropriate, properties describing the type of the project must be loaded. How type information about a project is populated is the subject of the next section.
 
+### Project and Platform Types
+The first property defined by all projects is `<MetaProject>` which in conjunction with the `Configuration`, `Platform`, and `MetaPlatform` global properties (passed via the command line or through the `msbuild` task), identifies the _type_ of the project. With the type established, a hierarchy of `.pre.props` files (which are loaded before `.props` files) are able to populate properties which fully describe all aspects of the type of the project being loaded and which are documented below.
+
+#### MetaProject
+A `MetaProject` is an amalgam of normal projects. All the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
+
+#### MetaPlatform
+A MetaPlatform will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. A `group` MetaPlatform will have one or more child `group` or `meta` MetaPlatforms. A `meta` MetaPlatform will have exactly one child `leaf` MetaPlatform.
+
+Each `MetaProject` supports a set of `meta` `MetaPlatforms` as documented below:
+
+| MetaPlatform | MetaProject |
+| --- | --- |
+| xf.aut | android.aut, iios.aut |
+| xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
+| xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
+
+Much can be inferred by studying [`ext/xf/xf.pre.props`](ext/xf/xf.pre.props), and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
+
+    src\carouselView\lib> msbuild /v:m /p:platform=all /t:dryRun
+
+For even more information about project reference resolution pass `/p:verbosity=high` along with any target.
 
 # Shell
 
