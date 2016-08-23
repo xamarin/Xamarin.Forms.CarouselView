@@ -47,4 +47,8 @@ chcp 65001 >NUL
 
 :: check environment
 call where git.exe  > nul 2>&1
-if %errorlevel% neq 0 (echo 'git.exe' not found on path. Please add git.exe to path.)
+if %errorlevel% neq 0 (echo Please add 'git.exe' to path.)
+
+if "%iosServerAddress%"=="" (echo Please set 'iosServerAddress' to enable building iOS apps.)
+if "%iosServerPassword%"=="" (echo Please set 'iosServerPassword' to enable building iOS apps.)
+if "%iosServerUser%"=="" (echo Please set 'iosServerUser' to enable building iOS apps.)

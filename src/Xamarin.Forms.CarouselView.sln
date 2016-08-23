@@ -214,8 +214,10 @@ Global
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|Android.ActiveCfg = debug|android.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|Android.Build.0 = debug|android.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|Desktop.ActiveCfg = debug|[none]
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS.ActiveCfg = debug|[none]
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS (sim).ActiveCfg = debug|[none]
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS.ActiveCfg = debug|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS.Build.0 = debug|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS (sim).ActiveCfg = debug|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS (sim).Build.0 = debug|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS Unified.ActiveCfg = debug|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS Unified.Build.0 = debug|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|iOS Unified (sim).ActiveCfg = debug|ios.aut
@@ -229,8 +231,10 @@ Global
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|Android.ActiveCfg = release|android.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|Android.Build.0 = release|android.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|Desktop.ActiveCfg = release|[none]
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS.ActiveCfg = release|[none]
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS (sim).ActiveCfg = release|[none]
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS.ActiveCfg = release|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS.Build.0 = release|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS (sim).ActiveCfg = release|ios.aut
+		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS (sim).Build.0 = release|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS Unified.ActiveCfg = release|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS Unified.Build.0 = release|ios.aut
 		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|iOS Unified (sim).ActiveCfg = release|ios.aut
@@ -273,9 +277,8 @@ Global
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|Desktop.ActiveCfg = debug|[none]
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS.ActiveCfg = debug|[none]
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS (sim).ActiveCfg = debug|[none]
-		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS Unified.ActiveCfg = debug|iPhone
-		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS Unified (sim).ActiveCfg = debug|iPhoneSimulator
-		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS Unified (sim).Build.0 = debug|iPhoneSimulator
+		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS Unified.ActiveCfg = debug|[none]
+		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|iOS Unified (sim).ActiveCfg = debug|[none]
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|Win Phone.ActiveCfg = debug|[none]
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|Win Tablet (arm).ActiveCfg = debug|[none]
 		{09BD58E5-80C5-45F5-A506-663DA2FAB178}.Debug|Win Tablet (x32).ActiveCfg = debug|[none]

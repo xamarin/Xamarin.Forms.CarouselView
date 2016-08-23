@@ -9,6 +9,7 @@
     <Import_RootNamespace>Targets</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory).gitattributes" />
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env\androidEmulatorLaunch.bat" />
