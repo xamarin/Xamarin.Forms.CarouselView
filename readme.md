@@ -252,9 +252,23 @@ In general, such sections take the following form:
 Before a `.props` file can determine the type of project loaded, and so what settings are appropriate, properties describing the type of the project must be loaded. How type information about a project is populated is the subject of the next section.
 
 ### Project and Platform Types
-The first property defined by all projects is `<MetaProject>` which in conjunction with the `Configuration`, `Platform`, and `MetaPlatform` global properties (passed via the command line or through the `msbuild` task), identifies the _type_ of the project. With the type established, a hierarchy of `.pre.props` files (which are loaded before `.props` files) are able to populate properties which fully describe all aspects of the type of the project being loaded. 
+The first property defined by all projects is `<MetaProject>` which in conjunction with the `Configuration`, `Platform`, and `MetaPlatform` global properties (passed via the command line or through the `msbuild` task), identifies the _type_ of the project. With the type established, a hierarchy of `.pre.props` files (which are loaded before `.props` files) are able to populate properties which fully describe all aspects of the type of the project being loaded and which are documented below.
 
-While a complete description of the type system is beyond the scope of this documentation, much can be inferred by studying [`ext/xf/xf.pre.props`](ext/xf/xf.pre.props), and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
+#### MetaProject
+A `MetaProject` is an amalgam of normal projects. All the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
+
+#### MetaPlatform
+A MetaPlatform will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. A `group` MetaPlatform will have one or more child `group` or `meta` MetaPlatforms. A `meta` MetaPlatform will have exactly one child `leaf` MetaPlatform.
+
+Each `MetaProject` supports a set of `meta` `MetaPlatforms` as documented below:
+
+| MetaPlatform | MetaProject |
+| --- | --- |
+| xf.aut | android.aut, iios.aut |
+| xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
+| xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
+
+Much can be inferred by studying [`ext/xf/xf.pre.props`](ext/xf/xf.pre.props), and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
 
     src\carouselView\lib> msbuild /v:m /p:platform=all /t:dryRun
 
