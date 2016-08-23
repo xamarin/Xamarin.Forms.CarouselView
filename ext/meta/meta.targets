@@ -15,7 +15,7 @@
   <!--_ResolveMetaProjectReferencePaths-->
   <Target
     Name="_ResolveMetaProjectReferencePaths"
-    Condition="'$(PlatformType)'=='$(LeafPlatformId)' AND '$(BuildTarget)'=='Compile'"
+    Condition="'$(MetaPlatformType)'=='$(LeafPlatformId)' AND '$(BuildTarget)'=='Compile'"
   >
     <PropertyGroup>
       <!--
@@ -36,7 +36,7 @@
   <!--_ResolveMetaProjectReferences-->
   <Target 
     Name="_ResolveMetaProjectReferences"
-    Condition="'$(PlatformType)'=='$(LeafPlatformId)'"
+    Condition="'$(MetaPlatformType)'=='$(LeafPlatformId)'"
   >
     <Error
       Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($|;)'))"
@@ -80,7 +80,7 @@
   <!--_ResolveMetaPlatform-->
   <Target
     Name="_ResolveMetaPlatform"
-    Condition="'$(PlatformType)'=='$(MetaPlatformId)'"
+    Condition="'$(MetaPlatformType)'=='$(MetaPlatformId)'"
   >
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
@@ -95,12 +95,12 @@
   <!--_ResolveMetaPlatformGroup-->
   <Target
     Name="_ResolveMetaPlatformGroup"
-    Condition="'$(PlatformType)'=='$(GroupPlatformId)'"
+    Condition="'$(MetaPlatformType)'=='$(GroupPlatformId)'"
   >
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
         <ReferenceSource>GroupPlatform</ReferenceSource>
-        <Platform>%(ChildPlatforms.Identity)</Platform>
+        <Platform>%(ChildMetaPlatforms.Identity)</Platform>
         <AdditionalProperties>$(KeepRecursiveFrame)Platform=%(Identity)</AdditionalProperties>
       </MetaReference>
     </ItemGroup>
@@ -109,7 +109,7 @@
   <!--_FindBadMetaPlatform-->
   <Target
     Name="_FindBadMetaPlatform"
-    Condition="'$(PlatformType)'==''"
+    Condition="'$(MetaPlatformType)'==''"
   >
     <Error
       Condition="'$(LeafPlatform)'==''"

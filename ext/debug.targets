@@ -9,7 +9,7 @@
     <Message Text="  MetaPlatform: $(MetaPlatform)" Importance="high" />
     <Message Text="  Configuration: $(Configuration)" Importance="high" />
     <Message Text="  OutDirAbsolute: $(OutDirAbsolute)" Importance="high" />
-    <Message Text="  ChildPlatforms: $(ChildPlatforms)" Importance="high" />
+    <Message Text="  ChildMetaPlatforms: $(ChildMetaPlatforms)" Importance="high" />
     <Message Text="  LibraryPlatform: $(LibraryPlatform)" Importance="high" />
     <Message Text="  MobilePlatform: $(MobilePlatform)" Importance="high" />
     <Message Text="  MobileSubPlatform: $(MobileSubPlatform)" Importance="high" />

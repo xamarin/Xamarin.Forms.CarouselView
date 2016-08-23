@@ -30,13 +30,14 @@
 
   <!--ad-hoc platform group-->
   <PropertyGroup Condition="$(Plat.Contains(';'))">
-    <ChildPlatforms>$(Plat)</ChildPlatforms>
-    <PlatformType>$(GroupPlatformId)</PlatformType>
+    <ChildMetaPlatforms>$(Plat)</ChildMetaPlatforms>
+    <MetaPlatformType>$(GroupPlatformId)</MetaPlatformType>
+    <IsGroupPlatform>true</IsGroupPlatform>
   </PropertyGroup>
 
   <!--ChildPlatform: Property -> Items-->
   <ItemGroup>
-    <ChildPlatforms Include="$(ChildPlatforms)"/>
+    <ChildMetaPlatforms Include="$(ChildMetaPlatforms)"/>
   </ItemGroup>
 
   <ItemDefinitionGroup>
