@@ -258,15 +258,24 @@ The first property defined by all projects is `<MetaProject>` which in conjuncti
 A `MetaProject` is an amalgam of normal projects. All the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
 
 #### MetaPlatform
-A MetaPlatform will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. A `group` MetaPlatform will have one or more child `group` or `meta` MetaPlatforms. A `meta` MetaPlatform will have exactly one child `leaf` MetaPlatform.
+`MetaPlatform` is the heart of the type system. It's what allows the grafting of Xamarin.Forms lexicon for platforms over the standard existing one. So instead of talking about `AnyCPU` or `x64` its possible to talk about `mobile`, `android`, or `win.arm` platforms. 
 
-Each `MetaProject` supports a set of `meta` `MetaPlatforms` as documented below:
+A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. 
+- A `group` `MetaPlatform` is simply a collection of one or more `group` or `meta` `MetaPlatforms` which are stored in `ChildMetaPlatforms`. 
+- A `meta` `MetaPlatform` is the name Xamarin.Forms commonly uses to refer to platforms and will have exactly one child `leaf` `MetaPlatform` which is stored in `LeafPlatform`. 
+- A `leaf` `MetaPlatform` is a normal platform (e.g. AnyCPU, x86) that is augmented with a `MetaPlatform`. The unified project system does its best to hide the existance of `leaf` `MetaPlatforms`.
+
+Each `MetaProject` supports a set of `MetaPlatforms` as documented below:
 
 | MetaPlatform | MetaProject |
 | --- | --- |
 | xf.aut | android.aut, iios.aut |
 | xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
 | xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
+
+Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, and `MetaPlatformTypes`.
+
+![Platform Image](doc/Platforms.gif)
 
 Much can be inferred by studying [`ext/xf/xf.pre.props`](ext/xf/xf.pre.props), and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
 
