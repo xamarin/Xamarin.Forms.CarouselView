@@ -15,7 +15,7 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 4. the build will be archived at `\drp\number\10001\`
 
 # Xamarin.Forms Build System
-The Xamarin.Forms library build environment addresses challenges encountered while developing CarouselView with the goal of simplifying the creation of Xamarin.Forms libraries in general. 
+The Xamarin.Forms library build environment addresses challenges encountered while developing CarouselView with the goal of simplifying general design, build, test, and packaging of Xamarin.Forms libraries. In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. Basically, CI "out-of-the-box". This works focuses on the clean, restore, build, package, and publish steps.
 
 ## Highlights
 This section enumerates selected achievements of this effort specific to Xamarin.Forms library creation (as opposed to general build enhancements).
@@ -195,7 +195,7 @@ Successful builds of clean enlistments from the root using the shim (see [bld](#
 ## Projects
 Project files have been modified to enable build features that simplify maintaining a CI infrastructure at the expense of tooling. The main tooling break are design time features of Visual Studio which modify project files because, without VSIP integration, Visual Studio in unaware of the new conventions. For example, adding a new file Android specific file via Visual Studio to [`CarouselView.csproj`][2] will require moving the `<Compile Include="NewAndroidFile.cs">` element to live under `<ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)'" >`. 
 
-Until VSIP integration is available, manual edits are more easily made after installing [EditProj][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project (`.repo`)[.repo]. The `.repo` project includes all msbuild files which allows for global search and replace of msbuild symbols. The shell alias `ts` will touch the solution file which has the effect of reloading changes made to msbuild files which are included by project files (which are otherwise cashed once at startup and never refreshed).
+Until VSIP integration is available, manual edits are more easily made after installing [EditProj][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
 
 ### General Project Template
 Project files all conform to the following general template sections of which are described in subsequent sections.
