@@ -18,22 +18,25 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 # Xamarin.Forms Build System
 The Xamarin.Forms build environment addresses challenges encountered while developing CarouselView with the immediate goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. 
 
-In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. Basically, CI "out-of-the-box". This works focuses on the clean, restore, build, package, and publish steps.
+In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. Basically, CI "out-of-the-box". This works focuses on the clean, restore, build, package, and publish steps. 
+
+The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built.
 
 ## Highlights
-This section enumerates selected achievements of this effort specific to Xamarin.Forms library creation. General build enhancements are covered in a later section.
+Consuming and producing Xamarin.Forms libraries is simplified cheifly by [reducing the number of projects](#project-reduction) consumed and produced by both mobile apps and libraries, by the introduction of a [mobile meta-platform tree](#mobile-metaplatform-tree) which integrates with existing Visual Studio [solution](#mobile-solution) and [project](#mobile-project) tooling, and finally, "de-duplicating" the msbuild files so build setting like `TreatWarningsAsErrors` appear only once and so can be centrally administered.
 
-Consumption of Xamarin.Forms libraries is simplified. The number of binaries a Xamarin.Forms app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring.  
+### Project Reduction
+The number of binaries a Xamarin.Forms app needs to reference to use a Xamarin.Forms library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring. 
 
-Creation of libraries is simplified. The number of C# projects required for building a library which supports all Xamarin.Forms platforms is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
+The number of projects required for building a Xamarin.Forms library is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own `MetaPlatform`. So, for example, the Android CarouselView library can be built like this:
 
-    src\carouselView\lib> msbuild /p:platform=monodroid
+    src\carouselView\lib> msbuild /p:MetaPlatform=monodroid
 
-To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group platform `mobile`. 
+To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group `MetaPlatform` `mobile`. 
 
-Creation of apps is simplified. The number of C# projects required to build an app (as is necessary for library testing) is similarly reduced from 6 (Android, iOS [classic & unified], and Windows [tablet, phone, uap]) to 1 and also has a corresponding set of meta-platforms.
+The number of projects required to build a Xamarin.Forms app for all supported platforms is reduced from 6 (Android, iOS [classic & unified], and Windows [tablet, phone, uap]) to 1 and also has a corresponding set of `MetaPlatforms`.
 
-## Platform Tree
+### Mobile MetaPlatform Tree
 The full "platform tree" for library, app, and test projects are shown below (compiler defines are given in brackets).
 
 ````
@@ -70,8 +73,8 @@ The full "platform tree" for library, app, and test projects are shown below (co
          └──▌ wpa.arm (app)
 ````
 
-## Solution Configuration and Platforms
-Creating a new Xamarin.Forms creates platforms in the solution file (`AnyCPU`, `ARM`, `x64`, `x86`, `IPhone`, `IPhoneSimulator`) which do not map directly to what we think of as _mobile_ platforms. The unified project system creates a set of meta-platforms that do map directly to mobile platforms and these are exposed in Visual Studio.
+#### Mobile Solution
+Typically, creating a new Xamarin.Forms project creates platforms in the solution file which do not map directly to what we think of as _mobile_ platforms (e.g. `AnyCPU`, `ARM`, `x64`, `x86`, `IPhone`, `IPhoneSimulator`). The unified project system creates a set of solution `MetaPlatforms` that do map directly to project `MetaPlatforms` list above and these are exposed in Visual Studio.
 
 | Solution | Library | App | Test | 
 | --- | --- | --- | --- |
@@ -88,7 +91,7 @@ Creating a new Xamarin.Forms creates platforms in the solution file (`AnyCPU`, `
 | Win Tablet (arm) | win | win.arm | |
 
 
-## Unified Xamarin.Forms Project
+#### Mobile Project
 The unified Xamarin.Forms library and app projects contain a folder for each platform the contents of which will only be compiled (and have correct intellisense) when the corresponding platform is specified. 
 
 Debugging support is gently hacked in with the addition of CarouselView.App.[Platform] C# projects. These projects could, should, and hopefully will, be merged into the unified app project via the creation of a VSIP plugin. 
