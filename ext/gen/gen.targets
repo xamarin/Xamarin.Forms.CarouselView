@@ -29,9 +29,9 @@
       <ExpansionFileName>$([System.IO.Path]::GetFileName($(ExpansionPath)))</ExpansionFileName>
       <ExpansionPathFresh>$(IntermediateOutputPathAbsolute)$(ExpansionFileName)</ExpansionPathFresh>
     </PropertyGroup>
-    <Message Importance="$(Verbosity)" Text="  TemplatePath: $(TemplatePath)" />
-    <Message Importance="$(Verbosity)" Text="  ExpansionFileName: $(ExpansionFileName)" />
-    <Message Importance="$(Verbosity)" Text="  ExpansionPath: $(ExpansionPath)" />
+    <Message Importance="$(GenVerbosity)" Text="  TemplatePath: $(TemplatePath)" />
+    <Message Importance="$(GenVerbosity)" Text="  ExpansionFileName: $(ExpansionFileName)" />
+    <Message Importance="$(GenVerbosity)" Text="  ExpansionPath: $(ExpansionPath)" />
 
     <!--find variables of form: $(Name)-->
     <RegexMatches
@@ -48,8 +48,8 @@
         <Replacement>$(%(Identity))</Replacement>
       </Pattern>
     </ItemGroup>
-    <Message Importance="$(Verbosity)" Text="  Replacements:" />
-    <Message Importance="$(Verbosity)" Text="    %(Pattern.Name) -> %(Replacement)" />
+    <Message Importance="$(GenVerbosity)" Text="  Replacements:" />
+    <Message Importance="$(GenVerbosity)" Text="    %(Pattern.Name) -> %(Replacement)" />
 
     <!--replace variables with values-->
     <RegexReplace
@@ -66,15 +66,15 @@
       Text="$(ExpansionTextFresh)"
       Overwrite="true"
     />
-    <Message Importance="$(Verbosity)" Text="  ExpansionFileName -> $(ExpansionPathFresh)" />
+    <Message Importance="$(GenVerbosity)" Text="  ExpansionFileName -> $(ExpansionPathFresh)" />
 
     <!--test if expansion is stale-->
     <PropertyGroup>
       <IsExpansionStale Condition="'$(ExpansionTextFresh)'!='$(ExpansionText)'">true</IsExpansionStale>
       <SubstituteExpandedResult>%(Template.SubstituteExpandedResult)</SubstituteExpandedResult>
     </PropertyGroup>
-    <Message Importance="$(Verbosity)" Text="  IsExpansionStale: $(IsExpansionStale)" />
-    <Message Importance="$(Verbosity)" Text="    SubstituteExpandedResult: $(SubstituteExpandedResult)" />
+    <Message Importance="$(GenVerbosity)" Text="  IsExpansionStale: $(IsExpansionStale)" />
+    <Message Importance="$(GenVerbosity)" Text="    SubstituteExpandedResult: $(SubstituteExpandedResult)" />
 
     <!--error if expansion is false-->
     <Error 
@@ -89,7 +89,7 @@
     </ItemGroup>
     <Message
       Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'=='true'"
-      Importance="$(Verbosity)" Text="$(ExpansionIdentity) -> $(ExpansionPathFresh)" 
+      Importance="$(GenVerbosity)" Text="$(ExpansionIdentity) -> $(ExpansionPathFresh)" 
     />
   </Target>
 

@@ -3,6 +3,7 @@
 
   <PropertyGroup>
     <ExtGenDir>$(MSBuildThisFileDirectory)</ExtGenDir>
+    <GenVerbosity>normal</GenVerbosity>
   </PropertyGroup>
 
   <ItemDefinitionGroup>

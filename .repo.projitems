@@ -11,6 +11,7 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitattributes" />
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env\androidEmulatorLaunch.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\androidPackageInstall.bat" />

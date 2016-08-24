@@ -62,6 +62,7 @@
       Targets="$(MetaBuildTarget)"
       Properties="Configuration=%(Configuration.Identity)"
       BuildInParallel="true"
+      RemoveProperties="$(FrameProperties)"
     >
       <Output ItemName="TargetResult" TaskParameter="TargetOutputs" />
     </MSBuild>
@@ -149,6 +150,7 @@
       <_Property Include="CommonTargetsPath" />
       <_Property Include="CSharpCoreTargetsPath" />
       <_Property Include="BuildingInsideVisualStudio" />
+      <_Property Include="FrameProperties" />
     </ItemGroup>
     <ItemGroup Condition="'$(IsLeafPlatform)'=='true'">
       <_Property Include="OutDirAbsolute" />

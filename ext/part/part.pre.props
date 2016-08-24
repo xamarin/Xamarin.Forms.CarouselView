@@ -9,6 +9,7 @@
     <IsPartPlatform Condition="'$(_IsPartPlatform)'!=''">$(_IsPartPlatform)</IsPartPlatform>
     <ClearRecursiveFrame>$(ClearRecursiveFrame)_IsPartPlatform=;</ClearRecursiveFrame>
     <KeepRecursiveFrame>$(KeepRecursiveFrame)_IsPartPlatform=$(_IsPartPlatform);</KeepRecursiveFrame>
+    <FrameProperties>$(FrameProperties)IsPartPlatform;</FrameProperties>
   </PropertyGroup>
   
 </Project>

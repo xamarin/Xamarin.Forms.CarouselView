@@ -223,57 +223,53 @@
   <Choose>
 
     <!--leaf-->
-    <When Condition="'$(MetaPlatform)'!=''">
-      <Choose>
-        <When Condition="'$(Plat)'=='$(AnyCPULeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(AnyCPULeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)ANYCPU;</DefineConstants>
-          </PropertyGroup>
-        </When>
-        <When Condition="'$(Plat)'=='$(X86LeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(X86LeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)X86;</DefineConstants>
-          </PropertyGroup>
-        </When>
-        <When Condition="'$(Plat)'=='$(X64LeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(X64LeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)X64;</DefineConstants>
-          </PropertyGroup>
-        </When>
-        <When Condition="'$(Plat)'=='$(ArmLeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(ArmLeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)ARM;</DefineConstants>
-          </PropertyGroup>
-        </When>
-        <When Condition="'$(Plat)'=='$(IPhoneLeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(IPhoneLeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)IPHONE;</DefineConstants>
-          </PropertyGroup>
-        </When>
-        <When Condition="'$(Plat)'=='$(IPhoneSimulatorLeafPlatformId)'">
-          <PropertyGroup>
-            <Plat>$(IPhoneSimulatorLeafPlatformId)</Plat>
-            <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
-            <IsLeafPlatform>true</IsLeafPlatform>
-            <DefineConstants>$(DefineConstants)IPHONE_SIMULATOR;</DefineConstants>
-          </PropertyGroup>
-        </When>
-      </Choose>
+    <When Condition="'$(Plat)'=='$(AnyCPULeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(AnyCPULeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)ANYCPU;</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(X86LeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(X86LeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)X86;</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(X64LeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(X64LeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)X64;</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(ArmLeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(ArmLeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)ARM;</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(IPhoneLeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(IPhoneLeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)IPHONE;</DefineConstants>
+      </PropertyGroup>
+    </When>
+    <When Condition="'$(Plat)'=='$(IPhoneSimulatorLeafPlatformId)'">
+      <PropertyGroup>
+        <Plat>$(IPhoneSimulatorLeafPlatformId)</Plat>
+        <MetaPlatformType>$(LeafPlatformId)</MetaPlatformType>
+        <IsLeafPlatform>true</IsLeafPlatform>
+        <DefineConstants>$(DefineConstants)IPHONE_SIMULATOR;</DefineConstants>
+      </PropertyGroup>
     </When>
     <When Condition="'$(Plat)'=='$(PackLeafPlatformId)'">
       <PropertyGroup>

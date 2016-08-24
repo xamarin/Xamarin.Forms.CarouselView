@@ -9,14 +9,17 @@
     <MetaVerbosity>$(Verbosity)</MetaVerbosity>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Platform Condition="'$(Platform)'==''">all</Platform>
+  <PropertyGroup Condition="'$(Platform)'==''">
+    <Platform>all</Platform>
+    <Platform Condition="'$(MetaPlatform)'!=''">$(MetaPlatform)</Platform>
+    <Plat>$(Platform)</Plat>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <MetaPlatform Condition="'$(_MetaPlatform)'!=''">$(_MetaPlatform)</MetaPlatform>
     <ClearRecursiveFrame>$(ClearRecursiveFrame)_MetaPlatform=;</ClearRecursiveFrame>
     <KeepRecursiveFrame>$(KeepRecursiveFrame)_MetaPlatform=$(_MetaPlatform);</KeepRecursiveFrame>
+    <FrameProperties>$(FrameProperties)MetaPlatform;</FrameProperties>
   </PropertyGroup>
 
   <!--library platform ids-->

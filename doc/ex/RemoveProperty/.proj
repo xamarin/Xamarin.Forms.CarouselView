@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="4.0" 
+  DefaultTargets="Build" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+  <PropertyGroup>
+    <!--<Platform>Override (Global)</Platform>-->
+  </PropertyGroup>
+
+  <Target Name="Build">
+    <Message Importance="high" Text="Platform: $(Platform)" />
+    
+    <MSBuild
+      Targets="Other"
+      Projects="$(MSBuildProjectFile)"
+      Properties="Name=normal;Platform=$(Platform)"
+    />
+
+    <MSBuild
+      Targets="Other"
+      Projects="$(MSBuildProjectFile)"
+      Properties="Name=remove"
+      RemoveProperties="Platform"
+    />
+
+    <!--unexpected: RemovePropeties removes properties even if specified in Properties-->
+    <MSBuild
+      Targets="Other"
+      Projects="$(MSBuildProjectFile)"
+      Properties="Name=both;Platform=Bar"
+      RemoveProperties="Platform"
+    />
+  </Target>
+
+  <Target Name="Other">
+    <Message Importance="high" Text="Name: $(Name)" />
+    <Message Importance="high" Text="Platform (before override): $(Platform)" />
+    <PropertyGroup>
+      <Platform>Override (Other)</Platform>
+    </PropertyGroup>
+    <Message Importance="high" Text="Platform (after override): $(Platform)" />
+  </Target>
+  
+</Project>
