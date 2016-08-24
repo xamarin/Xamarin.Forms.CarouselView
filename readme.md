@@ -5,7 +5,7 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 
 1. launch shell via `\env\env.lnk`
 2. type `restore` to restore nuget files
-3. cd `src\build` and type 'build' to build task assembly
+3. cd `src\build` and type `build` to build task assembly
 3. open `\src\Xamarin.Forms.CarouselView.sln`
 
 ## Building like CI does
