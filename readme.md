@@ -23,7 +23,7 @@ In practice, this means having the ability to take a machine with a freshly inst
 ## Highlights
 This section enumerates selected achievements of this effort specific to Xamarin.Forms library creation. General build enhancements are covered in a later section.
 
-Consumption of Xamarin.Forms libraries is simplified. The number of binaries a Xamarin.Forms app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic. Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring.
+Consumption of Xamarin.Forms libraries is simplified. The number of binaries a Xamarin.Forms app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring.  
 
 Creation of libraries is simplified. The number of C# projects required for building a library which supports all Xamarin.Forms platforms is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
 
@@ -227,7 +227,7 @@ Project files all conform to the following general template sections of which ar
 </Project>
 ```
 
-### Common Properties
+### Common Properties (.props)
 Typically, solutions with multiple projects suffer from duplication of project settings. For example, to enable warnings as errors typically requires modifying each project. To prevent duplication and allow settings to be centrally administered common project settings are extracted to `.props` files in parent directories. For example, `WarningLevel` and `TreatWarningsAsErrors` have been extracted to [`src\.props`](src/.props) and so are included by all projects in any sub-directory of `src`. 
 
 Those `.props` files "closest" to the project override those files further away. For example, the [`.props`](.props) file in root directory is included before any other simultaneously making its definitions available to those files and allowing them to override those settings. For example, the `.props` files processed when loading [`CarouselView.csproj`][2] are, [`\.props`](.props), then [`src\.props`](src/.props), then [`src\carouselView\.props`](src/carouselview/.props), then finally the project itself. Note that they are included in the reverse order but, because the first thing they each do is import their parent `.props` file they are logically processed in the reverse of the include order. Don't think too hard about it; It works as you'd expect.
@@ -251,37 +251,31 @@ In general, such sections take the following form:
 ````
 Before a `.props` file can determine the type of project loaded, and so what settings are appropriate, properties describing the type of the project must be loaded. How type information about a project is populated is the subject of the next section.
 
-### Project and Platform Types
+### Project and Platform Types (.pre.props)
 The first property defined by all projects is `<MetaProject>` which in conjunction with the `Configuration`, `Platform`, and `MetaPlatform` global properties (passed via the command line or through the `msbuild` task), identifies the _type_ of the project. With the type established, a hierarchy of `.pre.props` files (which are loaded before `.props` files) are able to populate properties which fully describe all aspects of the type of the project being loaded and which are documented below.
 
 #### MetaProject
-A `MetaProject` is an amalgam of normal projects. All the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
+A `MetaProject` is an amalgam of projects. For example, all the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
 
 #### MetaPlatform
-`MetaPlatform` is the heart of the type system. It's what allows the grafting of Xamarin.Forms lexicon for platforms over the standard existing one. So instead of talking about `AnyCPU` or `x64` its possible to talk about `mobile`, `android`, or `win.arm` platforms. 
+`MetaPlatform` is the heart of the type system; The `MetaPlatform` abstraction allows grafting a new platform lexicon over of the existing desktop lexicon. For example, in the case of Xamarin.Forms, `MetaPlatform` makes it possible to talk about `mobile`, `android`, or `win.arm` platforms instead of `AnyCPU`, `x32`, or `x64` platforms. 
 
-A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. 
-- A `group` `MetaPlatform` is simply a collection of one or more `group` or `meta` `MetaPlatforms` which are stored in `ChildMetaPlatforms`. 
-- A `meta` `MetaPlatform` is the name Xamarin.Forms commonly uses to refer to platforms and will have exactly one child `leaf` `MetaPlatform` which is stored in `LeafPlatform`. 
-- A `leaf` `MetaPlatform` is a normal platform (e.g. AnyCPU, x86) that is augmented with a `MetaPlatform`. The unified project system does its best to hide the existance of `leaf` `MetaPlatforms`.
-
-Each `MetaProject` supports a set of `MetaPlatforms` as documented below:
+Each `MetaProject` supports a set of `MetaPlatforms`. For example, here are the relationships for Xamarin.Forms:
 
 | MetaPlatform | MetaProject |
 | --- | --- |
-| xf.aut | android.aut, iios.aut |
+| xf.aut | android.aut, ios.aut |
 | xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
 | xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
 
-Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, and `MetaPlatformTypes`.
+A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. Depending on the `MetaPlatformType`, either `IsGroupPlatform`, `IsMetaPlatform` or `IsLeafPlatform` will be set to true.
+- A `group` `MetaPlatform` is a collection of one or more `group` or `meta` `MetaPlatforms`. Groups can be named (e.g. `Mobile` = { `portable`, `android`, `ios`, `windows` }) or specified ad-hoc on the command line (e.g. `/p:MetaPlatform=android;windows`). The children of the group are stored in `ChildMetaPlatforms`. 
+- A `meta` `MetaPlatform` is a platform in new lexicon which is being grafted over a desktop platform (e.g. `monodroid` over `AnyCpu` or `monotouch.app.sim` over `IPhoneSimulator`). It has one `leaf` `MetaPlatform` child which is stored in `LeafPlatform`.
+- A `leaf` `MetaPlatform` is a desktop platform (e.g. `AnyCPU`) augmented with a `MetaPlatform` (e.g. `android`) and `MetaProject` (e.g. `android.lib`) and other properties describing the project type (e.g. `MobilePlatform`==`Android`). These agumented properties are use in `.csproj` and `.props` files (e.g.  [`CarouselView.csproj`][2] and [`src/.props`](src/.props)) to set the properties (e.g. `AndroidSupportedAbis`) of one of the projects composing the unified project (e.g. Xamarin.Android). Once the properties of the composed project are set its msbuild targets are invoked to finally preform the build.
+
+Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, and `MetaPlatformTypes` for Xamarin.Forms. These relationships are declared in [ext\xf\xf.pre.props](ext/xf/xf.pre.props).
 
 ![Platform Image](doc/Platforms.gif)
-
-Much can be inferred by studying [`ext/xf/xf.pre.props`](ext/xf/xf.pre.props), and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
-
-    src\carouselView\lib> msbuild /v:m /p:platform=all /t:dryRun
-
-For even more information about project reference resolution pass `/p:verbosity=high` along with any target.
 
 # Shell
 
