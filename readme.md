@@ -17,7 +17,9 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 4. the build will be archived at `\drp\number\10001\`
 
 # Xamarin.Forms Build System
-The Xamarin.Forms build environment addresses challenges encountered while developing CarouselView with the immediate goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. The Xamarin.Forms build systems aims to do at design time what Xamarin.Forms has already done at runtime. At runtime, Xamarin.Forms abstracts the different types of mobile platforms by allowing virtual controls to be added to a virtual device which Xamarin.Forms then renders for each specific platform. At design time, Xamarin.Forms build aims to abstract the different types of mobile projects by merging them into a single project from which the build system generates multipule assemblies.
+The Xamarin.Forms build system addresses challenges encountered while developing CarouselView with the immediate goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. 
+
+The Xamarin.Forms build systems aims to do at design time what Xamarin.Forms has already done at runtime. At runtime, Xamarin.Forms abstracts the different types of mobile platforms by allowing virtual controls to be added to a virtual device which Xamarin.Forms then renders for each specific platform. At design time, the Xamarin.Forms build system aims to abstract the different types of mobile projects by merging them into a single project from which the build system generates multipule assemblies.
 
 Providing CI "out-of-the-box" is also a goal of Xamarin.Forms build. In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. This works focuses on the clean, restore, build, package, and publish steps. 
 
