@@ -13,14 +13,8 @@
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
     <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
-    <None Include="$(MSBuildThisFileDirectory)env\androidEmulatorLaunch.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\androidPackageInstall.bat" />
+    <None Include="$(MSBuildThisFileDirectory)env.lnk" />
     <None Include="$(MSBuildThisFileDirectory)env\env.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\env.lnk" />
-    <None Include="$(MSBuildThisFileDirectory)env\find.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\go.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\killUsual.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\testsRun.bat" />
     <None Include="$(MSBuildThisFileDirectory)env\vcvarsallShim.bat" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.pre.props" />
@@ -82,7 +76,6 @@
     <None Include="$(MSBuildThisFileDirectory).targets" />
     <None Include="$(MSBuildThisFileDirectory)nuget.config" />
     <None Include="$(MSBuildThisFileDirectory)readme.md" />
-    <None Include="$(MSBuildThisFileDirectory)src\.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)src\.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\CarouselView.App.Android.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\CarouselView.App.csproj" />

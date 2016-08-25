@@ -12,7 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ShimTarget Include="$(ShimTarget)" />
     <ShimReference Include="$(ShimReference)" />
     <Configuration Include="$(Configuration)"/>
   </ItemGroup>
@@ -46,8 +45,13 @@
 
   <!--shim command line-->
   <PropertyGroup>
+    <ExecDispatch>_ExecDispatch</ExecDispatch>
+    <ExecDispatch Condition="'$(ShimInProcess)'=='true'">_Dispatch</ExecDispatch>
+    
     <ShimName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</ShimName>
+    <EscapedProperties>$(Properties.Replace(";","$(Sc)"))</EscapedProperties>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
+    <EscapedShimmedProperties>$(ShimmedProperties.Replace(";","$(Sc)"))</EscapedShimmedProperties>
     <EscapedPlatform>$(Platform.Replace(";","$(Sc)"))</EscapedPlatform>
     <EscapedConfiguration>$(Configuration.Replace(";","$(Sc)"))</EscapedConfiguration>
   </PropertyGroup>
@@ -56,15 +60,15 @@
     <BuildCommand Include="$(ProjFile)" />
     <BuildCommand Include="/t:_Dispatch" />
     
-    <!--properties-->
-    <ShimProperties Include="$(ShimProperties)" />
+    <!--global shim properties-->
     <BuildCommand Include='/p:BuildTarget="$(BuildTarget)"' />
-    <BuildCommand Include='/p:ShimState="$(NextShimState)"' />
+    <BuildCommand Include='/p:ShimState="$(ShimState)"' />
     <BuildCommand Include='/p:ShimDir=$(ShimDir)' />
     <BuildCommand Include='/p:Platform="$(EscapedPlatform)"' />
     <BuildCommand Include='/p:Configuration="$(EscapedConfiguration)"' />
-    <BuildCommand Include="@(ShimProperties->'/p:%(Identity)')" Condition="'$(ShimProperties)'!=''" />
+    <BuildCommand Include='/p:Properties="$(EscapedProperties)"' Condition="'$(Properties)'!=''" />
     <BuildCommand Include='/p:ShimProperties="$(EscapedShimProperties)"' Condition="'$(ShimProperties)'!=''" />
+    <BuildCommand Include='/p:ShimmedProperties="$(EscapedShimmedProperties)"' Condition="'$(ShimmedProperties)'!=''" />
     
     <!--misc-->
     <BuildCommand Include="/nodeReuse:false" />

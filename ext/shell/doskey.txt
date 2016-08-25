@@ -57,33 +57,34 @@ rclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release" /p:ShimProper
 linkdir=mklink /j $1 $2
 diruse=subst $1 $2
 
-;= go
-r=go rootDir
-src=go SrcDir
-env=go EnvDir
-bin=go BuildBinDir
-obj=go BuildTempDir
-tmp=go TempDir
-bld=go BuildDir
-dls=go DlsDir
-packages=go NugetPackagesDirAbsolute
-tools=go ToolsDir
-drp=go DropDir
-ext=go ExtDir
+;= pushd
+r=pushd %RootDir%
+src=pushd %SrcDir%
+bin=pushd %BuildBinDir%
+obj=pushd %BuildTempDir%
+bld=pushd %BuildDir%
+dls=pushd %DlsDir%
+ext=pushd %ExtDir%
+drp=pushd %DropDir%
+packages=pushd %NugetPackagesDirAbsolute%
+tools=pushd %ToolsDir%
 
 ;= carouselView
-cv=pushd %srcDir%carouselView
-lib=pushd %srcDir%carouselView\lib
-app=pushd %srcDir%carouselView\app
-aut=pushd %srcDir%carouselView\aut
+cv=pushd %SrcDir%carouselView
+lib=pushd %SrcDir%carouselView\lib
+app=pushd %SrcDir%carouselView\app
+aut=pushd %SrcDir%carouselView\aut
 after=pushd %tstDir%nugetTest\after
 
 ;= tools
 diff=p4merge -C utf8 $1 $2
 bc="C:\Program Files\Beyond Compare 4\BCompare.exe" $1 $2
-ts=touch %srcDir%*.sln
+ts=touch %SrcDir%*.sln
+
+;= killusual
+killusual=taskkill /f /im adb.exe /im msbuild.exe /im nunit-agent.exe
 
 ;= todo
-todo=echo $* >> f:\todo.txt
-ltodo=type f:\todo.txt
-ntodo=notepad f:\todo.txt
+todo=echo $* >> %RootDir%todo.txt
+ltodo=type %RootDir%todo.txt
+ntodo=notepad %RootDir%todo.txt

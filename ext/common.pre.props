@@ -51,9 +51,11 @@
     <Nl>$(Cr)$(Lf)</Nl>
   </PropertyGroup>
 
-  <!--download root path-->
+  <!--well known paths-->
   <PropertyGroup>
+    <SrcDir>$(RootDir)src\</SrcDir>
     <DlsDir>$(RootDir)dls\</DlsDir>
+    <ToolsDir>$(DlsDir)tools\</ToolsDir>
   </PropertyGroup>
 
   <!--build root paths-->
@@ -68,11 +70,6 @@
     <!--tempDir-->
     <BuildTempSubDir>obj\</BuildTempSubDir>
     <BuildTempDir>$(BuildBinDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempDir>
-  </PropertyGroup>
-
-  <!--tool path-->
-  <PropertyGroup>
-    <ToolsDir>$(DlsDir)tools\</ToolsDir>
   </PropertyGroup>
   
   <!--nuget-->

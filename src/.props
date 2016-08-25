@@ -5,7 +5,7 @@
   <!--shim-->
   <PropertyGroup>
     <ShimName>Core</ShimName>
-    <ShimTarget>NugetRestore</ShimTarget>
+    <ShimBeforeProject />
     <ShimAfterProject />
     <ShimAfterTarget />
     <ShimExclude>

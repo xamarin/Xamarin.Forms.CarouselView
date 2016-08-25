@@ -36,10 +36,12 @@
 
   <!--shim-->
   <PropertyGroup>
-    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
     <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
+    <ShimTarget>NugetRestore</ShimTarget>
+    <ShimProperties>SkipNugetImports=true</ShimProperties>
   </PropertyGroup>
   <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
+    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
     <ShimAfterProject>$(PublishProj)</ShimAfterProject>
     <ShimAfterTarget>Publish</ShimAfterTarget>
   </PropertyGroup>

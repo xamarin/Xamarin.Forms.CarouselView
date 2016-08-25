@@ -3,6 +3,8 @@
 
   <PropertyGroup>
     <ExtShimDir>$(MSBuildThisFileDirectory)</ExtShimDir>
+    <ShimProj>$(ExtShimDir)shim.proj</ShimProj>
+    <ShimVerbosity Condition="'$(ShimVerbosity)'==''">normal</ShimVerbosity>
   </PropertyGroup>
 
 </Project>

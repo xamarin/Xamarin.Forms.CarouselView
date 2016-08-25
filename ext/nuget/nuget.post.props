@@ -18,7 +18,6 @@
 
   <!--enumerate targets-->
   <PropertyGroup>
-    <SkipNugetImports>true</SkipNugetImports>
     <NugetImports>$(NugetImports.Trim(';'))</NugetImports>
     <NugetImportCount>$(NugetImports.Split(';').Length)</NugetImportCount>
     <NugetImportCount Condition="'$(NugetImports)'==''">0</NugetImportCount>
@@ -33,5 +32,5 @@
       >$(NugetImports.Split(';')[$(NugetImportIndex)])</NugetImportCurrent>
   </PropertyGroup>
 
-  <Import Project="$(NugetImportCurrent)" Condition="'$(NugetImportFinished)'!='true'" />  
+  <Import Project="ref\$(NugetImportCurrent)" Condition="'$(NugetImportFinished)'!='true'" />  
 </Project>
