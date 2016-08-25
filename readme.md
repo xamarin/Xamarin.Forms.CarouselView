@@ -5,7 +5,7 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 
 1. launch shell via `\env\env.lnk`
 2. type `restore` to restore nuget files
-3. cd `src\build` and type 'build' to build task assembly
+3. in `src\build` type `build` (to build custom msbuild tasks)
 3. open `\src\Xamarin.Forms.CarouselView.sln`
 
 ## Building like CI does
@@ -18,22 +18,25 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 # Xamarin.Forms Build System
 The Xamarin.Forms build environment addresses challenges encountered while developing CarouselView with the immediate goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. 
 
-In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. Basically, CI "out-of-the-box". This works focuses on the clean, restore, build, package, and publish steps.
+In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. Basically, CI "out-of-the-box". This works focuses on the clean, restore, build, package, and publish steps. 
+
+The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built.
 
 ## Highlights
-This section enumerates selected achievements of this effort specific to Xamarin.Forms library creation. General build enhancements are covered in a later section.
+Consuming and producing Xamarin.Forms libraries is simplified cheifly by [reducing the number of projects](#project-reduction) consumed and produced by both mobile apps and libraries, by the introduction of a [mobile meta-platform tree](#mobile-metaplatform-tree) which integrates with existing Visual Studio [solution](#mobile-solution) and [project](#mobile-project) tooling, and finally, "de-duplicating" the msbuild files so build setting like `TreatWarningsAsErrors` appear only once and so can be centrally administered.
 
-Consumption of Xamarin.Forms libraries is simplified. The number of binaries a Xamarin.Forms app needs to reference to use a library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring.  
+### Project Reduction
+The number of binaries a Xamarin.Forms app needs to reference to use a Xamarin.Forms library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring. 
 
-Creation of libraries is simplified. The number of C# projects required for building a library which supports all Xamarin.Forms platforms is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own platform. So, for example, the Android CarouselView library can be built like this:
+The number of projects required for building a Xamarin.Forms library is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own `MetaPlatform`. So, for example, the Android CarouselView library can be built like this:
 
-    src\carouselView\lib> msbuild /p:platform=monodroid
+    src\carouselView\lib> msbuild /p:MetaPlatform=monodroid
 
-To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group platform `mobile`. 
+To build the iOS classic version substitute `monodroid` with `monotouch`. To build all platforms at once use the group `MetaPlatform` `mobile`. 
 
-Creation of apps is simplified. The number of C# projects required to build an app (as is necessary for library testing) is similarly reduced from 6 (Android, iOS [classic & unified], and Windows [tablet, phone, uap]) to 1 and also has a corresponding set of meta-platforms.
+The number of projects required to build a Xamarin.Forms app for all supported platforms is reduced from 6 (Android, iOS [classic & unified], and Windows [tablet, phone, uap]) to 1 and also has a corresponding set of `MetaPlatforms`.
 
-## Platform Tree
+### Mobile MetaPlatform Tree
 The full "platform tree" for library, app, and test projects are shown below (compiler defines are given in brackets).
 
 ````
@@ -70,8 +73,8 @@ The full "platform tree" for library, app, and test projects are shown below (co
          └──▌ wpa.arm (app)
 ````
 
-## Solution Configuration and Platforms
-Creating a new Xamarin.Forms creates platforms in the solution file (`AnyCPU`, `ARM`, `x64`, `x86`, `IPhone`, `IPhoneSimulator`) which do not map directly to what we think of as _mobile_ platforms. The unified project system creates a set of meta-platforms that do map directly to mobile platforms and these are exposed in Visual Studio.
+### Mobile Solution
+Typically, creating a new Xamarin.Forms project creates platforms in the solution file which do not map directly to what we think of as _mobile_ platforms (e.g. `AnyCPU`, `ARM`, `x64`, `x86`, `IPhone`, `IPhoneSimulator`). The unified project system creates a set of solution `MetaPlatforms` that do map directly to project `MetaPlatforms` list above and these are exposed in Visual Studio.
 
 | Solution | Library | App | Test | 
 | --- | --- | --- | --- |
@@ -88,7 +91,7 @@ Creating a new Xamarin.Forms creates platforms in the solution file (`AnyCPU`, `
 | Win Tablet (arm) | win | win.arm | |
 
 
-## Unified Xamarin.Forms Project
+### Mobile Project
 The unified Xamarin.Forms library and app projects contain a folder for each platform the contents of which will only be compiled (and have correct intellisense) when the corresponding platform is specified. 
 
 Debugging support is gently hacked in with the addition of CarouselView.App.[Platform] C# projects. These projects could, should, and hopefully will, be merged into the unified app project via the creation of a VSIP plugin. 
@@ -134,6 +137,32 @@ As viewed from the Visual Studio Solution Explorer the unified project for Carou
 ````
 
 # General Build System
+Creating a build system that makes CI "delightful" requires a number of changes to the out-of-the-box templates created by Visual Studio. Documentation of these enhancements proceeds by describing (1) Build Outputs; The directories and binaries generated by a CI build, (2) Build Inputs; The project and other msbuild files that describe the build, and (3) Piecemeal Building; Decomposing the CI build into a pipeline of smaller builds that can be launched from the shell.
+
+## Shell
+The shell allows building to be decoupled from Visual Studio and solution files and depend soely on msbuild.exe and project files. Currently, building still requires _installing_ Visual Studio however with more work a smaller msbuild SDK install may be sufficient. This is a worthy goal as it simplifies the setup of CI machines.
+
+Files supporting the creation of the shell live in [env/](env/) and are listed below. A link to open the shell lives at env\env.lnk and is initialized with [env\env.bat](env/env.bat). Upon opening, the shell will issue warnings if various preconditions are not met (e.g git.exe not on path). Next the shell will initialize the msbuild.exe environment using the [vcvarsallShim.bat](env/vcvarsallShim.bat). Finally, the aliases are loaded from [doskey.txt](env/doskey.txt).
+
+A "thin" environment is a design goal; as much as possible variables and logic that exist in msbuild are not duplicated in bat files. For example, well known paths declared as msbuild variables (e.g. `SrcDir`) are not re-declared in bat files but rather are extracted by invoking an msbuild target (see [go.bat](env/go.bat)) that produces a bat file that is then invoked to change directories.
+````
+▌ env
+├─ env.lnk - link to launch shell
+├─ env.bat - shell environment variables
+├─ doskey.txt - aliases
+├─ go.bat - bridge between shell and msbuild; allows cd to a path assigned to an msbuild varaible
+├─ killusual.bat
+└─ vcvarsallShim.bat
+````
+
+```
+build - build both release and debug
+rbuild - build release
+dbuild - build debug
+clean - clean both release and debug
+rclean - clean release
+dclean - clean debug
+```
 
 ## Directories
 The following directories are well known to the build system and shell. Navigate to most well-known directories by typing its name into the shell. Type `r` to navigate to the root directory.
@@ -164,13 +193,15 @@ The following well-known directories are generated by the build and are not unde
 ## Sub-Directories
 The following sub-directories of well-known directories have structure specific to their function worth documenting. Generally, sub-directories of well-known directories do not have shell aliases. 
 
-### /bld/
-Build output generated from a sub-directory in `src` is placed in the same sub-directory in `bin` (or `obj`). For example, build output from building `src\carouselView\lib\CarouselView.csproj` is placed in `bld\bin\carouselView\lib` and `bld\obj\carouselView\lib`. 
+### bld
+Build output is kept separate from source code; Build output generated by a project in sub-directory of `src` is placed in the same sub-directory in `bld\bin` and `bld\obj`. For example, build output from building `src\carouselView\lib\CarouselView.csproj` is placed in `bld\bin\carouselView\lib` and `bld\obj\carouselView\lib`. 
 
-If projects are built using the shim then log files of all verbosities (summary, normal, detailed, and diag) and severities (warning, and error) are also created (The shim is a project which searches for and then builds .csproj files after, among other things, configuring logging. It lives at ext\shim\shim.proj which and is typically invoked through its alias `build`, `rbuild`, `dbuild`). If the shim is invoked from the root then it is assumed the build will be published (copied) to `drp\number\$(BuildNumber)` and a build number is generated and recorded along with the current source control identifying information (revision, branch, url, etc).
+If projects are built using the shim (see [shim](#shim)) then log files of all verbosities (summary, normal, detailed, and diag) and severities (warning, and error) for all sub-builds (e.g. Shim.Build, Core.NugetRestore, Core.Build) are also created.
+
+If the build is identifiable (see [drp](drp)) then metadata identifying the build (number, revision, branch, url) will be stored in `BuildInfo.*` files under `bin\bld` and `BuildInfo.cs` under `bld\obj\$(Configuration)`.
 ````
-▌ bin
-└──▌ bld
+▌ bld
+└──▌ bin
 │  ├─ BuildInfo.Build.Number - computed by adding one to the last sub-directory of drp\number\
 │  ├─ BuildInfo.Enlistment.revision - computed by consulting source control (git)
 │  ├─ BuildInfo.Enlistment.status - capture the state of the enlistment; publication fails if dirty
@@ -185,12 +216,23 @@ If projects are built using the shim then log files of all verbosities (summary,
          └─ BuildInfo.cs - generated by shim, replaces universally included src\BuildInfo.cs during build
 ````
 
-### /drp/
-Successful builds of clean enlistments from the root using the shim (see [bld](#bld)) will have their `bin\bld` directory copied to `drp\number\$(BuildNumber)`. The build number is a function of the subdirectories found in `drp\number`. For example, if `drp\number` has sub-directories `10000`, `10001` and `10002` then the next build build number would be `10003`. A symlink is also created at `drp\revision\$(EnlistmentRevision)` which points to the corresponding build. For example, in git an enlistment revision would be the git hash. 
+### drp
+Builds are archived so they may be distributed via file servers. Among other things, having an archive of builds simplifies bisecting a regression and debugging intermittent build failures. For a build to be archived it must have been assigned an identity and that identity should be burned into each assembly published. Build identities are assigned by the shim (see [shim](#shim)) to builds of clean enlistments kicked off from the root.
+
+The following three identities are assigned to a build:
+
+| Assigned By | Identity | Example |
+| --- | --- | --- | --- |
+| File system | Number | Next folder in `drp\number` (see [BuildInfo.cs](src/BuildInfo.cs)) |
+| Source Control | Revision, Branch, Url | Git hash, branch, url (see [BuildInfo.cs](src/BuildInfo.cs)) |
+| Person | Version | `BuildVersion` declared in [src\.props](src/.props) (see [AssemblyVersion.cs][3]) |
+
+After build completion, identifiable builds will have their `bin\bld` directory copied to `drp\number\$(BuildNumber)` and a simlink to that directory is created at `drp\revision\$(EnlistmentRevision)` and created (or overridden) at `drp\version\$(BuildVersion)`. 
 ````
 ▌ drp
 ├──▌ number - archived builds by build number
-└──▌ revision - archived builds by source control revision
+├──▌ revision - archived builds by source control revision  (symlinks into drp\number)
+└──▌ version - archived builds by version (symlinks into drp\number)
 ````
 
 ## Projects
@@ -277,19 +319,27 @@ Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, 
 
 ![Platform Image](doc/Platforms.gif)
 
-# Shell
-
-## Shell Commands
+## Building
 
 ### Shim
-```
-build - build both release and debug
-rbuild - build release
-dbuild - build debug
-clean - clean both release and debug
-rclean - clean release
-dclean - clean debug
-```
+The [shim](ext\shim\shim.proj) is a project which searches for and then builds .csproj files after, among other things, configuring logging. 
+
+### MetaPlatform
+To build a `MetaPlatform` specify it at the command like just like a `Platform`. For example, build the `android` Xamarin.Forms `MetaPlatform` like this:
+
+    src\carouselView\lib> msbuild /p:MetaPlatform=android
+    
+In order to support Visual Studio, a `MetaPlatform` can also be passed as a `Platform` like this:
+
+    src\carouselView\lib> msbuild /p:Platform=android
+
+and by issuing `/t:dryRun` commands from the shell. For example, here is the [output](doc/dryRun.md) produced by the following command:
+
+    src\carouselView\lib> msbuild /v:m /p:platform=all /t:dryRun
+
+For even more information about project reference resolution pass `/p:verbosity=high` along with any target.
+
 
 [1]: https://visualstudiogallery.msdn.microsoft.com/b346d9de-8722-4b0e-b50e-9ae9add9fca8
 [2]: src/carouselView/lib/CarouselView.csproj
+[3]: src/carouselView/lib/Properties/AssemblyVersion.cs
