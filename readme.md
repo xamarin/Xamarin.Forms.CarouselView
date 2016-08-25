@@ -199,6 +199,7 @@ Downloaded files are kept here. Principly, this includes nuget packages and boos
 ````
 ▌ dls
 ├──▌ packages - nuget packages
+│  └──▌ meta - contains packages.config files generated and used by build during package restore
 └──▌ tools - boostraping tools (nuget.exe)
 ````
 
@@ -329,22 +330,43 @@ Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, 
 
 ![Platform Image](doc/Platforms.gif)
 
+## Nuget
+Nuget packages are restored via a new `msbuild` target `NugetRestore` (see [dls\packages\meta](#dls)). The target internally downloads and invokes `nuget.exe` on `package.config` generated from `NugetReference` and `NugetPackage` `ItemGroups`. 
+
 ## Restoring, Building, And Cleaning
-The following documents how the monolithic build, as kicked off buy the `build` alias, can be decomposed to msbuild statements to build an individual binary or set of binaries. Before that, however, the documentation will cover various ways to clean the enlistment and also how nuget packages can be restored via an msbuild command.
+The following documents the various ways to invoke `msbuild` on [`MetaProjects`](#metaproject) to restore nuget packages, build binaries, and clean up.
 
 ### Cleaning
-The following commands are used to clean the build:
+The build can be cleaned in the following ways:
 
-1. `msbuild /t:clean` has been overridden to use git to remove all untracked files in the `bin` and `obj` directories for the given project.
+1. `msbuild /t:clean` has been overridden in `MetaProjects` to use git to remove all untracked files in the `bin` and `obj` directories for the given project.
 2. the `clean` alias (similar to the `build` alias) has the effect of running `msbuild /t:clean` on all `.csproj` files in the current directory, all its sub-directories, and all projects referenced by that project set for both `debug` and `release`.
 3. by manually deleting the [`bld`](#bld) directory (and optionally the [`dls`](#dls) and [`drp`](#drp) directories). 
 4. the `nuke` alias which uses git to remove all untracked files in the current directory and its sub-directories returning the repo to a virgin state. 
 
 ### Restoring
+Nuget packages are restored via a new `MetaProject` `msbuild` target `NugetRestore` (see [Nuget](#nuget)). Nuget packages can be restored in the following ways:
 
+1. `msbuild /t:NugetRestore /p:SkipNugetImports` will restore all nuget packages for a given project and projects it references.
+2. the `restore` alias (similar to the `build` alias) has the effect of running `msbuild /t:NugetRestore` on all `.csproj` files in the current directory, all its sub-directories, and all projects referenced by that project set. 
+
+#### Task Assembly
+In addition to restoring nuget packages before building any Xamarin.Forms `MetaProjects`, the `Xamarin.Forms.Build.dll` must also be built as this assembly contains msbuild tasks used by Xamarin.Forms `MetaProject` builds. Failure to do this will result in the following (or similar) error: 
+
+    error MSB4036: The "RegexMatches" task was not found.
+
+Building the task assembly is handled automatically by the `build` alias but otherwise, if not previously built or if erased after a `nuke`, the assembly must be built manually via `src\build> build`. This wrinkle will be ironed out once the task assembly is put into its own nuget file but managing a task assembly can be a general challenge when maintaining a complex build as is the case here.
 
 ### Building
-What used to be many projects can now be rolled up into a [`MetaProject`](#MetaProject). A `MetaProject` supports a [hierarchy](#metaplatform-hierarchy) of [`MetaPlatforms`](#MetaPlatform). To build a `MetaPlatform` specify it at the command like just like a `Platform`. For example build the `xamarin.ios` Xamarin.Forms `MetaPlatform` like this:
+Building `MetaProjects` can be done in the following ways:
+
+1. `msbuild` will build all binaries for a given `MetaProject`. Before building this way, the nuget packages for the project will have to be restored using an approach listed in [Restoring](#restoring).
+2. the `build` alias has the effect of restoring nuget packages for on all `.csproj` files in the current directory, all its sub-directories, and all projects referenced by that project set and then building that same project set.
+
+## Restoring, Building, And Cleaning a specific MetaPlatform 
+Each `MetaPlatform` in a `MetaProject` can be restored, built, and cleaned separately by passing `/p:MetaPlatform=[MetaPlatform]` to `msbuild` as explained below. Note, before running any of the following examples on a `MetaProject` that project will need to be restored using an approach listed in [Restoring](#restoring).
+
+For example, this will build the `xamarin.ios` Xamarin.Forms `MetaPlatform` for CarouselView:
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios
     
@@ -352,15 +374,15 @@ In order to support Visual Studio, an unrecognized `Platform` is assumed to be a
 
     src\carouselView\lib> msbuild /v:m /p:Platform=xamarin.ios
 
-Multiple `MetaPlatfoms` can be built at the same time. For example, build `xamarin.ios` and `monotouch` platforms at the same time like this:
+Multiple `MetaPlatfoms` can be specified ad-hoc and built at the same time. For example, this will build `xamarin.ios` and `monotouch` platforms at the same time:
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios;monotouch
     
-Common groups of `MetaPlatforms` have been assigned names. For example, the following is equivilan to the previous example:
+Common groups of `MetaPlatforms` have been assigned names (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the following is equivalent to the previous example:
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=ios
     
-Groups of `MetaPlatforms` can also be built at the same time. For example, build `android`, `ios`, and `windows` platforms at the same time like this:
+Groups of `MetaPlatforms` can also be built at the same time. For example, this will build `android`, `ios`, and `windows` platforms at the same time:
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=android;ios;windows
     
@@ -370,9 +392,9 @@ Common groups of groups of `MetaPlatforms` have also been assigned names. For ex
     
 The ur group `all` will build all `MetaPlatforms` in a `MetaProject`. For example, the following will build (and package) all binaries that compose the CarouselView nuget package:
 
-    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=mobile
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=all
     
-If no `MetaPlatform` is passed then `all` `MetaPlatform` is built. 
+If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a default. 
 
     
 ### Shim
