@@ -204,6 +204,7 @@
           win;
           uap;
           wpa;
+          pack;
         </SupportedPlatforms>
       </PropertyGroup>
     </When>

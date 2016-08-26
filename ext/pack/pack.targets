@@ -8,6 +8,7 @@
 
   <PropertyGroup>
     <BuildDependsOn>
+      _PackCreate;
       _UnpackBuild;
       $(BuildDependsOn)
     </BuildDependsOn>
@@ -16,7 +17,9 @@
   <!--_UnpackBuild-->
   <Target
     Name="_UnpackBuild"
-    DependsOnTargets="_UnpackStage" >
+    DependsOnTargets="_UnpackStage" 
+    Condition="'$(SkipPackageCheck)'!='true'"
+  >
 
     <MSBuild
       Projects="$(ProjFile)"
