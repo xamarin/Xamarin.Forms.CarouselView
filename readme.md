@@ -228,17 +228,7 @@ If the build is identifiable (see [drp](drp)) then metadata identifying the buil
 ````
 
 ### drp
-Builds are archived so they may be distributed via file servers. Among other things, having an archive of builds simplifies bisecting a regression and debugging intermittent build failures. For a build to be archived it must have been assigned an identity and that identity should be burned into each assembly published. Build identities are assigned by the shim (see [shim](#shim)) to builds of clean enlistments kicked off from the root.
-
-The following three identities are assigned to a build:
-
-| Assigned By | Identity | Example |
-| --- | --- | --- | --- |
-| File system | Number | Next folder in `drp\number` (see [`BuildInfo.cs`](src/BuildInfo.cs)) |
-| Source Control | Revision, Branch, Url | Git hash, branch, url (see [`BuildInfo.cs`](src/BuildInfo.cs)) |
-| Person | Version | `BuildVersion` declared in [`src\.props`](src/.props) (see [`AssemblyVersion.cs`][3]) |
-
-After build completion, identifiable builds will have their `bin\bld` directory copied to `drp\number\$(BuildNumber)` and a simlink to that directory is created at `drp\revision\$(EnlistmentRevision)` and created (or overridden) at `drp\version\$(BuildVersion)`. 
+A build of a clean enlistment from the root directory via the alias `build`, successful or not, will copy the `bin\bld` directory to `drp\number\$(BuildNumber)` (see [Publishing](#publishing)). A simlink to that directory is created at `drp\revision\$(EnlistmentRevision)` and created (or overridden) at `drp\version\$(BuildVersion)`. 
 ````
 ▌ drp
 ├──▌ number - archived builds by build number
@@ -459,6 +449,60 @@ The first frame of output below starts with `RECURSE` which indicates the traver
   ...
 ```
 
+## Build Identity
+Build identity is established by the `build` alias before compilation begins by executing the following target (or via its alias `BuildInfo`):
+
+    > msbuild %idProj% /v:m
+
+This command will generate the following files in `bld\bin`:
+
+| Name | Description | File |
+| --- | --- | --- |
+| Number | Next folder in `drp\number` | `BuildInfo.Build.Number.txt` |
+| Url | git remote url | `BuildInfo.Enlistment.Revision.txt` |
+| Revision | git revision | `BuildInfo.Enlistment.Url.txt` |
+| Enlistment Status | git status | `BuildInfo.Enlistment.Status.txt` |
+
+If the repository is dirty (e.g `BuildInfo.Enlistment.Status.txt` is not empty) then a default build number and revision are not assigned and the following warning will be raised:
+
+    Build identity could not be established because enlistment contains modified, new, or untracked files.
+
+Build identity is loaded into the msbuild variables `BuildNumber`, `EnlistementRevision`, and `EnlistmentUrl` and, typically, used to expand C# template files (see below) so build identity can be compiled into assemblies. 
+
+## C# Templates
+C# templates allow expanding msbuild variables into C# files or asserting that default expansions match an actual expansion at build time; C# Templates have a `.t.cs` extension and during compilation they are not compiled but rather loaded in memory and scanned for variables of the form `$([Name])` which are replaced with the corresponding msbuild variable (e.g. see [`AssemblyVersion.t.cs`][7] and [`BuildInfo.t.cs`](src/BuildInfo.t.cs)). The expanded template is then compared with the matching `.cs` file checked in next to the `.t.cs` file (aka the "default expansion"; see [`AssemblyVersion.cs`][3] and [`BuildInfo.cs`](src/BuildInfo.cs)) and, if found to be different, then either:
+
+1. An warning is issued indicating the default expansion is stale and has been refreshed (a CI build should fail if the build itself causes the enlistment to become dirty and so force the developer to submit the changes for code-review).
+2. If `SubstituteExpandedResult=true` metadata is present on the item template (e.g. search for `BuildInfo.t.cs` in [`src\.props`](src/.props)) then the expansion is swapped out for the default expansion; the expansion is saved to `bin\obj\[relative path to src directory]\[tempalte].cs` and included in the compilation while the default expansion is excluded from compilation.
+
+The following build will produce an example of both scenarios:
+
+    src\carouselView\lib >msbuild /p:MetaPlatform=dotnet /t:RefreshTemplateExpansions
+
+```
+RefreshTemplateExpansions:
+    TemplatePath: \src\BuildInfo.t.cs
+    DefaultExpansionPath: \src\BuildInfo.cs
+    FreshExpansionPath -> \bld\obj\debug\carouselView\lib\dotnet\BuildInfo.cs
+    Variables:
+      BuildNumber -> 0
+      EnlistmentRevision -> dirty
+      EnlistmentUrl -> [null]
+    IsExpansionStale: true
+      SubstituteExpandedResult: true
+    Submsituting: \src\BuildInfo.cs -> \bld\obj\debug\carouselView\lib\dotnet\BuildInfo.cs
+RefreshTemplateExpansions:
+    TemplatePath: \src\carouselView\lib\Properties\AssemblyVersion.t.cs
+    DefaultExpansionPath: \src\carouselView\lib\Properties\AssemblyVersion.cs
+    FreshExpansionPath -> \bld\obj\debug\carouselView\lib\dotnet\AssemblyVersion.cs
+    Variables:
+      BuildVersion -> 2.3.0
+```
+Try suppling any of the msbuild variables on the command to see what happens when the default expansion becomes dirty. For example:
+
+    src\carouselView\lib >msbuild /p:MetaPlatform=dotnet /t:RefreshTemplateExpansions /p:BuildVersion=2.4.0
+
+
 ### Shim
 The [`shim`](ext\shim\shim.proj) is a project which searches for and then builds .csproj files after, among other things, configuring logging. 
 
@@ -489,3 +533,4 @@ A hermetic build environment is most simply achieved by checking all dependencie
 [4]: src/carouselView/lib/Portable/CarouselViewLibrary.cs
 [5]: src/carouselView/lib/Portable
 [6]: src/carouselView/lib/iOS/
+[7]: src/carouselView/lib/Properties/AssemblyVersion.t.cs
