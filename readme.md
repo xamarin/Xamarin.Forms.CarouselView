@@ -364,8 +364,8 @@ Building `MetaProjects` can be done in the following ways:
 1. `msbuild` will build all binaries for a given `MetaProject`. Before building this way, the nuget packages for the project will have to be restored using an approach listed in [Restoring](#restoring).
 2. the `build` alias has the effect of restoring nuget packages for on all `.csproj` files in the current directory, all its sub-directories, and all projects referenced by that project set and then building that same project set.
 
-## Restoring, Building, And Cleaning a specific MetaPlatform 
-Each `MetaPlatform` in a `MetaProject` can be restored, built, and cleaned separately by passing `/p:MetaPlatform=[MetaPlatform]` to `msbuild` as explained below. Note, before running any of the following examples on a `MetaProject` that project will need to be restored using an approach listed in [Restoring](#restoring).
+## Building MetaPlatforms 
+Any msbuild `MetaPlatform` target (e.g. `Clean`, `Build`, `NugetRestore`, etc) can act over a specific `MetaProject` by passing `/p:MetaPlatform=[MetaPlatform]`. Note, before building any of the following examples be sure to restore nuget packages for the target project using an approach listed in [Restoring](#restoring).
 
 For example, this will build the `xamarin.ios` Xamarin.Forms `MetaPlatform` for CarouselView:
 
@@ -401,18 +401,26 @@ The ur group `all` will build all `MetaPlatforms` in a `MetaProject`. For exampl
     
 If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a default. 
 
-### Part Platforms
-A `MetaPlatform` can combine what used to be two separate assemblies (parts) into a single composite assembly. This might be done to simplify deployment and consumption of the library or to simplify "tree shaking". For example, `MetaPlatform` `xamarin.ios` merges what used to be the "portable assembly" ([src\carouselView\lib\portable][5]) and "platform assembly" ([src\carouselView\lib\ios][6]) into a single composite assembly.  
+## Building Leaf and Part Platforms
+`LeafPlatforms` and `PartPlatforms` are platforms that delegate to one of the projects that compose the `MetaProject` to actually preform the build. 
 
-Composite assemblies open the possibility that code in what used to be one of the separate assemblies can reference internal members in the logic of what used to be the other assembly. Sometimes this is desired. For example, the `RenderWithAttribute` can point directly to the renderer (see  [CarouselViewLibrary.cs][4]). However most of the time this is undesired behavior. So, by default, to raise a compiler error when this happens, under the hood, in parallel to building the composite assembly, the separate portable and platform assemblies are also built. 
-For example, look at the output of a `xamarin.ios` build:
+### Leaf Platforms
+A `LeafPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `LeafPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `LeafPlatform` which can be built like this:
+
+    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch
+    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid
+    
+Though `LeafPlatforms` have no `MetaPlatform` children they may still be composed of various `PartPlatforms` as is described in the following section.
+    
+### Part Platforms
+A `MetaPlatform` may have merged what used to be two separate assemblies (parts) into a single composite assembly. For example, `MetaPlatform` `xamarin.ios` merges what used to be the "portable assembly" ([src\carouselView\lib\portable][5]) and "platform assembly" ([src\carouselView\lib\ios][6]) into a single composite assembly. In addition to simplifying deployment and tree-shaking, merging also opens the possibility that code in what used to be one of the separate assemblies can reference internal members in the code of what used to be the other assembly. Sometimes this is desired. For example, the `RenderWithAttribute` can point directly to the renderer (see  [CarouselViewLibrary.cs][4]). However most of the time this is undesired behavior. So, by default, to raise a compiler error when this happens, under the hood, in parallel to building the composite assembly, the separate portable and platform assemblies are also built. For example, look at the output of a `xamarin.ios` build:
 ```
 src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios
 CarouselView -> \bld\bin\debug\carouselView\lib\dotnet\Xamarin.Forms.CarouselView.dll
 CarouselView -> \bld\bin\debug\carouselView\lib\xamarin.ios\Xamarin.Forms.CarouselView.dll
 ```
-Three assemblies are created even though only two are reported:
-- `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly (`COMPOSITE` defined). 
+Three assemblies are created (even though only two are reported if `/v:m` is passed):
+- `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly (`COMPOSITE` is defined during this build). 
 - `dotnet\Xamarin.Forms.CarouselView.dll` is the portable assembly
 - and the build of what used to be the platform assembly is not logged but is output to `bld\obj\debug\carouselView\lib\part\xamarin.ios`.
 
@@ -424,18 +432,14 @@ To build only the part assemblies pass `/p:IsPartPlatform=true`.
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios /p:IsPartPlatform=true
     
-### Leaf Platforms
-A `LeafPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `LeafPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `LeafPlatform` which can be built like this:
+Search [CarouselView.csproj][2] for `IsPartPlatform` to peek under the hood to see how `PartPlatforms` are declared. Note the declaration of `IsCompositePlatform` which tells the `MetaPlatform` traversal logic to recurse and passing `IsPartPlatform` which effectively hooks the part platform into the build.
 
-    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch /p:SkipPartBuild=true
-    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid /p:SkipPartBuild=true
-
-### DryRun and Verbosity
-Building a `MetaPlatform` results in a traversal of the [MetaPlatform Hierarchy](#metaplatform-hierarchy) which can be visualized by suppressing other logging via `/v:m` and passing `/p:verbosity=high`. To just log the traversal without building use the new `DryRun` `MetaProject` target (see [ext\node\node.targets](ext/node/node.targets)). For example, the following is a dump of building `monodroid`:
+## DryRun and Verbosity
+Building a `MetaPlatform` results in a traversal of the [MetaPlatform Hierarchy](#metaplatform-hierarchy) which can be visualized by suppressing other logging via `/v:m` and passing `/p:verbosity=high`. To just log the traversal without building use the new `DryRun` `MetaProject` target (see [ext\node\node.targets](ext/node/node.targets)). For example, the following will dump the traversal of `monodroid`:
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=monodroid /p:Verbosity=high /t:DryRun
 
-The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`LeafPlatform`) node (`BUILD` indicates a `LeafPlatform`). In brackets follows the variables that compse the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
+The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`LeafPlatform`) node (`BUILD` indicates a `LeafPlatform`). In brackets follows the variables that compose the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
 ```
   RECURSE [debug|monodroid|monodroid]: Xamarin.Forms.CarouselView -> { anycpu }
     BuildTarget -> DryRun
