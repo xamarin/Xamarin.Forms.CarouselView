@@ -28,7 +28,7 @@ The documentation is dividied into [Highlighs](#highlighs) of the build system s
 Consuming and producing Xamarin.Forms libraries is simplified chiefly by [reducing the number of projects](#project-reduction) consumed and produced by both mobile apps and libraries, by the introduction of a [mobile meta-platform tree](#mobile-metaplatform-tree) which integrates with existing Visual Studio [solution](#mobile-solution) and [project](#mobile-project) tooling, and finally, "de-duplicating" the msbuild files so build setting like `TreatWarningsAsErrors` appear only once and so can be centrally administered.
 
 ### Project Reduction
-The number of binaries a Xamarin.Forms app needs to reference to use a Xamarin.Forms library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring. 
+The number of binaries a Xamarin.Forms app needs to reference to use a Xamarin.Forms library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring (see [Part Platforms](#part-platforms)). 
 
 The number of projects required for building a Xamarin.Forms library is reduced from 13 (portable, Android, iOS [classic & unified], and Windows [tablet, phone, uap] + shims) to 1. This is achieved by "merging" the 13 project files into a single project file with each merged project file becoming its own `MetaPlatform`. So, for example, the Android CarouselView library can be built like this:
 
@@ -412,7 +412,7 @@ CarouselView -> \bld\bin\debug\carouselView\lib\dotnet\Xamarin.Forms.CarouselVie
 CarouselView -> \bld\bin\debug\carouselView\lib\xamarin.ios\Xamarin.Forms.CarouselView.dll
 ```
 Three assemblies are created even though only two are reported:
-- `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly
+- `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly (`COMPOSITE` defined). 
 - `dotnet\Xamarin.Forms.CarouselView.dll` is the portable assembly
 - and the build of what used to be the platform assembly is not logged but is output to `bld\obj\debug\carouselView\lib\part\xamarin.ios`.
 
@@ -424,6 +424,37 @@ To build only the part assemblies pass `/p:IsPartPlatform=true`.
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios /p:IsPartPlatform=true
     
+### Leaf Platforms
+A `LeafPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `LeafPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `LeafPlatform` which can be built like this:
+
+    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch /p:SkipPartBuild=true
+    src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid /p:SkipPartBuild=true
+
+### DryRun and Verbosity
+Building a `MetaPlatform` results in a traversal of the [MetaPlatform Hierarchy](#metaplatform-hierarchy) which can be visualized by suppressing other logging via `/v:m` and passing `/p:verbosity=high`. To just log the traversal without building use the new `DryRun` `MetaProject` target (see [ext\node\node.targets](ext/node/node.targets)). For example, the following is a dump of building `monodroid`:
+
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=monodroid /p:Verbosity=high /t:DryRun
+
+The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`LeafPlatform`) node (`BUILD` indicates a `LeafPlatform`). In brackets follows the variables that compse the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
+```
+  RECURSE [debug|monodroid|monodroid]: Xamarin.Forms.CarouselView -> { anycpu }
+    BuildTarget -> DryRun
+    ProjFile -> F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj
+    IsMetaPlatform -> true
+    IsMobileLibraryPlatform -> true
+    IsMobileLibraryProject -> true
+    LeafPlatform -> anycpu
+    MobilePlatform -> android
+    LibraryPlatform -> monodroid
+    DefineConstants -> ANDROID;TRACE;DEBUG;
+    TargetProject -> monoDroid
+    FrameProperties -> MetaPlatform;IsPartPlatform;
+  CarouselView [debug|monodroid|monodroid] references:
+    LeafPlatform: F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj /t:DryRun /+p:_MetaPlatform=;IsPartPlatform=;P
+  latform=anycpu;_MetaPlatform=monodroid
+  ...
+```
+
 ### Shim
 The [`shim`](ext\shim\shim.proj) is a project which searches for and then builds .csproj files after, among other things, configuring logging. 
 
