@@ -10,16 +10,15 @@ Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. S
 
 ## Building like CI does
 
-0. configure machine so that a vanilla Xamarin.Forms project builds
-1. open shell using `\env.lnk`
-2. type `build` to build both debug and release package
-3. nuget package will be at `\bin\bld\release\carouselView\nuget\`
-4. the build will be archived at `\drp\number\10001\`
+1. configure machine so that a vanilla Xamarin.Forms project builds
+2. open shell using `\env.lnk`
+3. type `build` to build both debug and release package
+4. nuget package will be at `\bin\bld\release\carouselView\nuget\` and the build will be archived at `\drp\number\10001\`
 
 # Xamarin.Forms Build System
-The Xamarin.Forms build system addresses challenges encountered while developing CarouselView with the immediate goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. 
+The Xamarin.Forms build system addresses challenges encountered while developing CarouselView with the goal of simplifying design, build, test, and packaging of Xamarin.Forms libraries. 
 
-The Xamarin.Forms build systems aims to do at design time what Xamarin.Forms has already done at runtime. At runtime, Xamarin.Forms abstracts the different types of mobile platforms by allowing virtual controls to be added to a virtual device which Xamarin.Forms then renders for each specific platform. At design time, the Xamarin.Forms build system aims to abstract the different types of mobile projects by merging them into a single project from which the build system generates multipule assemblies.
+The Xamarin.Forms build systems aims to do at design time what Xamarin.Forms has already done at runtime. At runtime, Xamarin.Forms abstracts the different types of mobile platforms by allowing virtual controls to be added to a virtual device which Xamarin.Forms then renders for each specific platform. At design time, the Xamarin.Forms build system aims to abstract the different types of mobile projects by merging them into a single project from which the build system generates platform specific assemblies.
 
 Providing CI "out-of-the-box" is also a goal of Xamarin.Forms build. In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. This works focuses on the clean, restore, build, package, and publish steps. 
 
@@ -392,12 +391,38 @@ Common groups of groups of `MetaPlatforms` have also been assigned names. For ex
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=mobile
     
+`MetaPlatforms` can reference `MetaPlatforms` within the same `MetaProject`. For example, the `MetaPlatform` `pack`, which creates and verifies a nuget package, references `mobile` so building `pack` will also build `mobile` (setting `SkipPackageCheck=true` disables the package verification build (See [nuget](#nuget)).:
+
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=pack /p:SkipPackageCheck=true
+
 The ur group `all` will build all `MetaPlatforms` in a `MetaProject`. For example, the following will build (and package) all binaries that compose the CarouselView nuget package:
 
-    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=all
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=all /p:SkipPackageCheck=true
     
 If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a default. 
 
+### Part Platforms
+A `MetaPlatform` can combine what used to be two separate assemblies (parts) into a single composite assembly. This might be done to simplify deployment and consumption of the library or to simplify "tree shaking". For example, `MetaPlatform` `xamarin.ios` merges what used to be the "portable assembly" ([src\carouselView\lib\portable][5]) and "platform assembly" ([src\carouselView\lib\ios][6]) into a single composite assembly.  
+
+Composite assemblies open the possibility that code in what used to be one of the separate assemblies can reference internal members in the logic of what used to be the other assembly. Sometimes this is desired. For example, the `RenderWithAttribute` can point directly to the renderer (see  [CarouselViewLibrary.cs][4]). However most of the time this is undesired behavior. So, by default, to raise a compiler error when this happens, under the hood, in parallel to building the composite assembly, the separate portable and platform assemblies are also built. 
+For example, look at the output of a `xamarin.ios` build:
+```
+src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios
+CarouselView -> \bld\bin\debug\carouselView\lib\dotnet\Xamarin.Forms.CarouselView.dll
+CarouselView -> \bld\bin\debug\carouselView\lib\xamarin.ios\Xamarin.Forms.CarouselView.dll
+```
+Three assemblies are created even though only two are reported:
+- `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly
+- the build of what used to be the platform assembly is not logged but is output to `bld\obj\debug\carouselView\lib\part\xamarin.ios`.
+- `dotnet\Xamarin.Forms.CarouselView.dll` is the portable assembly. It is logged and put in the `bin` directory as it's included in the nuget package.
+
+To build just the composite assembly pass `/p:SkipPartBuild=true`:
+
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios /p:SkipPartBuild=true
+
+To build only the part assemblies pass `/p:IsPartPlatform=true`.
+
+    src\carouselView\lib> msbuild /v:m /p:MetaPlatform=xamarin.ios /p:IsPartPlatform=true
     
 ### Shim
 The [`shim`](ext\shim\shim.proj) is a project which searches for and then builds .csproj files after, among other things, configuring logging. 
@@ -426,3 +451,6 @@ A hermetic build environment is most simply achieved by checking all dependencie
 [1]: https://visualstudiogallery.msdn.microsoft.com/b346d9de-8722-4b0e-b50e-9ae9add9fca8
 [2]: src/carouselView/lib/CarouselView.csproj
 [3]: src/carouselView/lib/Properties/AssemblyVersion.cs
+[4]: src/carouselView/lib/portable/CarouselViewLibrary.cs
+[5]: src/carouselView/lib/portable/
+[6]: src/carouselView/lib/ios/
