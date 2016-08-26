@@ -413,8 +413,8 @@ CarouselView -> \bld\bin\debug\carouselView\lib\xamarin.ios\Xamarin.Forms.Carous
 ```
 Three assemblies are created even though only two are reported:
 - `xamarin.ios\Xamarin.Forms.CarouselView.dll` is the composite assembly
-- the build of what used to be the platform assembly is not logged but is output to `bld\obj\debug\carouselView\lib\part\xamarin.ios`.
 - `dotnet\Xamarin.Forms.CarouselView.dll` is the portable assembly. It is logged and put in the `bin` directory as it's included in the nuget package.
+- the build of what used to be the platform assembly is not logged but is output to `bld\obj\debug\carouselView\lib\part\xamarin.ios`.
 
 To build just the composite assembly pass `/p:SkipPartBuild=true`:
 
