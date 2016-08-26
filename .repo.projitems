@@ -14,8 +14,6 @@
     <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env.lnk" />
-    <None Include="$(MSBuildThisFileDirectory)env\env.bat" />
-    <None Include="$(MSBuildThisFileDirectory)env\vcvarsallShim.bat" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\debug.targets" />
@@ -25,6 +23,10 @@
     <None Include="$(MSBuildThisFileDirectory)ext\empty.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\gen\gen.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\gen\gen.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.git.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.proj" />
+    <None Include="$(MSBuildThisFileDirectory)ext\id\id.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\meta\meta.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\node\node.props" />
@@ -37,7 +39,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\part\part.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.git.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\publish\publish.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.post.props" />
@@ -55,7 +56,9 @@
     <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\shell\env.bat" />
     <None Include="$(MSBuildThisFileDirectory)ext\shell\shell.proj" />
+    <None Include="$(MSBuildThisFileDirectory)ext\shell\vcvarsallShim.bat" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.proj" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\shim\shim.pre.props" />
@@ -63,7 +66,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\xf\xf.targets" />
-    <None Include="$(MSBuildThisFileDirectory)src\.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\BuildInfo.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\build\.props" />
     <None Include="$(MSBuildThisFileDirectory)src\build\.targets" />
@@ -82,6 +84,7 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Entitlements.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Info.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj.bak" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Properties\AssemblyVersion.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Properties\AssemblyVersion.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
@@ -96,9 +99,11 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Properties\AssemblyVersion.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
     <None Include="$(MSBuildThisFileDirectory)src\.tasks" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\nuget.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)env\doskey.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)ext\shell\doskey.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\Properties\AndroidManifest.xml" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.json" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.lock.json" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\project.json" />
@@ -121,9 +126,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\Resources.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)src\BuildInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\MainActivity.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\AppDelegate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\Main.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\Resources\Resource.Designer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
@@ -136,6 +146,18 @@
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\aut\AppSetup.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselViewUITest.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Android\CarouselViewRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\iOS\CarouselViewRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\CarouselView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\CarouselViewLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\EnumerableExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\ICarouselViewController.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\SimpleItemsView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\CarouselViewLibrary.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\CarouselViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\phone\Package.appxmanifest" />

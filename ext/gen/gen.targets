@@ -23,14 +23,12 @@
 
     <!--get path to expansion-->
     <PropertyGroup>
-      <ExpansionPath>$(TemplatePath.Replace('.t',''))</ExpansionPath>
-      <ExpansionIdentity>@(Compile->WithMetadataValue('FullPath', '$(ExpansionPath)')->'%(Identity)')</ExpansionIdentity>
+      <DefaultExpansionPath>$(TemplatePath.Replace('.t',''))</DefaultExpansionPath>
+      <ExpansionIdentity>@(Compile->WithMetadataValue('FullPath', '$(DefaultExpansionPath)')->'%(Identity)')</ExpansionIdentity>
       <ExpansionText>$([System.IO.File]::ReadAllText($(ExpansionIdentity)))</ExpansionText>
-      <ExpansionFileName>$([System.IO.Path]::GetFileName($(ExpansionPath)))</ExpansionFileName>
-      <ExpansionPathFresh>$(IntermediateOutputPathAbsolute)$(ExpansionFileName)</ExpansionPathFresh>
+      <ExpansionFileName>$([System.IO.Path]::GetFileName($(DefaultExpansionPath)))</ExpansionFileName>
+      <FreshExpansionPath>$(IntermediateOutputPathAbsolute)$(ExpansionFileName)</FreshExpansionPath>
     </PropertyGroup>
-    <Message Importance="$(GenVerbosity)" Text="  TemplatePath: $(TemplatePath)" />
-    <Message Importance="$(GenVerbosity)" Text="  ExpansionPath: $(ExpansionPath)" />
 
     <!--find variables of form: $(Name)-->
     <RegexMatches
@@ -47,52 +45,72 @@
         <Replacement>$(%(Identity))</Replacement>
       </Pattern>
     </ItemGroup>
-    <Message Importance="$(GenVerbosity)" Text="  Replacements:" />
-    <Message Importance="$(GenVerbosity)" Text="    %(Pattern.Name) -> %(Replacement)" />
 
     <!--replace variables with values-->
     <RegexReplace
       Input="$(TemplateText)"
       Pattern="@(Pattern)"
     >
-      <Output PropertyName="ExpansionTextFresh" TaskParameter="Result" />
+      <Output PropertyName="FreshExpansionText" TaskParameter="Result" />
     </RegexReplace>
 
     <!--write fresh expansion-->
     <MakeDir Directories="$(IntermediateOutputPathAbsolute)" />
     <WriteTextToFile
-      File="$(ExpansionPathFresh)"
-      Text="$(ExpansionTextFresh)"
+      File="$(FreshExpansionPath)"
+      Text="$(FreshExpansionText)"
       Overwrite="true"
     />
-    <Message Importance="$(GenVerbosity)" Text="  ExpansionPathFresh -> $(ExpansionPathFresh)" />
+    
+    <!--log substitution-->
+    <Message Text="  TemplatePath: $(TemplatePath)" Importance="$(GenVerbosity)" />
+    <Message Text="  DefaultExpansionPath: $(DefaultExpansionPath)" Importance="$(GenVerbosity)" />
+    <Message Text="  FreshExpansionPath -> $(FreshExpansionPath)" Importance="$(GenVerbosity)" />
+    <Message Text="  Variables:" Importance="$(GenVerbosity)" />
+    <Message Text="    %(Pattern.Name) -> %(Replacement)" Condition="'%(Replacement)'!=''" Importance="$(GenVerbosity)" />
+    <Message Text="    %(Pattern.Name) -> [null]" Condition="'%(Replacement)'==''" Importance="$(GenVerbosity)" />
 
     <!--test if expansion is stale-->
     <PropertyGroup>
       <IsExpansionStale Condition="
         '@(Pattern->'%(Replacement)', '')'!='' AND
-        '$(ExpansionTextFresh)'!='$(ExpansionText)'
+        '$(FreshExpansionText)'!='$(ExpansionText)'
       ">true</IsExpansionStale>
-      <SubstituteExpandedResult>%(Template.SubstituteExpandedResult)</SubstituteExpandedResult>
+      
+      <SubstituteExpandedResult Condition="
+        '$(IsExpansionStale)'=='true'
+      ">%(Template.SubstituteExpandedResult)</SubstituteExpandedResult>
+      
+      <OverwriteDefaultExpansion Condition="
+        '$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'!='true'
+      ">true</OverwriteDefaultExpansion>
     </PropertyGroup>
-    <Message Importance="$(GenVerbosity)" Text="  IsExpansionStale: $(IsExpansionStale)" />
-    <Message Importance="$(GenVerbosity)" Text="    SubstituteExpandedResult: $(SubstituteExpandedResult)" Condition="'$(IsExpansionStale)'=='true'" />
+    <Message Text="  IsExpansionStale: $(IsExpansionStale)" Condition="'$(IsExpansionStale)'=='true'" Importance="$(GenVerbosity)" />
+    <Message Text="    SubstituteExpandedResult: $(SubstituteExpandedResult)" Condition="'$(SubstituteExpandedResult)'!=''" Importance="$(GenVerbosity)" />
+    <Message Text="    OverwriteDefaultExpansion: $(OverwriteDefaultExpansion)" Condition="'$(OverwriteDefaultExpansion)'!=''" Importance="$(GenVerbosity)" />
 
-    <!--error if expansion is false-->
-    <Error 
-      Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'!='true'"
-      Text="Expansion of template '$(TemplatePath)' is stale."
+    <!--overwrite default expansion-->
+    <Warning 
+      Text="Expansion of template '$(TemplatePath)' is stale. Refreshing default expansion '$(DefaultExpansionPath)'."
+      Condition="'$(OverwriteDefaultExpansion)'=='true'"
+    />
+    <WriteTextToFile
+      File="$(DefaultExpansionPath)"
+      Text="$(FreshExpansionText)"
+      Overwrite="true"
+      Condition="'$(OverwriteDefaultExpansion)'=='true'"
     />
 
-    <!--replace result-->
-    <ItemGroup Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'=='true'">
-      <Compile Remove="$(ExpansionIdentity)"/>
-      <Compile Include="$(ExpansionPathFresh)"/>
-    </ItemGroup>
+    <!--substitute expanded result-->
     <Message
-      Condition="'$(IsExpansionStale)'=='true' AND '$(SubstituteExpandedResult)'=='true'"
-      Importance="$(GenVerbosity)" Text="$(ExpansionIdentity) -> $(ExpansionPathFresh)" 
+      Text="  Submsituting: $(ExpansionIdentity) -> $(FreshExpansionPath)" 
+      Condition="'$(SubstituteExpandedResult)'=='true'"
+      Importance="$(GenVerbosity)" 
     />
+    <ItemGroup Condition="'$(SubstituteExpandedResult)'=='true'">
+      <Compile Remove="$(ExpansionIdentity)"/>
+      <Compile Include="$(FreshExpansionPath)"/>
+    </ItemGroup>
   </Target>
 
 </Project>

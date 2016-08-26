@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Main" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  
+<Project 
+  ToolsVersion="12.0" 
+  InitialTargets="_CommonTargetsInitialTargets"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+
+  <!--_CommonTargetsInitialTargets-->
+  <Target Name="_CommonTargetsInitialTargets">
+    
+    <ItemGroup>
+      <_BuildInfo Include="@(BuildNumberFile)">
+        <Name>BuildNumber</Name>
+        <Default>$(InvalidBuildNumber)</Default>
+      </_BuildInfo>
+      <_BuildInfo Include="@(EnlistmentRevisionFile)">
+        <Name>EnlistmentRevision</Name>
+        <Default>$(InvalidEnlistmentRevision)</Default>
+      </_BuildInfo>
+      <_BuildInfo Include="@(EnlistmentUrlFile)">
+        <Name>EnlistmentUrl</Name>
+        <Default />
+      </_BuildInfo>
+    </ItemGroup>
+    
+    <ReadLinesFromFile
+      File="%(_BuildInfo.Identity)"
+      Condition="Exists(%(Identity))"
+    >
+      <Output TaskParameter="Lines" PropertyName="%(Name)" />
+    </ReadLinesFromFile>
+    <CreateProperty Value="%(_BuildInfo.Default)" Condition="!Exists(%(Identity))">
+      <Output TaskParameter="Value" PropertyName="%(Name)" />
+    </CreateProperty>
+  </Target>
+
+  <!--Download-->
   <Target
     Name="Download"
     Condition="!Exists($(DestinationFile))" 
@@ -102,4 +136,52 @@
     <Message Importance="high" Text="$(ShimName) ($(BuildTarget)) -> $(_BuildLogFile)" />
   </Target>
 
+  <!--RefreshFile-->
+  <Target
+    Name="RefreshFile"
+  >
+    <!--
+      Inputs:
+        DefaultValue
+        LastFile
+        FreshFile
+        Importance
+    -->
+    
+    <!--load fresh value from fresh file-->
+    <PropertyGroup>
+      <_Fresh>$(DefaultValue)</_Fresh>
+    </PropertyGroup>
+    <ReadLinesFromFile File="$(FreshFile)" Condition="Exists($(FreshFile))" >
+      <Output TaskParameter="Lines" PropertyName="_Fresh" />
+    </ReadLinesFromFile>
+
+    <!--log fresh value-->
+    <PropertyGroup>
+      <Importance Condition="'$(Importance)'==''">normal</Importance>
+    </PropertyGroup>
+    <ItemGroup>
+      <LastFile Include="$(LastFile)" />
+    </ItemGroup>
+    <Message
+      Importance="$(Importance)"
+      Text="%(FileName)%(Extension) -> @(LastFile) ($(_Fresh))"
+    />
+
+    <!--load last value from last file-->
+    <ReadLinesFromFile File="$(LastFile)" Condition="Exists($(LastFile))">
+      <Output TaskParameter="Lines" PropertyName="_Last" />
+    </ReadLinesFromFile>
+
+    <!--if last value is stale then refresh it-->
+    <WriteLinesToFile
+      File="$(LastFile)"
+      Lines="$(_Fresh)"
+      Overwrite="true"
+      Condition="'$(_Fresh)'!='$(_Last)'"
+    />
+
+    <!--delete fresh file-->
+    <Delete Files="$(FreshFile)" />
+  </Target>
 </Project>

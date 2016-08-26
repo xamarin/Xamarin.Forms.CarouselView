@@ -1,217 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project 
   ToolsVersion="12.0" 
+  InitialTargets="_PublishInitialTarget"
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-  <Target Name="Build" DependsOnTargets="_RefreshEnlistmentInfo" />
-  <Target Name="Clean" >
-    <Delete
-      Files="
-        @(BuildInfoFile);
-        @(BuildNumberFile);
-        @(EnlistmentStatusFile);
-        @(EnlistmentRevisionFile);
-        @(EnlistmentBranchFile);
-        @(EnlistmentUrlFile);
-      "
-    />
-  </Target>
+  <Target Name="Build" DependsOnTargets="Publish" />
+  <Target Name="Clean" />
   <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
-  <Target Name="Publish"
-    DependsOnTargets="
-      _PublishFailIfDirty;
-      _PublishBuildNumber;
-      _PublishRevisionNumber;
-    "
-  />
 
-  <!--_RefreshEnlistmentInfo-->
-  <Target
-    Name="_RefreshEnlistmentInfo"
-    DependsOnTargets="
-      _RefreshEnlistmentStatus;
-      _RefreshEnlistmentRevision;
-      _RefreshBuildNumber;
-    ">
-  </Target>
-
-  <!--_RefreshEnlistmentStatus-->
-  <Target 
-    Name="_RefreshEnlistmentStatus" 
-    DependsOnTargets="_SaveFreshEnlistmentStatus"
-  >
-    <!--load fresh status file-->
-    <ReadLinesFromFile File="@(FreshEnlistmentStatusFile)">
-      <Output TaskParameter="Lines" PropertyName="_Fresh" />
-    </ReadLinesFromFile>
-
-    <!--load last status file-->
-    <ReadLinesFromFile File="@(EnlistmentStatusFile)" Condition="Exists(@(EnlistmentStatusFile))">
-      <Output TaskParameter="Lines" PropertyName="_Last" />
-    </ReadLinesFromFile>
-
-    <Message
-      Importance="$(Verbosity)"
-      Text="%(FileName)%(Extension) -> @(EnlistmentStatusFile)"
-    />
-    
-    <!--if last status file is stale then refresh it-->
-    <WriteLinesToFile
-      File="@(EnlistmentStatusFile)"
-      Lines="$(_Fresh)"
-      Overwrite="true"
-      Condition="'$(_Fresh)'!='$(_Last)'"
-    />
-
-    <Delete Files="@(FreshEnlistmentStatusFile)" />
-  </Target>
-
-  <!--_LoadEnlistmentStatus-->
-  <Target Name="_LoadEnlistmentStatus">
+  <!--_PublishInitialTarget-->
+  <Target Name="_PublishInitialTarget" >
+    <PropertyGroup>
+      <BuildNumberDir>$(BuildByNumberDir)$(BuildNumber)\</BuildNumberDir>
+      <BuildRevisionDir>$(BuildByRevisionDir)$(EnlistmentRevision)\</BuildRevisionDir>
+    </PropertyGroup>
 
     <!--load get status file-->
     <ReadLinesFromFile File="@(EnlistmentStatusFile)">
       <Output TaskParameter="Lines" ItemName="_Lines" />
     </ReadLinesFromFile>
-
-    <!--enlistment is clean if status file is empty-->
     <PropertyGroup>
       <IsEnlistmentClean Condition="@(_Lines->Count()) == 0">true</IsEnlistmentClean>
     </PropertyGroup>
   </Target>
 
-  <!--_RefreshEnlistmentRevision-->
-  <Target
-    Name="_RefreshEnlistmentRevision"
+  <!--Publish-->
+  <Target Name="Publish"
     DependsOnTargets="
-      _LoadEnlistmentStatus;
-      _SaveFreshEnlistmentRevision
+      _PublishFailIfDirty;
+      _PublishByBuildNumber;
+      _PublishByRevisionNumber;
     "
-  >
-    <PropertyGroup>
-      <_Fresh>$(InvalidEnlistmentRevision)</_Fresh>
-    </PropertyGroup>
+  />
 
-    <!--load fresh status file-->
-    <ReadLinesFromFile 
-      File="@(FreshEnlistmentRevisionFile)" 
-      Condition="'$(IsEnlistmentClean)'=='true'"
-    >
-      <Output TaskParameter="Lines" PropertyName="_Fresh" />
-    </ReadLinesFromFile>
-    <Warning 
-      Condition="'$(IsEnlistmentClean)'!='true'" 
-      Text="No build revision assigned because enslitment contains modified, new, or untracked files. See: @(EnlistmentStatusFile)"
-    />
-    
-    <Message
-      Importance="high"
-      Text="%(FileName)%(Extension) -> @(EnlistmentRevisionFile) ($(_Fresh))"
-    />
-
-    <!--load last status file-->
-    <ReadLinesFromFile File="@(EnlistmentRevisionFile)" Condition="Exists(@(EnlistmentRevisionFile))">
-      <Output TaskParameter="Lines" PropertyName="_Last" />
-    </ReadLinesFromFile>
-
-    <!--if last status file is stale then refresh it-->
-    <WriteLinesToFile
-      File="@(EnlistmentRevisionFile)"
-      Lines="$(_Fresh)"
-      Overwrite="true"
-      Condition="'$(_Fresh)'!='$(_Last)'"
-    />
-
-    <Delete Files="@(FreshEnlistmentRevisionFile)" />
-  </Target>
-
-  <!--_LoadEnlistmentRevision-->
-  <Target Name="_LoadEnlistmentRevision">
-    <ReadLinesFromFile File="@(EnlistmentRevisionFile)">
-      <Output TaskParameter="Lines" PropertyName="EnlistmentRevision" />
-    </ReadLinesFromFile>
-    
-    <PropertyGroup>
-      <BuildRevisionDir>$(BuildByRevisionDir)$(EnlistmentRevision)\</BuildRevisionDir>
-    </PropertyGroup>
-  </Target>
-
-  <!--_RefreshBuildNumber-->
-  <Target Name="_RefreshBuildNumber">
-    <PropertyGroup>
-      <_Fresh>$(InvalidBuildNumber)</_Fresh>
-    </PropertyGroup>
-
-    <!--create $(DropDir)10000 if no drop dirs exist-->
-    <MakeDir Directories="$(BuildByNumberDir)10000" Condition="!Exists($(BuildByNumberDir))" />
-
-    <!--_Fresh <- last directory in $(DropDir) + 1-->
-    <ItemGroup>
-      <_BuildDir Include="$([System.IO.Directory]::GetDirectories($(BuildByNumberDir)))" />
-      <_BuildNumbers Include="@(_BuildDir->'%(FileName)')" />
-    </ItemGroup>
-    <PropertyGroup Condition="'$(IsEnlistmentClean)'=='true'">
-      <_BuildNumbers>@(_BuildNumbers->Reverse())</_BuildNumbers>
-      <_Fresh>$(_BuildNumbers.Split(';')[0])</_Fresh>
-      <_Fresh>$([MSBuild]::Add(1, $(_Fresh)))</_Fresh>
-    </PropertyGroup>
-    <Warning
-      Condition="'$(IsEnlistmentClean)'!='true'"
-      Text="No build number assigned because enslitment contains modified, new, or untracked files. See: @(EnlistmentStatusFile)"
-    />
-    
-    <Message
-      Importance="high"
-      Text="%(FileName)%(Extension) -> @(BuildNumberFile) ($(BuildByNumberDir)$(_Fresh))"
-    />
-
-    <!--_Last <- @(BuildNumberFile)-->
-    <ReadLinesFromFile
-      File="@(BuildNumberFile)"
-      Condition="Exists(@(BuildNumberFile))"
-    >
-      <Output TaskParameter="Lines" ItemName="_Last" />
-    </ReadLinesFromFile>
-
-    <!--if stale, _Fresh -> @(BuildNumberFile)-->
-    <PropertyGroup>
-      <_BuildNumberStale Condition="'$(_Fresh)'!='@(_Last)'">true</_BuildNumberStale>
-    </PropertyGroup>
-    <MakeDir Directories="@(BuildNumberFile->'%(RootDir)%(Directory)')" />
-    
-    <WriteLinesToFile
-      File="@(BuildNumberFile)"
-      Lines="$(_Fresh)"
-      Overwrite="true"
-      Condition="'$(_BuildNumberStale)'=='true'"
-    />
-  </Target>
-
-  <!--_LoadBuildNumber-->
-  <Target Name="_LoadBuildNumber">
-    <ReadLinesFromFile File="@(BuildNumberFile)">
-      <Output TaskParameter="Lines" PropertyName="BuildNumber" />
-    </ReadLinesFromFile>
-
-    <PropertyGroup>
-      <BuildNumberDir>$(BuildByNumberDir)$(BuildNumber)\</BuildNumberDir>
-    </PropertyGroup>
-  </Target>
-
-  <Target
-    Name="_PublishFailIfDirty"
-    DependsOnTargets="_LoadEnlistmentStatus"
-  >
+  <!--_PublishFailIfDirty-->
+  <Target Name="_PublishFailIfDirty">
     <Error 
       Condition="'$(IsEnlistmentClean)'!='true'" 
       Text="Publish aborted; Repository dirty at time of build. Set IsEnlistmentClean=true to override. See: @(EnlistmentStatusFile)" 
     />
   </Target>
 
-  <!--_PublishBuildNumber-->
+  <!--_PublishByBuildNumber-->
   <Target 
-    Name="_PublishBuildNumber"
-    DependsOnTargets="_LoadBuildNumber"
+    Name="_PublishByBuildNumber"
+    DependsOnTargets="_PublishFailIfDirty"
   >  
     <Error
       Condition="Exists($(BuildNumberDir))"
@@ -227,13 +60,10 @@
     <Copy SourceFiles="@(_BuildFiles)" DestinationFolder="$(BuildNumberDir)%(RecursiveDir)" />
   </Target>
 
-  <!--_PublishRevisionNumber-->
+  <!--_PublishByRevisionNumber-->
   <Target
-    Name="_PublishRevisionNumber"
-    DependsOnTargets="
-      _PublishBuildNumber;
-      _LoadEnlistmentRevision;
-    "
+    Name="_PublishByRevisionNumber"
+    DependsOnTargets="_PublishByBuildNumber"
     Condition="'$(IsEnlistmentClean)'=='true'"
   >
     <MakeDir Directories="$(BuildByRevisionDir)" />

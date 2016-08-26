@@ -8,7 +8,7 @@
 
   <ItemDefinitionGroup>
     <Template>
-      <SubstituteExpandedResult>false</SubstituteExpandedResult>
+      <SubstituteExpandedResult />
     </Template>
   </ItemDefinitionGroup>
   

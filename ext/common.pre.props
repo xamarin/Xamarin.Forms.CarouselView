@@ -45,10 +45,11 @@
   <PropertyGroup>
     <Sc>%3B</Sc><!--;-->
     <Ds>%24</Ds><!--$-->
-    <Amp>&amp;</Amp>
     <Cr>%0D</Cr>
     <Lf>%0A</Lf>
     <Nl>$(Cr)$(Lf)</Nl>
+    <Quot>&quot;</Quot>
+    <Amp>&amp;</Amp>
   </PropertyGroup>
 
   <!--well known paths-->
@@ -56,6 +57,11 @@
     <SrcDir>$(RootDir)src\</SrcDir>
     <DlsDir>$(RootDir)dls\</DlsDir>
     <ToolsDir>$(DlsDir)tools\</ToolsDir>
+  </PropertyGroup>
+  
+  <!--nuget-->
+  <PropertyGroup>
+    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
   </PropertyGroup>
 
   <!--build root paths-->
@@ -71,9 +77,23 @@
     <BuildTempSubDir>obj\</BuildTempSubDir>
     <BuildTempDir>$(BuildBinDir.Replace('$(BuildBinSubDir)','$(BuildTempSubDir)'))</BuildTempDir>
   </PropertyGroup>
-  
-  <!--nuget-->
+
+  <!--build info-->
   <PropertyGroup>
-    <NugetPackagesDirAbsolute>$(DlsDir)packages\</NugetPackagesDirAbsolute>
+    <InvalidEnlistmentRevision>dirty</InvalidEnlistmentRevision>
+    <InvalidEnlistmentUrl/>
+    <InvalidBuildNumber>0</InvalidBuildNumber>
   </PropertyGroup>
+  <PropertyGroup>
+    <EnlistmentStatusFile>$(BuildBinDir)BuildInfo.Enlistment.Status.txt</EnlistmentStatusFile>
+    <BuildNumberFile>$(BuildBinDir)BuildInfo.Build.Number.txt</BuildNumberFile>
+    <EnlistmentRevisionFile>$(BuildBinDir)BuildInfo.Enlistment.Revision.txt</EnlistmentRevisionFile>
+    <EnlistmentUrlFile>$(BuildBinDir)BuildInfo.Enlistment.Url.txt</EnlistmentUrlFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <EnlistmentStatusFile Include="$(EnlistmentStatusFile)" />
+    <BuildNumberFile Include="$(BuildNumberFile)" />
+    <EnlistmentRevisionFile Include="$(EnlistmentRevisionFile)" />
+    <EnlistmentUrlFile Include="$(EnlistmentUrlFile)" />
+  </ItemGroup>
 </Project>

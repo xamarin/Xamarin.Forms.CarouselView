@@ -11,6 +11,14 @@
     <ProjectGuid>{444D601D-FB88-48C4-A281-0156ED6EDDE0}</ProjectGuid>
   </PropertyGroup>
 
+  <ItemGroup>
+    <FreshBuildNumberFile Include="@(BuildNumberFile->'%(Identity).fresh')" />
+    <FreshEnlistmentStatusFile Include="@(EnlistmentStatusFile->'%(Identity).fresh')" />
+    <FreshEnlistmentRevisionFile Include="@(EnlistmentRevisionFile->'%(Identity).fresh')" />
+    <FreshEnlistmentUrlFile Include="@(EnlistmentUrlFile->'%(Identity).fresh')" />
+  </ItemGroup>
+
   <Import Project="$(ExtDir)common.targets" />
-  <Import Project="publish.targets" />
+  <Import Project="id.git.targets"/>
+  <Import Project="id.targets" />
 </Project>

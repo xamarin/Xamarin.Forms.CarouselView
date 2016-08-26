@@ -41,8 +41,9 @@ nuke=git clean -fdXq
 scorch=git clean -fdXq -e !dls
 
 ;= build
-publish=msbuild %publishProj% /v:m /t:publish
-fpublish=msbuild %publishProj% /v:m /t:publish /p:IsEnlistmentClean=true
+buildInfo=msbuild %idProj% /v:m
+publish=msbuild %publishProj% /v:m
+fpublish=msbuild %publishProj% /v:m /p:IsEnlistmentClean=true
 shim=msbuild %shimProj% /t:dumpProjects
 restore=msbuild %shimProj% /v:m /t:nugetRestore
 dryRun=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="debug" /p:ShimProperties="$*"

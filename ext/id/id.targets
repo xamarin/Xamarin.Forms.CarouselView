@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  ToolsVersion="12.0" 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Target Name="Build" DependsOnTargets="RefreshEnlistmentInfo" />
+  <Target Name="Clean" >
+    <Delete
+      Files="
+        @(BuildNumberFile);
+        @(EnlistmentStatusFile);
+        @(EnlistmentRevisionFile);
+        @(EnlistmentUrlFile);
+      "
+    />
+  </Target>
+  <Target Name="Rebuild" DependsOnTargets="Clean;Build" />
+
+  <!--RefreshEnlistmentInfo-->
+  <Target
+    Name="RefreshEnlistmentInfo"
+    DependsOnTargets="
+      _RefreshEnlistmentStatus;
+      _RefreshBuildNumber;
+      _RefreshEnlistmentRevision;
+      _RefreshEnlistmentUrl;
+    ">
+  </Target>
+
+  <!--_RefreshEnlistmentStatus-->
+  <Target 
+    Name="_RefreshEnlistmentStatus" 
+    DependsOnTargets="_SaveFreshEnlistmentStatus"
+  >
+    <PropertyGroup>
+      <_Properties>FreshFile=@(FreshEnlistmentStatusFile);</_Properties>
+      <_Properties>$(_Properties)LastFile=@(EnlistmentStatusFile);</_Properties>
+    </PropertyGroup>
+
+    <MSBuild
+      Targets="RefreshFile"
+      Projects="$(ProjFile)"
+      Properties="$(_Properties)"
+    />
+  </Target>
+
+  <!--_LoadEnlistmentStatus-->
+  <Target Name="_LoadEnlistmentStatus">
+
+    <!--load get status file-->
+    <ReadLinesFromFile File="@(EnlistmentStatusFile)">
+      <Output TaskParameter="Lines" ItemName="_Lines" />
+    </ReadLinesFromFile>
+
+    <!--enlistment is clean if status file is empty-->
+    <PropertyGroup>
+      <IsEnlistmentClean Condition="@(_Lines->Count()) == 0">true</IsEnlistmentClean>
+    </PropertyGroup>
+  </Target>
+
+  <!--_WarnIfBuildNotIdentifiable-->
+  <Target 
+    Name="_WarnIfBuildNotIdentifiable"
+    DependsOnTargets="_LoadEnlistmentStatus"
+  >
+
+    <Warning
+      Condition="'$(IsEnlistmentClean)'!='true'"
+      Text="Build identity could not be established because enslitment contains modified, new, or untracked files. See: @(EnlistmentStatusFile)"
+    />
+  </Target>
+  
+  <!--_SaveFreshBuildNumber-->
+  <Target Name="_SaveFreshBuildNumber" >
+
+    <!--create $(BuildByNumberDefaultDir) if no drop dirs exist-->
+    <MakeDir Directories="$(BuildByNumberDefaultDir)" Condition="!Exists($(BuildByNumberDefaultDir))" />
+
+    <!--last directory in $(DropDir) + 1-->
+    <ItemGroup>
+      <_BuildDir Include="$([System.IO.Directory]::GetDirectories($(BuildByNumberDir)))" />
+      <_BuildNumbers Include="@(_BuildDir->'%(FileName)')" />
+    </ItemGroup>
+    <PropertyGroup>
+      <_BuildNumbers>@(_BuildNumbers->Reverse())</_BuildNumbers>
+      <_Fresh>$(_BuildNumbers.Split(';')[0])</_Fresh>
+      <_Fresh>$([MSBuild]::Add(1, $(_Fresh)))</_Fresh>
+    </PropertyGroup>
+
+    <!--save _Fresh build number-->
+    <MakeDir Directories="@(FreshBuildNumberFile->'%(RootDir)%(Directory)')" />
+    <WriteLinesToFile
+      File="@(FreshBuildNumberFile)"
+      Lines="$(_Fresh)"
+    />
+  </Target>
+
+  <!--_RefreshBuildNumber-->
+  <Target
+    Name="_RefreshBuildNumber"
+    DependsOnTargets="
+      _WarnIfBuildNotIdentifiable;
+      _SaveFreshBuildNumber
+    "
+  >
+    <PropertyGroup>
+      <_Properties>DefaultValue=$(InvalidBuildNumber);</_Properties>
+      <_Properties Condition="'$(IsEnlistmentClean)'=='true'"
+        >$(_Properties)FreshFile=@(FreshBuildNumberFile);</_Properties>
+      <_Properties>$(_Properties)LastFile=@(BuildNumberFile);</_Properties>
+      <_Properties>$(_Properties)Importance=high;</_Properties>
+    </PropertyGroup>
+
+    <MSBuild
+      Targets="RefreshFile"
+      Projects="$(ProjFile)"
+      Properties="$(_Properties)"
+    />
+  </Target>
+
+  <!--_RefreshEnlistmentUrl-->
+  <Target
+    Name="_RefreshEnlistmentUrl"
+    DependsOnTargets="
+      _SaveFreshEnlistmentUrl
+    "
+  >
+    <PropertyGroup>
+      <_Properties>DefaultValue=$(InvalidEnlistmentUrl);</_Properties>
+      <_Properties>$(_Properties)FreshFile=@(FreshEnlistmentUrlFile);</_Properties>
+      <_Properties>$(_Properties)LastFile=@(EnlistmentUrlFile);</_Properties>
+      <_Properties>$(_Properties)Importance=high;</_Properties>
+    </PropertyGroup>
+
+    <MSBuild
+      Targets="RefreshFile"
+      Projects="$(ProjFile)"
+      Properties="$(_Properties)"
+    />
+  </Target>
+
+  <!--_RefreshEnlistmentRevision-->
+  <Target
+    Name="_RefreshEnlistmentRevision"
+    DependsOnTargets="
+      _WarnIfBuildNotIdentifiable;
+      _SaveFreshEnlistmentRevision
+    "
+  >
+    <PropertyGroup>
+      <_Properties>DefaultValue=$(InvalidEnlistmentRevision);</_Properties>
+      <_Properties Condition="'$(IsEnlistmentClean)'=='true'"
+        >$(_Properties)FreshFile=@(FreshEnlistmentRevisionFile);</_Properties>
+      <_Properties>$(_Properties)LastFile=@(EnlistmentRevisionFile);</_Properties>
+      <_Properties>$(_Properties)Importance=high;</_Properties>
+    </PropertyGroup>
+
+    <MSBuild
+      Targets="RefreshFile"
+      Projects="$(ProjFile)"
+      Properties="$(_Properties)"
+    />
+  </Target>
+
+</Project>

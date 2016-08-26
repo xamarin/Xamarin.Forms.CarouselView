@@ -35,5 +35,5 @@
   <PropertyGroup Condition="'$(TargetProject)' == '$(WindowsTabletProjectId)'">
     <TargetsFile>$(MSBuildExtensionsPath)\Microsoft\WindowsXaml\v$(VisualStudioVersion)\Microsoft.Windows.UI.Xaml.CSharp.targets</TargetsFile>
   </PropertyGroup>
-
+  
 </Project>

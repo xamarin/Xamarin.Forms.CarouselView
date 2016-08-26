@@ -4,6 +4,7 @@
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
   <Target Name="_SaveFreshEnlistmentStatus" >
+    <MakeDir Directories="@(FreshEnlistmentStatusFile->'%(RootDir)%(Directory)')" />
     <Exec
       Command="git status --porcelain > @(FreshEnlistmentStatusFile)"
       WorkingDirectory="$(RootDir)"
@@ -11,8 +12,17 @@
   </Target>
 
   <Target Name="_SaveFreshEnlistmentRevision" >
+    <MakeDir Directories="@(FreshEnlistmentRevisionFile->'%(RootDir)%(Directory)')" />
     <Exec
       Command="git rev-list -n 1 head > @(FreshEnlistmentRevisionFile)"
+      WorkingDirectory="$(RootDir)"
+    />
+  </Target>
+
+  <Target Name="_SaveFreshEnlistmentUrl" >
+    <MakeDir Directories="@(FreshEnlistmentUrlFile->'%(RootDir)%(Directory)')" />
+    <Exec
+      Command="for /F $(Quot)tokens=*$(Quot) %%i in ('git remote') do git remote get-url %%i > @(FreshEnlistmentUrlFile)"
       WorkingDirectory="$(RootDir)"
     />
   </Target>

@@ -146,9 +146,7 @@
       <_Property Include="LibraryPlatform" />
       <_Property Include="DefineConstants" />
       <_Property Include="TargetProject" />
-      <_Property Include="TargetsFile" />
       <_Property Include="CommonTargetsPath" />
-      <_Property Include="CSharpCoreTargetsPath" />
       <_Property Include="BuildingInsideVisualStudio" />
       <_Property Include="FrameProperties" />
     </ItemGroup>

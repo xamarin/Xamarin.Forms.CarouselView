@@ -105,7 +105,11 @@
   
     Mobile
   -->
-  <PropertyGroup Condition="$(IsMobileLibraryPlatform) AND '$(IsPartPlatform)' != 'true' AND '$(IsLeafPlatform)'=='true' ">
+  <PropertyGroup Condition="
+    $(IsMobileLibraryPlatform) AND 
+    '$(IsPartPlatform)' != 'true' AND 
+    '$(IsLeafPlatform)'=='true' 
+  ">
     <IsCompositePlatform>true</IsCompositePlatform>
     <DefineConstants>$(DefineConstants)COMPOSITE;</DefineConstants>
   </PropertyGroup>

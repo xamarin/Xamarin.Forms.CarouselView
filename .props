@@ -2,7 +2,6 @@
 <Project 
   ToolsVersion="12.0" 
   DefaultTargets="Build" 
-  InitialTargets="C6D4C295-BD1A-4F1F-9E5A-B61496734293"
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
 >
   <Import 
@@ -16,24 +15,6 @@
   <Import Project="$(ExtNugetDir)nuget.props"/>
   <Import Project="$(ExtXfDir)xf.props"/>
 
-  <!--inject .targets-->
-  <PropertyGroup>
-    <!--<CustomAfterMicrosoftCommonTargets>$([MSBuild]::GetDirectoryNameOfFileAbove($(ProjDir), .targets))\.targets</CustomAfterMicrosoftCommonTargets>-->
-  </PropertyGroup>
-
-  <!--cctor-->
-  <Target 
-    Name="C6D4C295-BD1A-4F1F-9E5A-B61496734293"
-    Condition="'$(HasBuildInfo)'=='true'"
-  >
-    <ItemGroup>
-      <Compile Include="@(BuildInfoFile)" />
-    </ItemGroup>
-    <PropertyGroup>
-      <DefineConstants>$(DefineConstants)HAS_BUILD_INFO;</DefineConstants>
-    </PropertyGroup>
-  </Target>
-
   <!--shim-->
   <PropertyGroup>
     <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
@@ -41,9 +22,8 @@
     <ShimProperties>SkipNugetImports=true</ShimProperties>
   </PropertyGroup>
   <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
-    <ShimBeforeProject>$(PublishProj)</ShimBeforeProject>
+    <ShimBeforeProject>$(IdProj)</ShimBeforeProject>
     <ShimAfterProject>$(PublishProj)</ShimAfterProject>
-    <ShimAfterTarget>Publish</ShimAfterTarget>
   </PropertyGroup>
 
 </Project>

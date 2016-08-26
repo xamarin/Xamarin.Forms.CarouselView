@@ -48,7 +48,7 @@
     <ExecDispatch>_ExecDispatch</ExecDispatch>
     <ExecDispatch Condition="'$(ShimInProcess)'=='true'">_Dispatch</ExecDispatch>
     
-    <ShimName Condition="'$(ShimState)'=='$(ShimStateInitId)'">Shim</ShimName>
+    <ShimName Condition="'$(ShimState)'!='$(ShimStateLoggingId)'">Shim</ShimName>
     <EscapedProperties>$(Properties.Replace(";","$(Sc)"))</EscapedProperties>
     <EscapedShimProperties>$(ShimProperties.Replace(";","$(Sc)"))</EscapedShimProperties>
     <EscapedShimmedProperties>$(ShimmedProperties.Replace(";","$(Sc)"))</EscapedShimmedProperties>
