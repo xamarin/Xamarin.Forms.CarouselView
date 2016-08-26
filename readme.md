@@ -451,6 +451,6 @@ A hermetic build environment is most simply achieved by checking all dependencie
 [1]: https://visualstudiogallery.msdn.microsoft.com/b346d9de-8722-4b0e-b50e-9ae9add9fca8
 [2]: src/carouselView/lib/CarouselView.csproj
 [3]: src/carouselView/lib/Properties/AssemblyVersion.cs
-[4]: src/carouselView/lib/portable/CarouselViewLibrary.cs
-[5]: src/carouselView/lib/portable/
-[6]: src/carouselView/lib/ios/
+[4]: src/carouselView/lib/Portable/CarouselViewLibrary.cs
+[5]: src/carouselView/lib/Portable
+[6]: src/carouselView/lib/iOS/
