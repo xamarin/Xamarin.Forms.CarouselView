@@ -15,7 +15,7 @@
   <!--_ResolveMetaProjectReferencePaths-->
   <Target
     Name="_ResolveMetaProjectReferencePaths"
-    Condition="'$(MetaPlatformType)'=='$(LeafPlatformId)' AND '$(BuildTarget)'=='Compile'"
+    Condition="'$(MetaPlatformType)'=='$(AugmentedPlatformId)' AND '$(BuildTarget)'=='Compile'"
   >
     <PropertyGroup>
       <!--
@@ -36,7 +36,7 @@
   <!--_ResolveMetaProjectReferences-->
   <Target 
     Name="_ResolveMetaProjectReferences"
-    Condition="'$(MetaPlatformType)'=='$(LeafPlatformId)'"
+    Condition="'$(MetaPlatformType)'=='$(AugmentedPlatformId)'"
   >
     <Error
       Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($|;)'))"
@@ -80,13 +80,13 @@
   <!--_ResolveMetaPlatform-->
   <Target
     Name="_ResolveMetaPlatform"
-    Condition="'$(MetaPlatformType)'=='$(MetaPlatformId)'"
+    Condition="'$(MetaPlatformType)'=='$(ProxyPlatformId)'"
   >
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
-        <ReferenceSource>LeafPlatform</ReferenceSource>
-        <Platform>$(LeafPlatform)</Platform>
-        <AdditionalProperties>$(KeepRecursiveFrame)Platform=$(LeafPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <ReferenceSource>ProxiedPlatform</ReferenceSource>
+        <Platform>$(ProxiedPlatform)</Platform>
+        <AdditionalProperties>$(KeepRecursiveFrame)Platform=$(ProxiedPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
         <TargetFramework>$(TargetFramework)</TargetFramework>
       </MetaReference>
     </ItemGroup>
@@ -100,7 +100,7 @@
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
         <ReferenceSource>GroupPlatform</ReferenceSource>
-        <Platform>%(ChildMetaPlatforms.Identity)</Platform>
+        <Platform>%(GroupMetaPlatformMembers.Identity)</Platform>
         <AdditionalProperties>$(KeepRecursiveFrame)Platform=%(Identity)</AdditionalProperties>
       </MetaReference>
     </ItemGroup>
@@ -112,7 +112,7 @@
     Condition="'$(MetaPlatformType)'==''"
   >
     <Error
-      Condition="'$(LeafPlatform)'==''"
+      Condition="'$(ProxiedPlatform)'==''"
       Text="Platform '$(Plat)' is unrecognized."
     />
   </Target>

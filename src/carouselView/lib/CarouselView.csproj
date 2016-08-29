@@ -48,9 +48,9 @@
   -->
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|pack' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|pack' " />
-  <PropertyGroup Condition=" '$(Plat)' == '$(PackLeafPlatformId)' " />
-  <Import Project="nuspec.props" Condition=" '$(Plat)' == '$(PackLeafPlatformId)' " />
-  <ItemGroup Condition="'$(Plat)' == '$(PackLeafPlatformId)' ">
+  <PropertyGroup Condition=" '$(Plat)' == '$(PackPlatformId)' " />
+  <Import Project="nuspec.props" Condition=" '$(Plat)' == '$(PackPlatformId)' " />
+  <ItemGroup Condition="'$(Plat)' == '$(PackPlatformId)' ">
     <SelfReference Include="$(MobilePlatformId)" />
   </ItemGroup>
   <!--
@@ -108,7 +108,7 @@
   <PropertyGroup Condition="
     $(IsMobileLibraryPlatform) AND 
     '$(IsPartPlatform)' != 'true' AND 
-    '$(IsLeafPlatform)'=='true' 
+    '$(IsAugmentedPlatform)'=='true' 
   ">
     <IsCompositePlatform>true</IsCompositePlatform>
     <DefineConstants>$(DefineConstants)COMPOSITE;</DefineConstants>

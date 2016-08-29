@@ -319,9 +319,9 @@ Each `MetaProject` supports a set of `MetaPlatforms`. For example, here are the 
 | xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
 | xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
 
-A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. Depending on the `MetaPlatformType`, either `IsGroupPlatform`, `IsMetaPlatform` or `IsLeafPlatform` will be set to true.
+A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. Depending on the `MetaPlatformType`, either `IsGroupPlatform`, `IsProxyPlatform` or `IsAugmentedPlatform` will be set to true.
 - A `group` `MetaPlatform` is a collection of one or more `group` or `meta` `MetaPlatforms`. Groups can be named (e.g. `Mobile` = { `portable`, `android`, `ios`, `windows` }) or specified ad-hoc on the command line (e.g. `/p:MetaPlatform=android;windows`). The children of the group are stored in `ChildMetaPlatforms`. 
-- A `meta` `MetaPlatform` is a platform in new lexicon which is being grafted over a desktop platform (e.g. `monodroid` over `AnyCpu` or `monotouch.app.sim` over `IPhoneSimulator`). It has one `leaf` `MetaPlatform` child which is stored in `LeafPlatform`.
+- A `meta` `MetaPlatform` is a platform in new lexicon which is being grafted over a desktop platform (e.g. `monodroid` over `AnyCpu` or `monotouch.app.sim` over `IPhoneSimulator`). It has one `leaf` `MetaPlatform` child which is stored in `ProxiedPlatform`.
 - A `leaf` `MetaPlatform` is a desktop platform (e.g. `AnyCPU`) augmented with a `MetaPlatform` (e.g. `android`) and `MetaProject` (e.g. `android.lib`) and other properties describing the project type (e.g. `MobilePlatform`==`Android`). These agumented properties are use in `.csproj` and `.props` files (e.g.  [`CarouselView.csproj`][2] and [`src/.props`](src/.props)) to set the properties (e.g. `AndroidSupportedAbis`) of one of the projects composing the unified project (e.g. Xamarin.Android). Once the properties of the composed project are set its msbuild targets are invoked to finally preform the build.
 
 ### MetaPlatform Hierarchy
@@ -411,7 +411,7 @@ If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a defau
 `LeafPlatforms` and `PartPlatforms` are platforms that delegate to one of the projects that compose the `MetaProject` to actually preform the build. 
 
 ### Leaf Platforms
-A `LeafPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `LeafPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `LeafPlatform` which can be built like this:
+A `ProxiedPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `ProxiedPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `ProxiedPlatform` which can be built like this:
 
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid
@@ -445,22 +445,22 @@ Building a `MetaPlatform` results in a traversal of the [MetaPlatform Hierarchy]
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=monodroid /p:Verbosity=high /t:DryRun
 
-The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`LeafPlatform`) node (`BUILD` indicates a `LeafPlatform`). In brackets follows the variables that compose the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
+The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`ProxiedPlatform`) node (`BUILD` indicates a `ProxiedPlatform`). In brackets follows the variables that compose the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
 ```
   RECURSE [debug|monodroid|monodroid]: Xamarin.Forms.CarouselView -> { anycpu }
     BuildTarget -> DryRun
     ProjFile -> F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj
-    IsMetaPlatform -> true
+    IsProxyPlatform -> true
     IsMobileLibraryPlatform -> true
     IsMobileLibraryProject -> true
-    LeafPlatform -> anycpu
+    ProxiedPlatform -> anycpu
     MobilePlatform -> android
     LibraryPlatform -> monodroid
     DefineConstants -> ANDROID;TRACE;DEBUG;
     TargetProject -> monoDroid
     FrameProperties -> MetaPlatform;IsPartPlatform;
   CarouselView [debug|monodroid|monodroid] references:
-    LeafPlatform: F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj /t:DryRun /+p:_MetaPlatform=;IsPartPlatform=;P
+    ProxiedPlatform: F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj /t:DryRun /+p:_MetaPlatform=;IsPartPlatform=;P
   latform=anycpu;_MetaPlatform=monodroid
   ...
 ```

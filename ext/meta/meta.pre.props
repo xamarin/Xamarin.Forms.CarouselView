@@ -26,21 +26,21 @@
   <PropertyGroup>
 
     <!--abstract platform ids-->
-    <LeafPlatformId>leaf</LeafPlatformId>
-    <MetaPlatformId>meta</MetaPlatformId>
+    <AugmentedPlatformId>augmented</AugmentedPlatformId>
+    <ProxyPlatformId>proxy</ProxyPlatformId>
     <GroupPlatformId>group</GroupPlatformId>
   </PropertyGroup>
 
   <!--ad-hoc platform group-->
   <PropertyGroup Condition="$(Plat.Contains(';'))">
-    <ChildMetaPlatforms>$(Plat)</ChildMetaPlatforms>
+    <GroupMetaPlatformMembers>$(Plat)</GroupMetaPlatformMembers>
     <MetaPlatformType>$(GroupPlatformId)</MetaPlatformType>
     <IsGroupPlatform>true</IsGroupPlatform>
   </PropertyGroup>
 
   <!--ChildPlatform: Property -> Items-->
   <ItemGroup>
-    <ChildMetaPlatforms Include="$(ChildMetaPlatforms)"/>
+    <GroupMetaPlatformMembers Include="$(GroupMetaPlatformMembers)"/>
   </ItemGroup>
 
   <ItemDefinitionGroup>

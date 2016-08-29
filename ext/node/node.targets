@@ -125,14 +125,14 @@
   >
     <PropertyGroup>
       <Tag>BUILD</Tag>
-      <Tag Condition="'$(IsLeafPlatform)'!='true'">RECURSE</Tag>
+      <Tag Condition="'$(IsAugmentedPlatform)'!='true'">RECURSE</Tag>
     </PropertyGroup>
 
     <ItemGroup>
       <_Property Include="BuildTarget" />
       <_Property Include="ProjFile" />
-      <_Property Include="IsLeafPlatform" />
-      <_Property Include="IsMetaPlatform" />
+      <_Property Include="IsAugmentedPlatform" />
+      <_Property Include="IsProxyPlatform" />
       <_Property Include="IsMobileLibraryPlatform" />
       <_Property Include="IsMobileAppPlatform" />
       <_Property Include="IsPartPlatform" />
@@ -140,7 +140,7 @@
       <_Property Include="IsMobileLibraryProject" />
       <_Property Include="IsMobileTestProject" />
       <_Property Include="IsDesktopLibraryProject" />
-      <_Property Include="LeafPlatform" />
+      <_Property Include="ProxiedPlatform" />
       <_Property Include="MobilePlatform" />
       <_Property Include="MobileSubPlatform" />
       <_Property Include="LibraryPlatform" />
@@ -150,7 +150,7 @@
       <_Property Include="BuildingInsideVisualStudio" />
       <_Property Include="FrameProperties" />
     </ItemGroup>
-    <ItemGroup Condition="'$(IsLeafPlatform)'=='true'">
+    <ItemGroup Condition="'$(IsAugmentedPlatform)'=='true'">
       <_Property Include="OutDirAbsolute" />
       <_Property Include="IntermediateOutputPathAbsolute" />
       <_Property Include="TargetsFile" />
