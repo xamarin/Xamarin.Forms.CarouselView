@@ -22,10 +22,26 @@ The Xamarin.Forms build systems aims to do at design time what Xamarin.Forms has
 
 On demand releasing is also a goal of Xamarin.Forms build. In practice, this means having the ability to take a machine with a freshly installed OS and in a single command (possibly powershell now that it's cross platform), install Visual Stuido, install Xamarin Studio, install 3ed party tools (git, nuget, etc), download the source, clean, restore, build, package, publish, deploy, and test on all platforms. This works focuses on the clean, restore, build, package, and publish steps. 
 
-The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built.
+The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built:
+
+- [`Shell`](#shell) - A shell to proivde, as much as possible, an isolated environment from which to launch CI builds and to share aliases.
+- [`Directories`](#directories) - Simplify `.gitignore` by establishing separate directories for source, downloads, build artifcats, and build archives.
+- [`Projects`](#projects) - Establish conventions for "typing" projects via `.pre.props` files so that common project settings (e.g. `TreatWarningsAsErrors`) can be extracted to `.props` and `.target` files.
+- [`Shim`](#shim) - Allows defining an `InitialProject` and `FinalProject` which run before and after a poset of out-of-proc builds (vs in-proc msbuild tasks) each of which can defined a `Shim` which launches a new msbuild process before the main build (e.g. used to dispatch identify, restore, build, and publish build steps). Also enable all manner of logging.  
+- [`Build Identity`](#build-identity) - Allows defining a `BuildVersion` which combined with a computed `BuildNumber` establishes the assembly version number. Also establishes `EnlistmentRevision`, `EnlistmentUrl`, and `EnlistmentBranch` as well as `IsEnslistementClean`. 
+- [`C# Tempaltes`](#csharp-templates) - Allows defining `Tempalte` project items which allow injecting msbuild variables into source code or failing the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`).
+- [`Publishing`](#publishing) - Automatic archiving of builds by `BuildNumber`, `EnlistmentRevision`, `EnlistmentBranch`, and `AssemblyVersion` as well as erasure of old archives. 
+- [`Cleaning`](#cleaning) - Redefines `Clean` target to use source control to erase non-enlisted files (e.g. `git clean`).
+- [`NugetRestore`](#nugetrestore) - Moves `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Adds a `NugetRestore` target to download the packages.
+- [`Pack`](#pack) - Moves `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc). Generates a nuget package at build. Verifies that an simple project can be built after upgrading to the new package.
+- [`MetaPlatform`](#metaplatform) - Allows definition of hierarchy of `MetaPlatforms` (e.g. `android`, `ios`) which allow multipule `.csproj` files to be consolidated into a single project. Allows defining a `SelfReference` so `MetaPlatforms` can reference other `MetaPlatforms` defined in the same `.csproj`.
+- [`PartPlatform`](#part-platforms) - Allows merging `.csproj` files (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part).
 
 ## Highlights
-Consuming and producing Xamarin.Forms libraries is simplified chiefly by [reducing the number of projects](#project-reduction) consumed and produced by both mobile apps and libraries, by the introduction of a [mobile meta-platform tree](#mobile-metaplatform-tree) which integrates with existing Visual Studio [solution](#mobile-solution) and [project](#mobile-project) tooling, and finally, "de-duplicating" the msbuild files so build setting like `TreatWarningsAsErrors` appear only once and so can be centrally administered.
+Consuming and producing Xamarin.Forms libraries is simplified by:
+- [reducing the number of projects](#project-reduction) consumed and produced by both mobile apps and libraries
+- by the introduction of a [mobile meta-platform tree](#mobile-metaplatform-tree) which integrates with existing Visual Studio [solution](#mobile-solution) and [project](#mobile-project) tooling, and finally,
+- by "de-duplicating" the msbuild files so build setting like `TreatWarningsAsErrors` appear only once and so can be centrally administered.
 
 ### Project Reduction
 The number of binaries a Xamarin.Forms app needs to reference to use a Xamarin.Forms library is reduced from 3 (portable, platform, and shim [to support the linker]) to 1. This is achieved by compiling the portable and shim logic into the platform library. This allows a `RenderWithAttribute` applied to the Xamarin.Forms element to directly reference the platform renderer ([see here][2]). This obviates the need for the shim library and dodges a large class of potential linker issues. A compiler error is still generated during library construction if the platform logic references internal portable logic (note that until VSIP integration happens, Intellisense will not complain about such references). Under the hood, this is achieved by kicking off additional compilations of the project. The code can check for the `COMPOSITE` compilation symbol to know what type of compilation is occurring (see [Part Platforms](#part-platforms)). 
@@ -469,7 +485,7 @@ If the repository is dirty (e.g `BuildInfo.Enlistment.Status.txt` is not empty) 
 
 Build identity is loaded into the msbuild variables `BuildNumber`, `EnlistementRevision`, and `EnlistmentUrl` and, typically, used to expand C# template files (see below) so build identity can be compiled into assemblies. 
 
-## C# Templates
+## CSharp Templates
 C# templates allow expanding msbuild variables into C# files or asserting that default expansions match an actual expansion at build time; C# Templates have a `.t.cs` extension and during compilation they are not compiled but rather loaded in memory and scanned for variables of the form `$([Name])` which are replaced with the corresponding msbuild variable (e.g. see [`AssemblyVersion.t.cs`][7] and [`BuildInfo.t.cs`](src/BuildInfo.t.cs)). The expanded template is then compared with the matching `.cs` file checked in next to the `.t.cs` file (aka the "default expansion"; see [`AssemblyVersion.cs`][3] and [`BuildInfo.cs`](src/BuildInfo.cs)) and, if found to be different, then either:
 
 1. An warning is issued indicating the default expansion is stale and has been refreshed (a CI build should fail if the build itself causes the enlistment to become dirty and so force the developer to submit the changes for code-review).
@@ -502,6 +518,7 @@ Try suppling any of the msbuild variables on the command to see what happens whe
 
     src\carouselView\lib >msbuild /p:MetaPlatform=dotnet /t:RefreshTemplateExpansions /p:BuildVersion=2.4.0
 
+## Publishing
 
 ### Shim
 The [`shim`](ext\shim\shim.proj) is a project which searches for and then builds .csproj files after, among other things, configuring logging. 
