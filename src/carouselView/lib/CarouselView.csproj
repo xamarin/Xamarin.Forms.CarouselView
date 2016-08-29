@@ -98,7 +98,7 @@
     <IntermediateOutputPath>$(IntermediateOutputPath)portable\obj\</IntermediateOutputPath>
   </PropertyGroup>
   <!--self reference portable library-->
-  <ItemGroup Condition="$(IsMobileLibraryPlatform) AND '$(IsPartPlatform)' == 'true' ">
+  <ItemGroup Condition="'$(IsMobileLibraryPlatform)' == 'true' AND '$(IsPartPlatform)' == 'true' ">
     <SelfReference Include="$(PortableLibraryPlatformId)" />
   </ItemGroup>
   <!--
@@ -106,7 +106,7 @@
     Mobile
   -->
   <PropertyGroup Condition="
-    $(IsMobileLibraryPlatform) AND 
+    '$(IsMobileLibraryPlatform)' == 'true' AND 
     '$(IsPartPlatform)' != 'true' AND 
     '$(IsAugmentedPlatform)'=='true' 
   ">

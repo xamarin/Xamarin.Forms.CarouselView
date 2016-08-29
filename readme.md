@@ -1,4 +1,4 @@
-# Quick Start
+﻿# Quick Start
 Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build environment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now, the following commands should get you off the ground:
 
 ## Opening Solution
@@ -179,7 +179,7 @@ la - list all aliases
 fa - find an alias with a given string (e.g. fa carousel)
 r, src, cv, lib, app, aut - navigate to common directories used in documentation examples
 gs, ga - git status, add
-nuke - use git to clean out directory and sub directories
+nuke, killusual - use git to clean out directory and sub directories, kill processes holding nukable files
 ., .., ... - navigate up 1, 2 or 3 directories
 ```
 
@@ -253,7 +253,7 @@ A build of a clean enlistment from the root directory via the alias `build`, suc
 ````
 
 ## Projects
-When abstracting multipule platforms, as does Xamarin.Forms, the solution file can quickly become unwieldy as more platforms are supported. For example, to build a CarouselView library without the following improvements requires dozens of projects (see [Project Reduction highlight](#project-reduction)). Most of the projects are shims containg little logic of their own. These project clutter the solution and their common settings are hard to administer. By merging these many shim projects and extracting common settings to a single location sanity is restored.
+When abstracting multiple platforms, as does Xamarin.Forms, the solution file can quickly become unwieldy as more platforms are supported. For example, to build a CarouselView library without the following improvements requires dozens of projects (see [Project Reduction highlight](#project-reduction)). Most of the projects are shims contain little logic of their own. These project clutter the solution and their common settings are hard to administer. By merging these many shim projects and extracting common settings to a single location sanity is restored.
 
 ### Common Project Properties
 Typically, solutions with multiple projects suffer from duplication of project settings. For example, to enable warnings as errors typically requires modifying each project. To prevent duplication and allow settings to be centrally administered common project settings are extracted to `.props` files in parent directories. For example, `WarningLevel` and `TreatWarningsAsErrors` have been extracted to [`src\.props`](src/.props) and so are included by all projects in any sub-directory of `src`. 
@@ -274,13 +274,13 @@ Some settings gathered into `.props` files are common to all projects (e.g. `War
 While there are only two types of configuration (`debug` and `release`) many project and platform types have been introduced and are described below.
 
 ### MetaProject
-A `MetaProject` is an amalgam of existing project templates and has the following general form:
+A `MetaProject` is an amalgam of primitive project templates (primitive project templates being those that existed before this work) and has the following general form:
 
 ```xml
 <Project>
   <PropertyGroup>
-    <!--A MetaProject is identified by a ProjectGuid, just like a project-->
-    <ProjectGuid>...</ProjectGuid>
+    <!--A MetaProject is identified by a MetaProjectGuid-->
+    <MetaProjectGuid>...</MetaProjectGuid>
   </PropertyGroup>
   
   <!--Load properties with descriptive names for the type of project and platform being loaded-->
@@ -306,25 +306,42 @@ For example, Xamarin.Forms build defines the following `MetaProjects` for
 - all Xamarin.Forms app projects
 - Calabash Android and iOS UI automation projects
 
-A `.props` file could determin the type of `MetaProject` from which it was included it by comparing the `ProjectGuid` to a constant however that does not make for a readable project file. Instead, a hierarchy of `.pre.props` files (some provided by the `MetaProject` itself) are loaded before `.props` files and define a set of properties with descriptive names for aspects of the type being loaded for the `.props` files to use. For example, the Xamarin.Forms `MetaProjects` [`xf.pre.props`](ext/xf/xf.pre.props) file define, among many others, `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` depending on the type of `MetaProject` being loaded. 
+A `.props` file can determine the type of `MetaProject` by comparing `MetaProjectGuid` to a constant however that is not very readable. Instead, `.props` files typically use properties with descriptive names declared in a hierarchy of `.pre.props` files loaded before the `.props` files. For example, the Xamarin.Forms [`xf.pre.props`](ext/xf/xf.pre.props) file defines `MetaProjectName` with values of either `xf.lib`, `xf.app`, or `xf.aut` as well as `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` depending on the type of `MetaProject` being loaded. 
 
 ### MetaPlatform
-`MetaPlatform` is the heart of the type system; The `MetaPlatform` abstraction allows grafting a new platform lexicon over of the existing desktop lexicon. For example, in the case of Xamarin.Forms, `MetaPlatform` makes it possible to talk about `mobile`, `android`, or `win.arm` platforms instead of `AnyCPU`, `x32`, or `x64` platforms. 
+`MetaPlatform` is the heart of the type system; The `MetaPlatform` abstraction allows deriving new platforms from the primitive platforms (primitive platforms being those platforms that existed before this work). For example, in the case of Xamarin.Forms, `MetaPlatform` allows for creation of `monotouch.sim`, `android`, or `win.arm` platforms out of `IPhoneSimulator`, `AnyCPU`, or `arm` primitive platforms. Each `MetaProject` supports a set of `MetaPlatforms`. For example, the `MetaPlatform` members for Xamarin.Forms `MetaProjects` are as follows:
 
-Each `MetaProject` supports a set of `MetaPlatforms`. For example, here are the relationships for Xamarin.Forms:
-
-| MetaPlatform | MetaProject |
+| `MetaPlatform` | `MetaProject` |
 | --- | --- |
-| xf.aut | android.aut, ios.aut |
-| xf.lib | dotnet, monodroid, monotouch, xamarin.ios, win, uap, wpa |
-| xf.app | monodroid.app, monotouch.phone, monotouch.sim, xamarin.ios.sim, xamarin.ios.phone, win.32, win.64, win.arm, uap.32, wpa.32 |
+| `xf.aut` | `android.aut`, `ios.aut` |
+| `xf.lib` | `dotnet`, `monodroid`, `monotouch`, `xamarin.ios`, `win`, `uap`, `wpa` |
+| `xf.app` | `monodroid.app`, `monotouch.phone`, `monotouch.sim`, `xamarin.ios.sim`, `xamarin.ios.phone`, `win.32`, `win.64`, `win.arm`, `uap.32`, `wpa.32` |
 
-A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `leaf`. Depending on the `MetaPlatformType`, either `IsGroupPlatform`, `IsProxyPlatform` or `IsAugmentedPlatform` will be set to true.
-- A `group` `MetaPlatform` is a collection of one or more `group` or `meta` `MetaPlatforms`. Groups can be named (e.g. `Mobile` = { `portable`, `android`, `ios`, `windows` }) or specified ad-hoc on the command line (e.g. `/p:MetaPlatform=android;windows`). The children of the group are stored in `ChildMetaPlatforms`. 
-- A `meta` `MetaPlatform` is a platform in new lexicon which is being grafted over a desktop platform (e.g. `monodroid` over `AnyCpu` or `monotouch.app.sim` over `IPhoneSimulator`). It has one `leaf` `MetaPlatform` child which is stored in `ProxiedPlatform`.
-- A `leaf` `MetaPlatform` is a desktop platform (e.g. `AnyCPU`) augmented with a `MetaPlatform` (e.g. `android`) and `MetaProject` (e.g. `android.lib`) and other properties describing the project type (e.g. `MobilePlatform`==`Android`). These agumented properties are use in `.csproj` and `.props` files (e.g.  [`CarouselView.csproj`][2] and [`src/.props`](src/.props)) to set the properties (e.g. `AndroidSupportedAbis`) of one of the projects composing the unified project (e.g. Xamarin.Android). Once the properties of the composed project are set its msbuild targets are invoked to finally preform the build.
+`MetaPlatforms` come in three flavors discriminated by the `MetaPlatofrmType` property values `augmented`, `proxy`, and `group` or by `IsAugmentedPlatform`, `IsProxyPlatform` and `IsGroupPlatform`. 
 
-### MetaPlatform Hierarchy
+#### Augmented MetaPlatform
+An `augmented` `MetaPlatform` is a primitive platform augmented with additional properties that more fully describe the platform type which are used by `.props` files use to declare properties common to that type. For example, the classic and unified Xamarin.Forms iOS app projects are aggregated into the `xf.app` `MetaProject` which supports two augmentations of the `IPhoneSimulator` platform discriminated by the `MetaPlatform` property values `xamarin.ios.sim` and `monotouch.sim`. Both augmentations cause the [`xf.pre.props`](ext/xf/xf.pre.props) file to declare `MobilePlatform` with the constant value of `ios` (aka `IosMobilePlatformId`) which will be used in [src\.props](src/.props) to declare the `MtouchSdkVersion`. The `xamarin.ios.sim` `derived` `MetaPlatform` can be built from the command line like this (see also: [Building MetaPlatforms](#building-metaplatforms)):
+
+    src\carouselView\app> msbuild /v:m /p:Platform=IPhoneSimulator /p:MetaPlatform=xamarin.ios.sim
+
+#### Proxy MetaPlatform
+A `proxy` `MetaPlatform` infers its `Platform` from its `MetaPlatform` (e.g. `IPhoneSimulator` from `monotouch.sim`) and then _explictly_ passes that `Platform` to a recursive call of itself. It exists for two reasons: 
+
+1. it provides a slighly simpler command line build syntax. For example, `xamairn.ios.sim` can be built without specifying `Platform` and only specifying `MetaPlatform` (see also: [Building MetaPlatforms](#building-metaplatforms)):
+
+    src\carouselView\app> msbuild /v:m /p:MetaPlatform=xamarin.ios.sim
+    
+2. it allows `MetaPlatform` to be passed as `Platform` (unrecognized `Platforms` are assumed to be `MetaPlatforms`) which allows passing `MetaPlatforms` from Visual Studio which allows building from Visual Studio:
+
+    src\carouselView\app> msbuild /v:m /p:Platform=xamarin.ios.sim
+
+#### Group MetaPlatform
+A `group` `MetaPlatform` is a collection of one or more `MetaPlatforms`. Groups can be named (e.g. `ios.unified` := { `xamarin.ios.phone`, `xamarin.ios.sim` }) or specified ad-hoc on the command line (e.g. `/p:MetaPlatform=monotouch.xim;xamarin.ios.sim`). When built, a `group` `MetaPlatform` will build all of its members. For example, either of the following will build both `xamarin.ios.phone` and `xamarin.ios.sim` (see also: [Building MetaPlatforms](#building-metaplatforms)):
+
+    src\carouselView\app> msbuild /v:m /p:Platform=xamarin.ios.phone;xamarin.ios.sim
+    src\carouselView\app> msbuild /v:m /p:Platform=ios.unified
+    
+#### MetaPlatform Hierarchy
 Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, and `MetaPlatformTypes` for Xamarin.Forms. These relationships are declared in [`ext\xf\xf.pre.props`](ext/xf/xf.pre.props).
 
 ![Platform Image](doc/Platforms.gif)
@@ -332,10 +349,7 @@ Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, 
 ### Editing Projects
 Project files have been modified to enable build features that simplify maintaining a CI infrastructure at the expense of tooling. The main expense (breaks) are design time features of Visual Studio which modify project files because, without VSIP integration, Visual Studio in unaware of the new conventions. For example, adding a new file Android specific file via Visual Studio to [`CarouselView.csproj`][2] will require moving the `<Compile Include="NewAndroidFile.cs">` element to live under `<ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)'" >`. 
 
-Manual edits of project files are more easily made after installing [`EditProj`][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). 
-
-The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
-
+Manual edits of project files are more easily made after installing [`EditProj`][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
 
 ## Nuget
 Nuget packages are restored via a new `msbuild` target `NugetRestore` (see [dls\packages\meta](#dls)). The target internally downloads and invokes `nuget.exe` on `package.config` generated from `NugetReference` and `NugetPackage` `ItemGroups`. 
