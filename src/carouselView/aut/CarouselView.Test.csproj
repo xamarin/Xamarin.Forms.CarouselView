@@ -5,7 +5,7 @@
     Properties
   -->
   <PropertyGroup>
-    <MetaProject>xf.aut</MetaProject>
+    <MetaProjectGuid>{96CAA386-638A-4131-9DCB-66C61447BAFA}</MetaProjectGuid>
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />

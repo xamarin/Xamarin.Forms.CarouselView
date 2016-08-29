@@ -5,9 +5,9 @@
   <!--shim-->
   <PropertyGroup>
     <ShimName>Core</ShimName>
-    <ShimBeforeProject />
-    <ShimAfterProject />
-    <ShimAfterTarget />
+    <ShimInitialProject />
+    <ShimFinalProject />
+    <ShimFinalTarget />
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
       $(MSBuildThisFileDirectory)**\android\**\*.csproj;

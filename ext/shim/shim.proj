@@ -25,21 +25,21 @@
 
   <!--shim state-->
   <PropertyGroup>
-    <ShimStateInitId>init</ShimStateInitId>
-    <ShimStatePrePostId>prepost</ShimStatePrePostId>
+    <ShimStateInitializeId>initializing</ShimStateInitializeId>
+    <ShimStateInitialAndFinalId>initialAndFinal</ShimStateInitialAndFinalId>
     <ShimStateProjectsId>projects</ShimStateProjectsId>
     <ShimStateLoggingId>logging</ShimStateLoggingId>
     
-    <ShimState Condition="'$(ShimState)'==''">$(ShimStateInitId)</ShimState>
+    <ShimState Condition="'$(ShimState)'==''">$(ShimStateInitializeId)</ShimState>
 
-    <NextShimState Condition="'$(ShimState)'=='$(ShimStateInitId)'">$(ShimStatePrePostId)</NextShimState>
-    <NextShimState Condition="'$(ShimState)'=='$(ShimStatePrePostId)'">$(ShimStateProjectsId)</NextShimState>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStateInitializeId)'">$(ShimStateInitialAndFinalId)</NextShimState>
+    <NextShimState Condition="'$(ShimState)'=='$(ShimStateInitialAndFinalId)'">$(ShimStateProjectsId)</NextShimState>
     <NextShimState Condition="'$(ShimState)'=='$(ShimStateProjectsId)'">$(ShimStateLoggingId)</NextShimState>
     <NextShimState Condition="'$(ShimState)'=='$(ShimStateLoggingId)'">$(ShimStateLoggingId)</NextShimState>
   </PropertyGroup>
   <ItemGroup>
     <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateProjectsId)'" Include="$(ProjFile)" />
-    <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStatePrePostId)'" Include="$(ProjFile)" />
+    <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateInitialAndFinalId)'" Include="$(ProjFile)" />
     <DispatchProjectFiles Condition="'$(ShimState)'=='$(ShimStateLoggingId)'" Include="@(ShimProjectFiles)" />
   </ItemGroup>
 

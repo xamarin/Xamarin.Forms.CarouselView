@@ -3,11 +3,11 @@
   ToolsVersion="12.0" 
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   
-  <!--InitShim-->
+  <!--InitializeShim-->
   <Target 
-    Name="InitShim"
+    Name="InitializeShim"
     BeforeTargets="Proxy"
-    Condition="'$(ShimState)'=='$(ShimStateInitId)'"
+    Condition="'$(ShimState)'=='$(ShimStateInitializeId)'"
   >
     <!--if the BuildTarget is the ShimTarget (e.g. /t:NugetRestore) then no need to shim out-of-proc-->
     <PropertyGroup  
@@ -30,20 +30,20 @@
     </MSBuild>
   </Target>
 
-  <!--PrePostShim-->
+  <!--InitialAndFinalShim-->
   <Target 
-    Name="PrePostShim"
+    Name="InitialAndFinalShim"
     BeforeTargets="Proxy"
-    Condition="'$(ShimState)'=='$(ShimStatePrePostId)'"
+    Condition="'$(ShimState)'=='$(ShimStateInitialAndFinalId)'"
   >
 
-    <!--before shim target-->
+    <!--initial target-->
     <MSBuild
-      Projects="$(ShimBeforeProject)"
-      Targets="$(ShimBeforeTarget)"
+      Projects="$(ShimInitialProject)"
+      Targets="$(ShimInitialTarget)"
     />
 
-    <!--self dispatch-->
+    <!--dispatch-->
     <MSBuild
       Targets="$(BuildTarget)"
       Projects="$(ProjFile)"
@@ -52,10 +52,10 @@
       <Output ItemName="TargetResult" TaskParameter="TargetOutputs"/>
     </MSBuild>
 
-    <!--after shim target-->
+    <!--final target-->
     <MSBuild
-      Projects="$(ShimAfterProject)"
-      Targets="$(ShimAfterTarget)"
+      Projects="$(ShimFinalProject)"
+      Targets="$(ShimFinalTarget)"
     />
   </Target>
 
@@ -65,8 +65,6 @@
     Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimReference->Count()) > 0"
     BeforeTargets="Proxy"
   >
-
-    <!--shim references-->
     <MSBuild
       Targets="$(BuildTarget)"
       Projects="$(ProjFile)"
@@ -81,7 +79,6 @@
     Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimProjectFiles->Count()) > 0"
     BeforeTargets="Proxy"
   >
-    <!--inject shim target(s)-->
     <MSBuild
       Targets="$(ExecDispatch)"
       Projects="$(ProjFile)"
@@ -93,7 +90,7 @@
   <Target
     Name="BuildProjects"
     DependsOnTargets="ResolveShimReferences;Shim"
-    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimProjectFiles->Count()) > 0"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimProjectFiles->Count()) > 0 AND '$(ShimTarget)'!='$(BuildTarget)'"
     BeforeTargets="Proxy"
   >
     <!--expand configurations-->
@@ -109,7 +106,6 @@
       Targets="$(ExecDispatch)"
       Projects="@(ProjFileWithConfig)"
       Properties="ShimState=$(NextShimState);BuildTarget=$(BuildTarget);Properties=$(ShimmedProperties)"
-      Condition="'$(ShimTarget)'!='$(BuildTarget)'"
     />
   </Target>
 

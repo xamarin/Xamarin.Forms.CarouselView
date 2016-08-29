@@ -3,7 +3,7 @@
   <PropertyGroup>
     <!--<ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>-->
     <!--VS project type is a function of the first ProjectTypeGuids found in the text of the project file-->
-    <MetaProject>xf.lib</MetaProject>
+    <MetaProjectGuid>{63DFE391-2B58-4C43-B6EC-4D376EB60592}</MetaProjectGuid>
   </PropertyGroup>
   <!--
   

@@ -40,7 +40,7 @@
   >
     <Error
       Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($|;)'))"
-      Text="Platform '$(MetaPlatform)' is not supported by '$(MetaProject)' project type."
+      Text="Platform '$(MetaPlatform)' is not supported by '$(MetaProjectName)' project type."
     />
     <Error
       Condition="'$(BuildTarget)'=='Compile' AND '$(IsInVS)'!='true'"

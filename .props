@@ -22,8 +22,8 @@
     <ShimProperties>SkipNugetImports=true</ShimProperties>
   </PropertyGroup>
   <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
-    <ShimBeforeProject>$(IdProj)</ShimBeforeProject>
-    <ShimAfterProject>$(PublishProj)</ShimAfterProject>
+    <ShimInitialProject>$(IdProj)</ShimInitialProject>
+    <ShimFinalProject>$(PublishProj)</ShimFinalProject>
   </PropertyGroup>
 
 </Project>

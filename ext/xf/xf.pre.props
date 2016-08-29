@@ -53,12 +53,12 @@
 
   <!--meta projects-->
   <PropertyGroup>
-    <DesktopLibraryMetaProjectId>desktop.lib</DesktopLibraryMetaProjectId>
+    <DesktopLibraryMetaProjectGuid>{31928A03-4286-4294-B986-D31B43B5342F}</DesktopLibraryMetaProjectGuid>
 
     <!--Xamarin.Forms Project Ids-->
-    <MobileAppMetaProjectId>xf.app</MobileAppMetaProjectId>
-    <MobileLibraryMetaProjectId>xf.lib</MobileLibraryMetaProjectId>
-    <MobileAutomationMetaProjectId>xf.aut</MobileAutomationMetaProjectId>
+    <MobileAppMetaProjectGuid>{252E16D5-5794-4E3A-B63E-B780164F2200}</MobileAppMetaProjectGuid>
+    <MobileLibraryMetaProjectGuid>{63DFE391-2B58-4C43-B6EC-4D376EB60592}</MobileLibraryMetaProjectGuid>
+    <MobileAutomationMetaProjectGuid>{96CAA386-638A-4131-9DCB-66C61447BAFA}</MobileAutomationMetaProjectGuid>
   </PropertyGroup>
 
   <!--Xamarin.Forms Project Predicates-->
@@ -167,18 +167,20 @@
 
 
   <Choose>
-    <When Condition="'$(MetaProject)'=='$(DesktopLibraryMetaProjectId)'">
+    <When Condition="'$(MetaProjectGuid)'=='$(DesktopLibraryMetaProjectGuid)'">
       <PropertyGroup>
         <IsDesktopLibraryProject>true</IsDesktopLibraryProject>
+        <MetaProjectName>desktop</MetaProjectName>
         <SupportedPlatforms>
           desktop
         </SupportedPlatforms>
       </PropertyGroup>
     </When>
-    <When Condition="'$(MetaProject)'=='$(MobileAppMetaProjectId)'">
+    <When Condition="'$(MetaProjectGuid)'=='$(MobileAppMetaProjectGuid)'">
       <PropertyGroup>
         <IsMobileAppProject>true</IsMobileAppProject>
         <IsTest>True</IsTest>
+        <MetaProjectName>xf.app</MetaProjectName>
         <SupportedPlatforms>
           monodroid.app;
           monotouch.phone;
@@ -193,9 +195,10 @@
         </SupportedPlatforms>
       </PropertyGroup>
     </When>
-    <When Condition="'$(MetaProject)'=='$(MobileLibraryMetaProjectId)'">
+    <When Condition="'$(MetaProjectGuid)'=='$(MobileLibraryMetaProjectGuid)'">
       <PropertyGroup>
         <IsMobileLibraryProject>true</IsMobileLibraryProject>
+        <MetaProjectName>xf.lib</MetaProjectName>
         <SupportedPlatforms>
           dotnet;
           monodroid;
@@ -208,10 +211,11 @@
         </SupportedPlatforms>
       </PropertyGroup>
     </When>
-    <When Condition="'$(MetaProject)'=='$(MobileAutomationMetaProjectId)'">
+    <When Condition="'$(MetaProjectGuid)'=='$(MobileAutomationMetaProjectGuid)'">
       <PropertyGroup>
         <IsMobileTestProject>True</IsMobileTestProject>
         <IsTest>True</IsTest>
+        <MetaProjectName>xf.aut</MetaProjectName>
         <SupportedPlatforms>
           android.aut;
           ios.aut;
