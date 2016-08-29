@@ -253,7 +253,7 @@ A build of a clean enlistment from the root directory via the alias `build`, suc
 ````
 
 ## Projects
-Project files all conform to the following general template:
+When abstracting multipule platforms, as does Xamarin.Forms, the solution file can quickly become unwieldy as more platforms are supported. For example, to build a CarouselView library without the following improvements requires dozens of projects (see [Project Reduction highlight](#project-reduction)). Most of the projects are shims containg little logic of their own. These project clutter the solution and their common settings are hard to administer. By merging these many shim projects and extracting common settings to a single location sanity is restored.
 
 ### Common Project Properties
 Typically, solutions with multiple projects suffer from duplication of project settings. For example, to enable warnings as errors typically requires modifying each project. To prevent duplication and allow settings to be centrally administered common project settings are extracted to `.props` files in parent directories. For example, `WarningLevel` and `TreatWarningsAsErrors` have been extracted to [`src\.props`](src/.props) and so are included by all projects in any sub-directory of `src`. 
