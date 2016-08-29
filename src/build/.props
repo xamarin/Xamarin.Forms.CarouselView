@@ -9,6 +9,7 @@
   <!--shim-->
   <PropertyGroup>
     <ShimName>Setup</ShimName>
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
     <ShimExclude/>
     <ShimReference/>
   </PropertyGroup>

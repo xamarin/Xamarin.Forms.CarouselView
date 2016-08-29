@@ -15,7 +15,7 @@
       $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
-    <!--<ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>-->
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
   </PropertyGroup>
 

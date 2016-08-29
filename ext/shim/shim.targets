@@ -58,11 +58,11 @@
       Targets="$(ShimAfterTarget)"
     />
   </Target>
-  
-  <!--Shim-->
-  <Target 
-    Name="Shim"
-    Condition="'$(ShimState)'=='$(ShimStateProjectsId)'"
+
+  <!--ResolveShimReferences-->
+  <Target
+    Name="ResolveShimReferences"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimReference->Count()) > 0"
     BeforeTargets="Proxy"
   >
 
@@ -71,23 +71,29 @@
       Targets="$(BuildTarget)"
       Projects="$(ProjFile)"
       Properties="ShimDir=%(ShimReference.Identity)"
-      Condition="@(ShimReference->Count()) > 0"
     />
+  </Target>
 
+  <!--Shim-->
+  <Target 
+    Name="Shim"
+    DependsOnTargets="ResolveShimReferences"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimProjectFiles->Count()) > 0"
+    BeforeTargets="Proxy"
+  >
     <!--inject shim target(s)-->
     <MSBuild
       Targets="$(ExecDispatch)"
       Projects="$(ProjFile)"
       Properties="ShimState=$(NextShimState);BuildTarget=$(ShimTarget);Properties=$(ShimProperties)"
-      Condition="'$(ShimTarget)'!=''"
     />
   </Target>
 
   <!--BuildProjects-->
   <Target
     Name="BuildProjects"
-    DependsOnTargets="Shim"
-    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND '$(ShimName)'!=''"
+    DependsOnTargets="ResolveShimReferences;Shim"
+    Condition="'$(ShimState)'=='$(ShimStateProjectsId)' AND @(ShimProjectFiles->Count()) > 0"
     BeforeTargets="Proxy"
   >
     <!--expand configurations-->

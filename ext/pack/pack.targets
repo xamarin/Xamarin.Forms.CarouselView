@@ -20,7 +20,6 @@
     DependsOnTargets="_UnpackStage" 
     Condition="'$(SkipPackageCheck)'!='true'"
   >
-
     <MSBuild
       Projects="$(ProjFile)"
       Targets="MakeLogDir"
