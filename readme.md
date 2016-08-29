@@ -24,18 +24,18 @@ On demand releasing is also a goal of Xamarin.Forms build. In practice, this mea
 
 The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built:
 
-- [`Shell`](#shell) - A shell to proivde, as much as possible, an isolated environment from which to launch CI builds and to share aliases.
-- [`Directories`](#directories) - Simplify `.gitignore` by establishing separate directories for source, downloads, build artifcats, and build archives.
-- [`Projects`](#projects) - Establish conventions for "typing" projects via `.pre.props` files so that common project settings (e.g. `TreatWarningsAsErrors`) can be extracted to `.props` and `.target` files.
-- [`Shim`](#shim) - Allows defining an `InitialProject` and `FinalProject` which run before and after a poset of out-of-proc builds (vs in-proc msbuild tasks) each of which can defined a `Shim` which launches a new msbuild process before the main build (e.g. used to dispatch identify, restore, build, and publish build steps). Also enable all manner of logging.  
-- [`Build Identity`](#build-identity) - Allows defining a `BuildVersion` which combined with a computed `BuildNumber` establishes the assembly version number. Also establishes `EnlistmentRevision`, `EnlistmentUrl`, and `EnlistmentBranch` as well as `IsEnslistementClean`. 
-- [`C# Tempaltes`](#csharp-templates) - Allows defining `Tempalte` project items which allow injecting msbuild variables into source code or failing the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`).
+- [`Shell`](#shell) - Establish an isolated environment from which to launch CI builds and to share aliases.
+- [`Directories`](#directories) - Establish separate directories for source, downloads, build artifcats, and build archives.
+- [`Projects`](#projects) - Establish convention for extracting and cenralizing [common project properties](#common-properties) (e.g. `TreatWarningsAsErrors`) and for establishing [project and platform types](#project-and-platform-types)
+- [`Shim`](#shim) - Allow defining an `InitialProject` and `FinalProject` to run before and after a poset of out-of-proc builds (vs in-proc msbuild tasks). Allow defining a `Shim` project (also run in its own process) before the main build process. Enable all manner of logging on a build process and establish names for all log files.
+- [`Build Identity`](#build-identity) - Establish if an enlistment is clean and, if so, define `BuildNumber`, `EnlistmentRevision`, `EnlistmentUrl`, and `EnlistmentBranch`.
+- [`C# Tempaltes`](#csharp-templates) - Allow defining `Tempalte` project items to injecting msbuild variables into source code or to fail the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`).
 - [`Publishing`](#publishing) - Automatic archiving of builds by `BuildNumber`, `EnlistmentRevision`, `EnlistmentBranch`, and `AssemblyVersion` as well as erasure of old archives. 
 - [`Cleaning`](#cleaning) - Redefines `Clean` target to use source control to erase non-enlisted files (e.g. `git clean`).
-- [`NugetRestore`](#nugetrestore) - Moves `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Adds a `NugetRestore` target to download the packages.
-- [`Pack`](#pack) - Moves `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc). Generates a nuget package at build. Verifies that an simple project can be built after upgrading to the new package.
-- [`MetaPlatform`](#metaplatform) - Allows definition of hierarchy of `MetaPlatforms` (e.g. `android`, `ios`) which allow multipule `.csproj` files to be consolidated into a single project. Allows defining a `SelfReference` so `MetaPlatforms` can reference other `MetaPlatforms` defined in the same `.csproj`.
-- [`PartPlatform`](#part-platforms) - Allows merging `.csproj` files (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part).
+- [`NugetRestore`](#nugetrestore) - Move `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Add a `NugetRestore` target to download the packages.
+- [`Pack`](#pack) - Move `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc), generate a nuget package at build, and verify that a simple project can be built after upgrading to the new package.
+- [`MetaPlatform`](#metaplatform) - Allow consolidation of many `.csproj` files into a single `MetaProject` containing many `MetaPlatforms` (e.g. `android`, `ios`) and `SelfReferences` in place of `ProjectReferences`.
+- [`PartPlatform`](#part-platforms) - Allow merging projects (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part).
 
 ## Highlights
 Consuming and producing Xamarin.Forms libraries is simplified by:
@@ -253,45 +253,15 @@ A build of a clean enlistment from the root directory via the alias `build`, suc
 ````
 
 ## Projects
-Project files have been modified to enable build features that simplify maintaining a CI infrastructure at the expense of tooling. The main tooling break are design time features of Visual Studio which modify project files because, without VSIP integration, Visual Studio in unaware of the new conventions. For example, adding a new file Android specific file via Visual Studio to [`CarouselView.csproj`][2] will require moving the `<Compile Include="NewAndroidFile.cs">` element to live under `<ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)'" >`. 
+Project files all conform to the following general template:
 
-Manual edits of project files are more easily made after installing [`EditProj`][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). 
-
-The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
-
-### General Project Template
-Project files all conform to the following general template sections of which are described in subsequent sections.
-
-```xml
-<Project>
-  <PropertyGroup>
-    <!--Properties that identify the type of the project-->
-  </PropertyGroup>
-  
-  <!--Load properties that are a function of the type of the project and platform-->
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
-
-  <!--Load common properties for the given type of the project and platform-->
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
-
-  <PropertyGroup Condition="'$(SomeTypeProperty)'=='SomeTypeId'">
-    <!--Set properties specific to this project and\or platform; the goal is to have as few such properties as possible-->
-  </PropertyGroup>
-  <ItemGroup Condition="'$(SomeTypeProperty)'=='SomeTypeId'">
-    <!--Project Files-->
-    <!--Project References-->
-  </ItemGroup>
-  
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
-</Project>
-```
-
-### Common Properties (.props)
+### Common Project Properties
 Typically, solutions with multiple projects suffer from duplication of project settings. For example, to enable warnings as errors typically requires modifying each project. To prevent duplication and allow settings to be centrally administered common project settings are extracted to `.props` files in parent directories. For example, `WarningLevel` and `TreatWarningsAsErrors` have been extracted to [`src\.props`](src/.props) and so are included by all projects in any sub-directory of `src`. 
 
 Those `.props` files "closest" to the project override those files further away. For example, the [`.props`](.props) file in root directory is included before any other simultaneously making its definitions available to those files and allowing them to override those settings. For example, the `.props` files processed when loading [`CarouselView.csproj`][2] are, [`\.props`](.props), then [`src\.props`](src/.props), then [`src\carouselView\.props`](src/carouselview/.props), then finally the project itself. Note that they are included in the reverse order but, because the first thing they each do is import their parent `.props` file they are logically processed in the reverse of the include order. Don't think too hard about it; It works as you'd expect.
 
-Some settings gathered into `.props` files are common to all projects (e.g. `WarningLevel` and `TreatWarningsAsErrors`) however most are common to a specific _type_ of platform or project. For example, [`src/.props'](src/.props) (where most of settings extracted from various types of projects end up) contains the following section describing debug settings:
+### Types of Common Project Properties
+Some settings gathered into `.props` files are common to all projects (e.g. `WarningLevel` and `TreatWarningsAsErrors`) however most are common to a specific _type_ of project, platform, or configuration. When these type specific properties are centralized into a `.props` file they are declared conditionally on whether the project, platform, or configuration is of a matching type. For example, here is a snippet of [`src/.props'](src/.props) which contains setting specific to the `debug` configuration:
 ````
   <!--debug-->
   <PropertyGroup Condition="'$(Configuration)'=='debug'">
@@ -301,22 +271,44 @@ Some settings gathered into `.props` files are common to all projects (e.g. `War
     <DefineConstants>$(DefineConstants)TRACE;DEBUG;</DefineConstants>
   </PropertyGroup>
 ````
-In general, such sections take the following form:
-````
-  <!--common setting for type-->
-  <PropertyGroup Condition="'$(Type)'=='TypeId'">
-    <TypeSetting>setting</TypeSetting>
+While there are only two types of configuration (`debug` and `release`) many project and platform types have been introduced and are described below.
+
+### MetaProject
+A `MetaProject` is an amalgam of existing project templates and has the following general form:
+
+```xml
+<Project>
+  <PropertyGroup>
+    <!--A MetaProject is identified by a ProjectGuid, just like a project-->
+    <ProjectGuid>...</ProjectGuid>
   </PropertyGroup>
-````
-Before a `.props` file can determine the type of project loaded, and so what settings are appropriate, properties describing the type of the project must be loaded. How type information about a project is populated is the subject of the next section.
+  
+  <!--Load properties with descriptive names for the type of project and platform being loaded-->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
 
-### Project and Platform Types (.pre.props)
-The first property defined by all projects is `<MetaProject>` which in conjunction with the `Configuration`, `Platform`, and `MetaPlatform` global properties (passed via the command line or through the `msbuild` task), identifies the _type_ of the project. With the type established, a hierarchy of `.pre.props` files (which are loaded before `.props` files) are able to populate properties which fully describe all aspects of the type of the project being loaded and which are documented below.
+  <!--Load common properties for the given type of the project and platform-->
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
 
-#### MetaProject
-A `MetaProject` is an amalgam of projects. For example, all the Xamarin.Forms library projects (e.g. Android, iOS, and Windows) combine to form the `xf.lib` `MetaProject`, Xamarin.Forms app projects form `xf.app`, and Calabash Android and iOS UI automation projects form `xf.aut`. One of the boolean properties `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` is set to `true` depending on the type of meta-project being loaded.
+  <PropertyGroup Condition="'$(SomeTypeProperty)'=='SomeTypeId'">
+    <!--Set properties specific to this project and\or platform-->
+    <!--the goal is to have as few such properties as possible-->
+  </PropertyGroup>
+  <ItemGroup Condition="'$(SomeTypeProperty)'=='SomeTypeId'">
+    <!--files and references-->
+  </ItemGroup>
+  
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
+</Project>
+```
 
-#### MetaPlatform
+For example, Xamarin.Forms build defines the following `MetaProjects` for
+- all Xamarin.Forms library projects
+- all Xamarin.Forms app projects
+- Calabash Android and iOS UI automation projects
+
+A `.props` file could determin the type of `MetaProject` from which it was included it by comparing the `ProjectGuid` to a constant however that does not make for a readable project file. Instead, a hierarchy of `.pre.props` files (some provided by the `MetaProject` itself) are loaded before `.props` files and define a set of properties with descriptive names for aspects of the type being loaded for the `.props` files to use. For example, the Xamarin.Forms `MetaProjects` [`xf.pre.props`](ext/xf/xf.pre.props) file define, among many others, `IsMobileLibraryProject`, `IsMobileAppProject`, or `IsMobileTestProject` depending on the type of `MetaProject` being loaded. 
+
+### MetaPlatform
 `MetaPlatform` is the heart of the type system; The `MetaPlatform` abstraction allows grafting a new platform lexicon over of the existing desktop lexicon. For example, in the case of Xamarin.Forms, `MetaPlatform` makes it possible to talk about `mobile`, `android`, or `win.arm` platforms instead of `AnyCPU`, `x32`, or `x64` platforms. 
 
 Each `MetaProject` supports a set of `MetaPlatforms`. For example, here are the relationships for Xamarin.Forms:
@@ -332,10 +324,18 @@ A `MetaPlatform` will have a `MetaPlatformType` of either `group`, `meta`, or `l
 - A `meta` `MetaPlatform` is a platform in new lexicon which is being grafted over a desktop platform (e.g. `monodroid` over `AnyCpu` or `monotouch.app.sim` over `IPhoneSimulator`). It has one `leaf` `MetaPlatform` child which is stored in `LeafPlatform`.
 - A `leaf` `MetaPlatform` is a desktop platform (e.g. `AnyCPU`) augmented with a `MetaPlatform` (e.g. `android`) and `MetaProject` (e.g. `android.lib`) and other properties describing the project type (e.g. `MobilePlatform`==`Android`). These agumented properties are use in `.csproj` and `.props` files (e.g.  [`CarouselView.csproj`][2] and [`src/.props`](src/.props)) to set the properties (e.g. `AndroidSupportedAbis`) of one of the projects composing the unified project (e.g. Xamarin.Android). Once the properties of the composed project are set its msbuild targets are invoked to finally preform the build.
 
-#### MetaPlatform Hierarchy
+### MetaPlatform Hierarchy
 Here is a summary of the relationships between `MetaProjects`, `MetaPlatforms`, and `MetaPlatformTypes` for Xamarin.Forms. These relationships are declared in [`ext\xf\xf.pre.props`](ext/xf/xf.pre.props).
 
 ![Platform Image](doc/Platforms.gif)
+
+### Editing Projects
+Project files have been modified to enable build features that simplify maintaining a CI infrastructure at the expense of tooling. The main expense (breaks) are design time features of Visual Studio which modify project files because, without VSIP integration, Visual Studio in unaware of the new conventions. For example, adding a new file Android specific file via Visual Studio to [`CarouselView.csproj`][2] will require moving the `<Compile Include="NewAndroidFile.cs">` element to live under `<ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)'" >`. 
+
+Manual edits of project files are more easily made after installing [`EditProj`][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). 
+
+The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
+
 
 ## Nuget
 Nuget packages are restored via a new `msbuild` target `NugetRestore` (see [dls\packages\meta](#dls)). The target internally downloads and invokes `nuget.exe` on `package.config` generated from `NugetReference` and `NugetPackage` `ItemGroups`. 
