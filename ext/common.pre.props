@@ -55,6 +55,7 @@
   <!--well known paths-->
   <PropertyGroup>
     <SrcDir>$(RootDir)src\</SrcDir>
+    <RefDir>$(SrcDir)ref\</RefDir>
     <DlsDir>$(RootDir)dls\</DlsDir>
     <ToolsDir>$(DlsDir)tools\</ToolsDir>
   </PropertyGroup>

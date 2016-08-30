@@ -32,5 +32,5 @@
       >$(NugetImports.Split(';')[$(NugetImportIndex)])</NugetImportCurrent>
   </PropertyGroup>
 
-  <Import Project="ref\$(NugetImportCurrent)" Condition="'$(NugetImportFinished)'!='true'" />  
+  <Import Project="$(RefDir)$(NugetImportCurrent)" Condition="'$(NugetImportFinished)'!='true'" />  
 </Project>

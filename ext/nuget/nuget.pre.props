@@ -3,7 +3,6 @@
 
   <PropertyGroup>
     <ExtNugetDir>$(MSBuildThisFileDirectory)</ExtNugetDir>
-    <NugetRefDir>$(MSBuildThisFileDirectory)ref\</NugetRefDir>
   </PropertyGroup>
   
   <!--Nuget Target Framework Monikers-->

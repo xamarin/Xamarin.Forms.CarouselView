@@ -23,8 +23,8 @@
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <Import Project="$(NugetRefDir)Xamarin.UITest.props" />
-  <Import Project="$(NugetRefDir)NUnit.props" />
+  <Import Project="$(RefDir)Xamarin.UITest.props" />
+  <Import Project="$(RefDir)NUnit.props" />
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -43,7 +43,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <Import Project="$(NugetRefDir)Xamarin.Forms.props" />
+  <Import Project="$(RefDir)Xamarin.Forms.props" />
   <!--
   
     AssemblyVersion
@@ -69,7 +69,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
   </PropertyGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
-    <Import Project="$(NugetRefDir)Xamarin.Android.Support.props" />
+    <Import Project="$(RefDir)Xamarin.Android.Support.props" />
   </ImportGroup>
   <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
     <!--references-->
@@ -96,7 +96,7 @@
     <Foo>Bar</Foo>
   </PropertyGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
-    <Import Project="$(NugetRefDir)Xamarin.TestCloud.Agent.props" />
+    <Import Project="$(RefDir)Xamarin.TestCloud.Agent.props" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(Plat)' == 'iPhoneSimulator' ">
     <MtouchArch>i386, x86_64</MtouchArch>

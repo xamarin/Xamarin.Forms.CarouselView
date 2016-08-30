@@ -22,7 +22,6 @@
     <NugetPackage Include="NUnit.Runners">
       <Version>$(NugetNunitVersion)</Version>
       <TargetFramework>$(NugetNunitTargetFramework)</TargetFramework>
-      <Package>$(NugetNunitPackage)</Package>
     </NugetPackage>
   </ItemGroup>
 

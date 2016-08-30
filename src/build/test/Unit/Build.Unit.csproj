@@ -26,7 +26,7 @@
     <Compile Include="PublishTask.test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <Import Project="$(NugetRefDir)NUnit.props" />
+  <Import Project="$(RefDir)NUnit.props" />
   <ItemGroup>
     <ProjectReference Include="..\..\dev\Build\Build.csproj">
       <Project>{8e9c4286-1afb-48a6-ab17-180e14f47a9e}</Project>

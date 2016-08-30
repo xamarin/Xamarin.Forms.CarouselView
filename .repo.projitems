@@ -45,14 +45,6 @@
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\nuget\nuget.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\NUnit.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\WPtoolkit.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Android.Support.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Android.Support.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.Forms.targets" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.TestCloud.Agent.props" />
-    <None Include="$(MSBuildThisFileDirectory)ext\nuget\ref\Xamarin.UITest.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\pack\pack.post.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\proxy.targets" />
@@ -100,6 +92,14 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
     <None Include="$(MSBuildThisFileDirectory)src\.tasks" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\nuget.config" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\NUnit.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\WPtoolkit.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.Android.Support.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.Android.Support.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.Forms.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.Forms.targets" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.TestCloud.Agent.props" />
+    <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.UITest.props" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="$(MSBuildThisFileDirectory)ext\shell\doskey.txt" />

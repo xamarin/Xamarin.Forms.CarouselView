@@ -21,7 +21,7 @@ prompt $p $g
 set platform=
 
 :: msbuild environment
-set msbuildVar=%msbuildVar%RootDir;SrcDir;
+set msbuildVar=%msbuildVar%RootDir;SrcDir;RefDir;
 set msbuildVar=%msbuildVar%BuildDir;BuildBinDir;BuildTempDir;
 set msbuildVar=%msbuildVar%DlsDir;ExtDir;DropDir;ToolsDir;
 set msbuildVar=%msbuildVar%NugetPackagesDirAbsolute;
