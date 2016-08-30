@@ -26,15 +26,15 @@
   <PropertyGroup>
 
     <!--abstract platform ids-->
-    <AugmentedPlatformId>augmented</AugmentedPlatformId>
-    <ProxyPlatformId>proxy</ProxyPlatformId>
-    <GroupPlatformId>group</GroupPlatformId>
+    <PrimitiveMetaPlatformTypeId>primitive</PrimitiveMetaPlatformTypeId>
+    <ProxyMetaPlatformTypeId>proxy</ProxyMetaPlatformTypeId>
+    <GroupMetaPlatformTypeId>group</GroupMetaPlatformTypeId>
   </PropertyGroup>
 
   <!--ad-hoc platform group-->
   <PropertyGroup Condition="$(Plat.Contains(';'))">
     <GroupMetaPlatformMembers>$(Plat)</GroupMetaPlatformMembers>
-    <MetaPlatformType>$(GroupPlatformId)</MetaPlatformType>
+    <MetaPlatformType>$(GroupMetaPlatformTypeId)</MetaPlatformType>
     <IsGroupPlatform>true</IsGroupPlatform>
   </PropertyGroup>
 

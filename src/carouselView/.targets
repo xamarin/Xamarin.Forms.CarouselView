@@ -4,7 +4,7 @@
     
   <Target
     Name="GenAssemblyInfoFile"
-    Condition="'$(IsAugmentedPlatform)'=='true'"
+    Condition="'$(IsPrimitivePlatform)'=='true'"
     BeforeTargets="BeforeBuild" >
 
     <!--include assemblyInfo.cs in list of files to compile-->

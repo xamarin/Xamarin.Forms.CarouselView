@@ -317,7 +317,7 @@ A `.props` file can determine the type of `MetaProject` by comparing `MetaProjec
 | `xf.lib` | `dotnet`, `monodroid`, `monotouch`, `xamarin.ios`, `win`, `uap`, `wpa` |
 | `xf.app` | `monodroid.app`, `monotouch.phone`, `monotouch.sim`, `xamarin.ios.sim`, `xamarin.ios.phone`, `win.32`, `win.64`, `win.arm`, `uap.32`, `wpa.32` |
 
-`MetaPlatforms` come in three flavors discriminated by the `MetaPlatofrmType` property values `augmented`, `proxy`, and `group` or by `IsAugmentedPlatform`, `IsProxyPlatform` and `IsGroupPlatform`. 
+`MetaPlatforms` come in three flavors discriminated by the `MetaPlatofrmType` property values `augmented`, `proxy`, and `group` or by `IsPrimitivePlatform`, `IsProxyPlatform` and `IsGroupPlatform`. 
 
 #### Augmented MetaPlatform
 An `augmented` `MetaPlatform` is a primitive platform augmented with additional properties that more fully describe the platform type which are used by `.props` files use to declare properties common to that type. For example, the classic and unified Xamarin.Forms iOS app projects are aggregated into the `xf.app` `MetaProject` which supports two augmentations of the `IPhoneSimulator` platform discriminated by the `MetaPlatform` property values `xamarin.ios.sim` and `monotouch.sim`. Both augmentations cause the [`xf.pre.props`](ext/xf/xf.pre.props) file to declare `MobilePlatform` with the constant value of `ios` (aka `IosMobilePlatformId`) which will be used in [src\.props](src/.props) to declare the `MtouchSdkVersion`. The `xamarin.ios.sim` `derived` `MetaPlatform` can be built from the command line like this (see also: [Building MetaPlatforms](#building-metaplatforms)):
@@ -425,7 +425,7 @@ If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a defau
 `LeafPlatforms` and `PartPlatforms` are platforms that delegate to one of the projects that compose the `MetaProject` to actually preform the build. 
 
 ### Leaf Platforms
-A `ProxiedPlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `ProxiedPlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `ProxiedPlatform` which can be built like this:
+A `PrimitivePlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `PrimitivePlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `PrimitivePlatform` which can be built like this:
 
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid
@@ -459,7 +459,7 @@ Building a `MetaPlatform` results in a traversal of the [MetaPlatform Hierarchy]
 
     src\carouselView\lib> msbuild /v:m /p:MetaPlatform=monodroid /p:Verbosity=high /t:DryRun
 
-The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`ProxiedPlatform`) node (`BUILD` indicates a `ProxiedPlatform`). In brackets follows the variables that compose the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
+The first frame of output below starts with `RECURSE` which indicates the traversal is starting at an internal (non-`PrimitivePlatform`) node (`BUILD` indicates a `PrimitivePlatform`). In brackets follows the variables that compose the "recursive frame": `[Configuration|Platform|MetaPlatform|Part]` (in this case, `Part` is empty so not shown). Next, `Xamarin.Forms.CarouselView` is the name of the generated assembly and ` -> { anycpu }` shows the children of this node. After that are properties describing the type of the `MetaPlatform` which are used in `.csproj` and `.props` files to configure the project itself (see [ext\xf\xf.pre.props](ext/xf/xf.pre.props)). Finally, `CarouselView [debug|monodroid|monodroid] references:` lists the references (children) and the msbuild command line used to resolve the references. 
 ```
   RECURSE [debug|monodroid|monodroid]: Xamarin.Forms.CarouselView -> { anycpu }
     BuildTarget -> DryRun
@@ -467,14 +467,14 @@ The first frame of output below starts with `RECURSE` which indicates the traver
     IsProxyPlatform -> true
     IsMobileLibraryPlatform -> true
     IsMobileLibraryProject -> true
-    ProxiedPlatform -> anycpu
+    PrimitivePlatform -> anycpu
     MobilePlatform -> android
     LibraryPlatform -> monodroid
     DefineConstants -> ANDROID;TRACE;DEBUG;
     TargetProject -> monoDroid
     FrameProperties -> MetaPlatform;IsPartPlatform;
   CarouselView [debug|monodroid|monodroid] references:
-    ProxiedPlatform: F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj /t:DryRun /+p:_MetaPlatform=;IsPartPlatform=;P
+    PrimitivePlatform: F:\git\xam\cv\src\carouselView\lib\CarouselView.csproj /t:DryRun /+p:_MetaPlatform=;IsPartPlatform=;P
   latform=anycpu;_MetaPlatform=monodroid
   ...
 ```

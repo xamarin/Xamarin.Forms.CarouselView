@@ -4,9 +4,9 @@
   <PropertyGroup>
     <ResolveMetaReferencesDependsOn>
       _FindBadMetaPlatform;
-      _ResolveMetaProjectReferences; <!--leaf-->
-      _ResolveMetaProjectReferencePaths; <!--leaf-->
-      _ResolveMetaPlatform; <!--meta-->
+      _ResolveMetaProjectReferences; <!--primitive-->
+      _ResolveMetaProjectReferencePaths; <!--augmeneted-->
+      _ResolveProxyPlatform; <!--proxy-->
       _ResolveMetaPlatformGroup; <!--group-->
       $(ResolveMetaReferencesDependsOn);
     </ResolveMetaReferencesDependsOn>
@@ -15,7 +15,7 @@
   <!--_ResolveMetaProjectReferencePaths-->
   <Target
     Name="_ResolveMetaProjectReferencePaths"
-    Condition="'$(MetaPlatformType)'=='$(AugmentedPlatformId)' AND '$(BuildTarget)'=='Compile'"
+    Condition="'$(MetaPlatformType)'=='$(PrimitiveMetaPlatformTypeId)' AND '$(BuildTarget)'=='Compile'"
   >
     <PropertyGroup>
       <!--
@@ -36,7 +36,7 @@
   <!--_ResolveMetaProjectReferences-->
   <Target 
     Name="_ResolveMetaProjectReferences"
-    Condition="'$(MetaPlatformType)'=='$(AugmentedPlatformId)'"
+    Condition="'$(IsPrimitivePlatform)'=='true'"
   >
     <Error
       Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(SupportedPlatforms.ToLower())', '(^|;)\s*$(MetaPlatform.ToLower())\s*($|;)'))"
@@ -77,16 +77,16 @@
     </ItemGroup>
   </Target>
 
-  <!--_ResolveMetaPlatform-->
+  <!--_ResolveProxyPlatform-->
   <Target
-    Name="_ResolveMetaPlatform"
-    Condition="'$(MetaPlatformType)'=='$(ProxyPlatformId)'"
+    Name="_ResolveProxyPlatform"
+    Condition="'$(IsProxyPlatform)'=='true'"
   >
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
-        <ReferenceSource>ProxiedPlatform</ReferenceSource>
-        <Platform>$(ProxiedPlatform)</Platform>
-        <AdditionalProperties>$(KeepRecursiveFrame)Platform=$(ProxiedPlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
+        <ReferenceSource>ProxyPlatform</ReferenceSource>
+        <Platform>$(PrimitivePlatform)</Platform>
+        <AdditionalProperties>$(KeepRecursiveFrame)Platform=$(PrimitivePlatform);_MetaPlatform=$(MetaPlatform)</AdditionalProperties>
         <TargetFramework>$(TargetFramework)</TargetFramework>
       </MetaReference>
     </ItemGroup>
@@ -95,7 +95,7 @@
   <!--_ResolveMetaPlatformGroup-->
   <Target
     Name="_ResolveMetaPlatformGroup"
-    Condition="'$(MetaPlatformType)'=='$(GroupPlatformId)'"
+    Condition="'$(IsGroupPlatform)'=='true'"
   >
     <ItemGroup>
       <MetaReference Include="$(ProjFile)">
@@ -111,10 +111,7 @@
     Name="_FindBadMetaPlatform"
     Condition="'$(MetaPlatformType)'==''"
   >
-    <Error
-      Condition="'$(ProxiedPlatform)'==''"
-      Text="Platform '$(Plat)' is unrecognized."
-    />
+    <Error Text="Platform '$(Plat)' is unrecognized." />
   </Target>
   
 </Project>

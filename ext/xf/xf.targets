@@ -26,7 +26,7 @@
       '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' AND 
       '$(IsMobileLibraryProject)'=='true' AND
       '$(IsPartPlatform)'!='true' AND
-      '$(IsAugmentedPlatform)'=='true'
+      '$(IsPrimitivePlatform)'=='true'
     "
     Inputs="@(WindowsResourceFile)"
     Outputs="@(WindowsResourceFile->'%(TargetDir)')"

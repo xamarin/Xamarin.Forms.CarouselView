@@ -15,6 +15,6 @@
   <Import Project="$(ExtPartDir)part.targets" />
   <Import Project="$(ExtXfDir)xf.targets"/>
 
-  <Import Project="$(ExtDir)empty.targets" Condition="'$(IsAugmentedPlatform)'!='true'"/>
+  <Import Project="$(ExtDir)empty.targets" Condition="'$(IsPrimitivePlatform)'!='true'"/>
   <Import Project="$(ExtDir)proxy.targets" />
 </Project>
