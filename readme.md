@@ -317,10 +317,10 @@ A `.props` file can determine the type of `MetaProject` by comparing `MetaProjec
 | `xf.lib` | `dotnet`, `monodroid`, `monotouch`, `xamarin.ios`, `win`, `uap`, `wpa` |
 | `xf.app` | `monodroid.app`, `monotouch.phone`, `monotouch.sim`, `xamarin.ios.sim`, `xamarin.ios.phone`, `win.32`, `win.64`, `win.arm`, `uap.32`, `wpa.32` |
 
-`MetaPlatforms` come in three flavors discriminated by the `MetaPlatofrmType` property values `augmented`, `proxy`, and `group` or by `IsPrimitivePlatform`, `IsProxyPlatform` and `IsGroupPlatform`. 
+`MetaPlatforms` come in three flavors discriminated by the `MetaPlatofrmType` property values `primitive`, `proxy`, and `group` or by `IsPrimitivePlatform`, `IsProxyPlatform` and `IsGroupPlatform`. 
 
-#### Augmented MetaPlatform
-An `augmented` `MetaPlatform` (or simply a `MetaPlatform`) is a `PrimitivePlatform` augmented with additional properties that more fully describe the `PrimitivePlatform` which are used by `.props` files use to declare properties common to that type. For example, the classic and unified Xamarin.Forms iOS app projects are aggregated into the `xf.app` `MetaProject` which supports two augmentations of the `IPhoneSimulator` `PrimitivePlatform` discriminated by the `MetaPlatform` property values `xamarin.ios.sim` and `monotouch.sim`. Both augmentations cause the [`xf.pre.props`](ext/xf/xf.pre.props) file to declare `MobilePlatform` with the constant value of `ios` (aka `IosMobilePlatformId`) which will be used in [src\.props](src/.props) to declare the `MtouchSdkVersion`. The `xamarin.ios.sim` `derived` `MetaPlatform` can be built from the command line like this (see also: [Building MetaPlatforms](#building-metaplatforms)):
+#### Primitive MetaPlatform
+An `primitive` `MetaPlatform` (or simply a `MetaPlatform`) is a `PrimitivePlatform` primitive with additional properties that more fully describe the `PrimitivePlatform` which are used by `.props` files use to declare properties common to that type. For example, the classic and unified Xamarin.Forms iOS app projects are aggregated into the `xf.app` `MetaProject` which supports two augmentations of the `IPhoneSimulator` `PrimitivePlatform` discriminated by the `MetaPlatform` property values `xamarin.ios.sim` and `monotouch.sim`. Both augmentations cause the [`xf.pre.props`](ext/xf/xf.pre.props) file to declare `MobilePlatform` with the constant value of `ios` (aka `IosMobilePlatformId`) which will be used in [src\.props](src/.props) to declare the `MtouchSdkVersion`. The `xamarin.ios.sim` `derived` `MetaPlatform` can be built from the command line like this (see also: [Building MetaPlatforms](#building-metaplatforms)):
 
     src\carouselView\app> msbuild /v:m /p:Platform=IPhoneSimulator /p:MetaPlatform=xamarin.ios.sim
 
@@ -430,7 +430,7 @@ If no `MetaPlatform` is passed, then `all` `MetaPlatform` is assigned as a defau
 `LeafPlatforms` and `PartPlatforms` are platforms that delegate to one of the projects that compose the `MetaProject` to actually preform the build. 
 
 ### Leaf Platforms
-A `PrimitivePlatform` is a desktop platform augmented with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `PrimitivePlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `PrimitivePlatform` which can be built like this:
+A `PrimitivePlatform` is a desktop platform primitive with a `meta` `MetaPlatform` (see [MetaPlatform](#metaplatform)). Every `PrimitivePlatform` has no children and one or more parent `MetaPlatforms` (see [MetaPlatform Hierarchy](#metaplatform-hierarchy)). For example, the `monodroid` and `monotouch` `MetaPlatforms` each have a `AnyCPU` `PrimitivePlatform` which can be built like this:
 
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monotouch
     src\carouselView\lib> msbuild /v:m /p:Platform=AnyCPU /p:MetaPlatform=monodroid
@@ -559,7 +559,7 @@ In general, the shell should aspire to do more than simply not depend on Visual 
 - solves the "nuget restore cycle problem" whereby a nuget package restored during build modifies a .csproj after the build has parsed the file.
 - vasly simplifies the "getting-started" instructions which encourages community contribution. 
 
-A hermetic build environment is most simply achieved by checking all dependencies into source control (e.g. msbuild.exe, C# compiler, nuget packages emulators, SDKs, and all referenced assemblies of .Net framework). So, just like a Docker container, it is fully self-contained. This is not easily achieved with Git as Git  is not designed to manage binaries out of the box. However Git could fairly easily be augmented to support this (see [git lfs nuget proxy](git-lfs-nuget-proxy)).
+A hermetic build environment is most simply achieved by checking all dependencies into source control (e.g. msbuild.exe, C# compiler, nuget packages emulators, SDKs, and all referenced assemblies of .Net framework). So, just like a Docker container, it is fully self-contained. This is not easily achieved with Git as Git  is not designed to manage binaries out of the box. However Git could fairly easily be primitive to support this (see [git lfs nuget proxy](git-lfs-nuget-proxy)).
 
 ## Git Lfs Nuget Proxy
 
