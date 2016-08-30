@@ -24,18 +24,18 @@ On demand releasing is also a goal of Xamarin.Forms build. In practice, this mea
 
 The documentation is dividied into [Highlighs](#highlighs) of the build system specific to Xamarin.Forms and [General Build System](#general-build-system) which describes the numerous more general build enhancements on top of which the new Xamarin.Forms build system is built:
 
-- [`Shell`](#shell) - Establish an isolated environment from which to launch CI builds and to share aliases.
+- [`Shell`](#shell) - Establish an isolated environment from which to launch CI builds and to share aliases  (see [`ext\shell`](ext/shell)).
 - [`Directories`](#directories) - Establish separate directories for source, downloads, build artifcats, and build archives.
 - [`Projects`](#projects) - Establish convention for extracting and cenralizing [common project properties](#common-properties) (e.g. `TreatWarningsAsErrors`) and for establishing [project and platform types](#project-and-platform-types)
-- [`Shim`](#shim) - Allow defining an `InitialProject` and `FinalProject` to run before and after a poset of out-of-proc builds (vs in-proc msbuild tasks). Allow defining a `Shim` project (also run in its own process) before the main build process. Enable all manner of logging on a build process and establish names for all log files.
-- [`Build Identity`](#build-identity) - Establish if an enlistment is clean and, if so, define `BuildNumber`, `EnlistmentRevision`, `EnlistmentUrl`, and `EnlistmentBranch`.
-- [`C# Tempaltes`](#csharp-templates) - Allow defining `Tempalte` project items to injecting msbuild variables into source code or to fail the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`).
-- [`Publishing`](#publishing) - Automatic archiving of builds by `BuildNumber`, `EnlistmentRevision`, `EnlistmentBranch`, and `AssemblyVersion` as well as erasure of old archives. 
-- [`Cleaning`](#cleaning) - Redefines `Clean` target to use source control to erase non-enlisted files (e.g. `git clean`).
-- [`NugetRestore`](#nugetrestore) - Move `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Add a `NugetRestore` target to download the packages.
-- [`Pack`](#pack) - Move `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc), generate a nuget package at build, and verify that a simple project can be built after upgrading to the new package.
-- [`MetaPlatform`](#metaplatform) - Allow consolidation of many `.csproj` files into a single `MetaProject` containing many `MetaPlatforms` (e.g. `android`, `ios`) and `SelfReferences` in place of `ProjectReferences`.
-- [`PartPlatform`](#part-platforms) - Allow merging projects (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part).
+- [`Shim`](#shim) - Allow defining an `InitialProject` and `FinalProject` to run before and after a poset of out-of-proc builds (vs in-proc msbuild tasks). Allow defining a `Shim` project (also run in its own process) before the main build process. Enable all manner of logging on a build process and establish names for all log files (see [`ext\shim`](ext/shim)).
+- [`Build Identity`](#build-identity) - Establish if an enlistment is clean and, if so, define `BuildNumber`, `EnlistmentRevision`, `EnlistmentUrl`, and `EnlistmentBranch` (see [`ext\id`](ext/id)).
+- [`C# Tempaltes`](#csharp-templates) - Allow defining `Tempalte` project items to injecting msbuild variables into source code or to fail the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`) (see [`ext\gen`](ext/gen)).
+- [`Publishing`](#publishing) - Automatic archiving of builds by `BuildNumber`, `EnlistmentRevision`, `EnlistmentBranch`, and `AssemblyVersion` as well as erasure of old archives (see [`ext\publish`](ext/publish)). 
+- [`Cleaning`](#cleaning) - Redefines `Clean` target to use source control to erase non-enlisted files (e.g. `git clean`) (see [`ext\clean`](ext/clean)).
+- [`NugetRestore`](#nugetrestore) - Move `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Add a `NugetRestore` target to download the packages (see [`ext\nuget`](ext/nuget)).
+- [`Pack`](#pack) - Move `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc), generate a nuget package at build, and verify that a simple project can be built after upgrading to the new package (see [`ext\pack`](ext/pack)).
+- [`MetaPlatform`](#metaplatform) - Allow consolidation of many `.csproj` files into a single `MetaProject` containing many `MetaPlatforms` (e.g. `android`, `ios`) and `SelfReferences` in place of `ProjectReferences` (see [`ext\meta`](ext/meta)).
+- [`PartPlatform`](#part-platforms) - Allow merging projects (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part) (see [`ext\part`](ext/part)).
 
 ## Highlights
 Consuming and producing Xamarin.Forms libraries is simplified by:
