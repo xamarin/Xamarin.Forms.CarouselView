@@ -32,10 +32,11 @@ The documentation is dividied into [Highlighs](#highlighs) of the build system s
 - [`C# Tempaltes`](#csharp-templates) - Allow defining `Tempalte` project items to injecting msbuild variables into source code or to fail the build if a checked in expansion does match the build time expansion (e.g. used to inject `AssemblyVersion`) (see [`ext\gen`](ext/gen)).
 - [`Publishing`](#publishing) - Automatic archiving of builds by `BuildNumber`, `EnlistmentRevision`, `EnlistmentBranch`, and `AssemblyVersion` as well as erasure of old archives (see [`ext\publish`](ext/publish)). 
 - [`Cleaning`](#cleaning) - Redefines `Clean` target to use source control to erase non-enlisted files (e.g. `git clean`) (see [`ext\clean`](ext/clean)).
-- [`NugetRestore`](#nugetrestore) - Move `project.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Add a `NugetRestore` target to download the packages (see [`ext\nuget`](ext/nuget)).
+- [`NugetRestore`](#nugetrestore) - Move `packages.config` metadata into msbuild files as `NugetReference` and `NugetPacakge`. Add a `NugetRestore` target to download the packages (see [`ext\nuget`](ext/nuget)).
 - [`Pack`](#pack) - Move `*.nuspec` metadata into msbuild files (e.g. `NuspecAuthors`, `NuspecOwners` etc), generate a nuget package at build, and verify that a simple project can be built after upgrading to the new package (see [`ext\pack`](ext/pack)).
 - [`MetaPlatform`](#metaplatform) - Allow consolidation of many `.csproj` files into a single `MetaProject` containing many `MetaPlatforms` (e.g. `android`, `ios`) and `SelfReferences` in place of `ProjectReferences` (see [`ext\meta`](ext/meta)).
 - [`PartPlatform`](#part-platforms) - Allow merging projects (parts) into a single file (composite) while still maintaining the visibility boundries of the separate projects (e.g. generating compiler errors if a part references non-puplic members of another part) (see [`ext\part`](ext/part)).
+- `MetaReferences` - Generalized centralized platform reference resolution and logging (e.g. used by `MetaPlatform` and `PartPlatform`) (see [`ext\node`](ext/node)).
 
 ## Highlights
 Consuming and producing Xamarin.Forms libraries is simplified by:
@@ -191,6 +192,7 @@ The following well-known directories are under source control. Build artifacts a
 ````
 ▌ root of enlistment
 ├──▌ src – files that contribute to build output
+│  └──▌ ref – common groups of references (e.g. nuget packages)
 ├──▌ ext - files that extend msbuild
 └──▌ doc - files that document the system
 ````
@@ -357,7 +359,86 @@ Project files have been modified to enable build features that simplify maintain
 Manual edits of project files are more easily made after installing [`EditProj`][1]. For more extensive edits, unload all projects under `src` and open project files from the shared project [`.repo`](.repo.shproj). The `.repo` project includes all msbuild files. This allows for global search and replace of msbuild symbols. The shell alias `ts` touches the solution file which has the effect of reloading changes made to msbuild files which are included by project files which are otherwise cashed once at startup and never refreshed.
 
 ## Nuget
-Nuget packages are restored via a new `msbuild` target `NugetRestore` (see [dls\packages\meta](#dls)). The target internally downloads and invokes `nuget.exe` on `package.config` generated from `NugetReference` and `NugetPackage` `ItemGroups`. 
+Nuget metadata, like project properties, is often duplicated and its administration would similarly benifit from extraction to a common location. For example, its resonable policy to want all test projects use the same version of `NUnit`. Unfortunately, not all the duplicated metadata is in msbuild project files which could simply be pulled into a `.props` file; Metadata is also duplicated between project files and `packages.config` files. For example, for any given nuget package its version is duplicated between the `packages.config` file and the project file `Reference`. So, before nuget duplicated metadata can be extracted to a common `.props` file the `packages.config` file must be converted to an msbuild file and the build taught how to interpret those files to preform the restore. 
+
+### NugetReference
+`NugetReference` is used to both specify the nuget package to be restored _and_ to reference the restored assembly; `NugetReference` replaces both the `packages.config` file and the project file's `Reference` to the restored assembly. Like `Reference`, `NugetReference` declares `HintPath` and `Private` metadata but is also augmented with `Package`, `Version` and `TargetFramework` metadata extracted from the `packages.config` file. For example, take the following `packages.config` file and its reference:
+
+```xml
+<packages><package id='NUnit' version='2.6.4' targetFramework='net452'/></packages>
+```
+```xml
+<ItemGroup>
+  <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <HintPath>$(NugetPackagesDir)NUnit.2.6.4\nunit.framework.dll</HintPath>
+    <Private>True</Private>
+  </Reference>
+</ItemGroup>
+```
+
+They can be converted into the following `NugetReference`:
+
+```xml
+<ItemGroup>
+  <NugetReference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Package>NUnit</Package>
+    <Version>2.6.4</Version>
+    <TargetFramework>net452</TargetFramework>
+    <HintPath>$(NugetPackagesDir)NUnit.2.6.4\nunit.framework.dll</HintPath>
+    <Private>True</Private>
+  </NugetReference>
+</ItemGroup>
+```
+
+### NugetPackage
+`NugetPackage` is used to reference a Nuget package that does not require a project file `Reference`. For example, `Nunit.Runners` nuget package just pulls down tooling binaries necessary for running tests. For example, take the following `packages.config`:
+
+```xml
+<packages><package id='NUnit.Runners' version='2.6.4' targetFramework='net452'/></packages>
+```
+
+It can be converted to the following:
+
+```xml
+<ItemGroup>
+  <NugetPackage Include="NUnit.Runners">
+    <Version>2.6.4</Version>
+    <TargetFramework>net452</TargetFramework>
+  </NugetPackage>
+</ItemGroup>
+```
+
+### Reference Library
+Common groups of references are extracted to their own msbuild files located at [src\ref](src/ref). For example, common references for the `Xamarin.Forms` nuget package have been extracted from [CarouselView.csproj][2] and [CarouselView.app.csproj][8] and replaced by a import of [src\ref\Xamarin.Forms.props](src/ref/Xamarin.Forms.props).
+
+Here is the complete list, as of this writing, of consolidated references:
+
+| Nuget Package | References |
+| --- | --- |
+| Xamarin.Forms | [src\ref\Xamarin.Forms.props](src/ref/Xamarin.Forms.props) |
+| Nunit | [src\ref\NUnit.props](src/ref/NUnit.props) |
+| WPtoolkit.Forms | [src\ref\WPtoolkit.props](src/ref/WPtoolkit.props) |
+| Xamarin.Android.Support | [src\ref\Xamarin.Android.Support.props](src/ref/Xamarin.Android.Support.props) |
+| Xamarin.TestCloud.Agent | [src\ref\Xamarin.TestCloud.Agent.props](src/ref/Xamarin.TestCloud.Agent.props) |
+| Xamarin.UITest | [src\ref\Xamarin.Android.Support.props](src/ref/Xamarin.UITest.props) |
+
+With common references consolidated by nuget package upgrading all projects to use a new version of a nuget package can be done in a single place. Granted, this change must be done by hand but the resulting code churn is much less than running `nuget upgrade` on each project. 
+
+### NugetRestore
+A new `NugetRestore` target has been included in all `MetaProjcets` which downloads and invokes `nuget.exe` on `packages.config` files generated from `NugetReference` and `NugetPackage` `ItemGroups` (see [`ext\nuget`](ext/nuget)). The packages are downloaded to `dls\packages` and the generated `packages.config` files are archived at `dls\packages\meta\`. 
+
+If the project references a nuget package that injects targets then `SkipNugetImports=true` must be passed to prevent msbuild from attempting to import the nuget's targets file before it has been restored. For example, the following will download the nuget packages for `CarouselView.app` and will issue a build error saying an import failed if `SkipNugetImports=true` is not specified:
+
+    src\carouselView\app >msbuild /v:m /t:NugetRestore /p:SkipNugetImports=true
+    
+#### When and How to Restore Nuget Packages
+Nuget packages must be restored before the msbuild process is launched to prevent creating a cycle in the dependancy graph; Nuget packages cannot be naively restored during build because by the time msbuild starts running a target to preform the restore it has already processesed all project imports and some packages, as noted above, inject import statements into the project during restore. Due to this cycle in the dependancy graph, a naive restore during build will fail by generating an import-not-found error or, if the import is conditional on the existance of its target, because the nuget's targets were not available during target execution.
+
+The nuget team, as pointed out by David Ebo in [this blog post][9], "solves" the problem by having Visual Studio preform the nuget restore before every build. However, as Ebo also points out, this is a non-sequitar solution for builds launched from a command line. For such builds the nuget team simply recommends running nuget restore before the build. And this is exactly what Xamarin.Forms build system does except that it automates the restore step by introducing a `Shim` build which launches a msbuild process to preform the restore followed by another msbuild proccess to preform the actual build. While this works, the creation of multi-process build introduces an undesired level of complexity. There must be a better way!
+
+Perhaps the simplest way to avoid introducing a cycle in the build is to check restored binaries into source control. TFS can do this without issue as it's designed to manage binary files. Git, at least the vanilla version, is not designed to manage binaries and so naively checking binaries into git is a bad idea (or, as Ebo put it, "If you do that, you’ve moved on to killing unicorns"). However the git community has devised a solution for managing binary files born of the desire to manage resources: [`git-lfs`](https://git-lfs.github.com/).
+
+`Git-lfs` could be adapted for restoring nuget packages. The main impediment to simply pushing nuget packages to into `git-lfs` is the cost of hosting the binaries. Github charges for hosting binaries as well as bytes downloaded. No one is going to to pay github.com to host nuget when nuget already hosts them for free. So the solution is to shim `git-lfs` so that it downloads the packages from nuget instead of from github.com. This best-of-all-worlds appraoch is examined in detail in [Git Lfs Nuget Proxy](git-lfs-nuget-proxy).
 
 ## Restoring, Building, And Cleaning
 The following documents the various ways to invoke `msbuild` on [`MetaProjects`](#metaproject) to restore nuget packages, build binaries, and clean up.
@@ -561,7 +642,11 @@ In general, the shell should aspire to do more than simply not depend on Visual 
 
 A hermetic build environment is most simply achieved by checking all dependencies into source control (e.g. msbuild.exe, C# compiler, nuget packages emulators, SDKs, and all referenced assemblies of .Net framework). So, just like a Docker container, it is fully self-contained. This is not easily achieved with Git as Git  is not designed to manage binaries out of the box. However Git could fairly easily be augmented to support this (see [git lfs nuget proxy](git-lfs-nuget-proxy)).
 
-## Git Lfs Nuget Proxy
+## Git Lfs Nuget Shim
+Breifly, `git-fls` works by 
+1. using the git client [smudge][10] filter to intercept binary files before uploading and replaces their content with a pointer to a file server to which the binary file is uploaded and hosted.
+2. using the git client [smudge][10] filter to intercept binary files before uploading and replaces their content with a pointer to a file server to which the binary file is uploaded and hosted.
+
 
 [1]: https://visualstudiogallery.msdn.microsoft.com/b346d9de-8722-4b0e-b50e-9ae9add9fca8
 [2]: src/carouselView/lib/CarouselView.csproj
@@ -570,3 +655,6 @@ A hermetic build environment is most simply achieved by checking all dependencie
 [5]: src/carouselView/lib/Portable
 [6]: src/carouselView/lib/iOS/
 [7]: src/carouselView/lib/Properties/AssemblyVersion.t.cs
+[8]: src/carouselView/app/CarouselView.App.csproj
+[9]: http://blog.davidebbo.com/2014/01/the-right-way-to-restore-nuget-packages.html
+[10]: http://gilesbowkett.blogspot.com/2013/05/how-gits-smudge-and-clean-filters-work.html
