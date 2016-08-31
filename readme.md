@@ -327,13 +327,11 @@ An `primitive` `MetaPlatform` (or simply a `MetaPlatform`) is a `PrimitivePlatfo
     src\carouselView\app> msbuild /v:m /p:Platform=IPhoneSimulator /p:MetaPlatform=xamarin.ios.sim
 
 #### Proxy MetaPlatform
-A `proxy` `MetaPlatform` infers its `Platform` from its `MetaPlatform` (e.g. `IPhoneSimulator` from `monotouch.sim`) and then _explictly_ passes that `Platform` to a recursive call of itself. It exists for two reasons: 
-
-1. it provides a slighly simpler command line build syntax. For example, `xamairn.ios.sim` can be built without specifying `Platform` and only specifying `MetaPlatform` (see also: [Building MetaPlatforms](#building-metaplatforms)):
+A `proxy` `MetaPlatform` infers its `Platform` from its `MetaPlatform` (e.g. `IPhoneSimulator` from `monotouch.sim`) and then _explictly_ passes that `Platform` to a recursive call of itself. It exists for two reasons: First, it provides a slighly simpler command line build syntax. For example, `xamairn.ios.sim` can be built without specifying `Platform` and only specifying `MetaPlatform` (see also: [Building MetaPlatforms](#building-metaplatforms)):
 
     src\carouselView\app> msbuild /v:m /p:MetaPlatform=xamarin.ios.sim
-    
-2. it allows `MetaPlatform` to be passed as `Platform` (unrecognized `Platforms` are assumed to be `MetaPlatforms`) which allows passing `MetaPlatforms` from Visual Studio which allows building from Visual Studio:
+
+And second, it allows `MetaPlatform` to be passed as `Platform` (unrecognized `Platforms` are assumed to be `MetaPlatforms`) which allows passing `MetaPlatforms` from Visual Studio which allows building from Visual Studio:
 
     src\carouselView\app> msbuild /v:m /p:Platform=xamarin.ios.sim
 
