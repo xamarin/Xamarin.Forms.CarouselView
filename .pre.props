@@ -6,23 +6,10 @@
     <RootDir>$(MSBuildThisFileDirectory)</RootDir>
     <ExtDir>$(RootDir)ext\</ExtDir>
   </PropertyGroup>
-  <Import Project="$(ExtDir)common.pre.props"/>
+  <Import Project="$(ExtDir)root.pre.props"/>
 
   <!--verbosity-->
   <PropertyGroup>
     <Verbosity>normal</Verbosity>
   </PropertyGroup>
-
-  <!--ext paths-->
-  <Import Project="$(ExtDir)clean\clean.pre.props"/>
-  <Import Project="$(ExtDir)shim\shim.pre.props"/>
-  <Import Project="$(ExtDir)node\node.pre.props"/>
-  <Import Project="$(ExtDir)meta\meta.pre.props"/>
-  <Import Project="$(ExtDir)part\part.pre.props"/>
-  <Import Project="$(ExtDir)pack\pack.pre.props"/>
-  <Import Project="$(ExtDir)gen\gen.pre.props"/>
-  <Import Project="$(ExtDir)xf\xf.pre.props"/>
-  <Import Project="$(ExtDir)publish\publish.pre.props"/>
-  <Import Project="$(ExtDir)id\id.pre.props"/>
-  <Import Project="$(ExtDir)nuget\nuget.pre.props"/>
 </Project>

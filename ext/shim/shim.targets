@@ -9,17 +9,6 @@
     BeforeTargets="Proxy"
     Condition="'$(ShimState)'=='$(ShimStateInitializeId)'"
   >
-    <!--if the BuildTarget is the ShimTarget (e.g. /t:NugetRestore) then no need to shim out-of-proc-->
-    <PropertyGroup  
-      Condition="
-        '$(BuildTarget)'=='$(ShimTarget)' OR 
-        '$(BuildTarget)'=='' OR
-        '$(ShimTarget)'==''
-      ">
-      <_Properties>ShimInProcess=true</_Properties>
-      <ExecDispatch>_Dispatch</ExecDispatch>
-    </PropertyGroup>
-    
     <!--self dispatch (to enable logging)-->
     <MSBuild
       Targets="$(ExecDispatch)"
@@ -127,6 +116,7 @@
     <MSBuild 
       Projects="$(ProjFile)"
       Targets="MakeLogDir"
+      Properties="BuildName=$(ShimName)"
     >
       <Output ItemName="BuildCommand" TaskParameter="TargetOutputs" />
     </MSBuild>

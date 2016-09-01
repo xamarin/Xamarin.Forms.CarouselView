@@ -5,9 +5,7 @@
   <!--shim-->
   <PropertyGroup>
     <ShimName>Core</ShimName>
-    <ShimInitialProject />
-    <ShimFinalProject />
-    <ShimFinalTarget />
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
     <ShimExclude>
       $(MSBuildThisFileDirectory)**\build\**\*.csproj;
       $(MSBuildThisFileDirectory)**\android\**\*.csproj;
@@ -15,7 +13,10 @@
       $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
-    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
+    <ShimTarget>NugetRestore</ShimTarget>
+    <ShimProperties>SkipNugetImports=true</ShimProperties>
+    <ShimInitialProject />
+    <ShimFinalProject />
     <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
   </PropertyGroup>
 

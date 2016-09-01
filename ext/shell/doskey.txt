@@ -40,19 +40,25 @@ gl=git log -1 $1
 nuke=git clean -fdXq
 scorch=git clean -fdXq -e !dls
 
-;= build
-buildInfo=msbuild %idProj% /v:m
-publish=msbuild %publishProj% /v:m
-fpublish=msbuild %publishProj% /v:m /p:IsEnlistmentClean=true
+;= idProj
+build-id=msbuild %idProj% /v:m
+
+;= publishProj
+build-publish=msbuild %publishProj% /v:m
+build-publish-force=msbuild %publishProj% /v:m /p:IsEnlistmentClean=true
+
+;= shimProj
 shim=msbuild %shimProj% /t:dumpProjects
 restore=msbuild %shimProj% /v:m /t:nugetRestore
-dryRun=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="debug" /p:ShimProperties="$*"
+dryRun=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="release;debug" /p:ShimProperties="$*"
+dryRun-debug=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="debug" /p:ShimProperties="$*"
+dryRun-release=msbuild %shimProj% /v:m /t:dryRun /p:Configuration="release" /p:ShimProperties="$*"
 build=msbuild %shimProj% /v:m /t:build /p:Configuration="release;debug" /p:ShimProperties="$*"
+build-debug=msbuild %shimProj% /v:m /t:build /p:Configuration="debug" /p:ShimProperties="$*"
+build-release=msbuild %shimProj% /v:m /t:build /p:Configuration="release" /p:ShimProperties="$*"
 clean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release;debug" /p:ShimProperties="$*"
-dbuild=msbuild %shimProj% /v:m /t:build /p:Configuration="debug" /p:ShimProperties="$*"
-dclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="debug" /p:ShimProperties="$*"
-rbuild=msbuild %shimProj% /v:m /t:build /p:Configuration="release" /p:ShimProperties="$*"
-rclean=msbuild %shimProj% /v:m /t:clean /p:Configuration="release" /p:ShimProperties="$*"
+clean-debug=msbuild %shimProj% /v:m /t:clean /p:Configuration="debug" /p:ShimProperties="$*"
+clean-release=msbuild %shimProj% /v:m /t:clean /p:Configuration="release" /p:ShimProperties="$*"
 
 ;= link
 linkdir=mklink /j $1 $2

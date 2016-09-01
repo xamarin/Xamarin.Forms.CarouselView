@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!--ext paths-->
+  <Import Project="$(ExtDir)common.pre.props"/>
+  <Import Project="$(ExtDir)clean\clean.pre.props"/>
+  <Import Project="$(ExtDir)shim\shim.pre.props"/>
+  <Import Project="$(ExtDir)node\node.pre.props"/>
+  <Import Project="$(ExtDir)meta\meta.pre.props"/>
+  <Import Project="$(ExtDir)part\part.pre.props"/>
+  <Import Project="$(ExtDir)pack\pack.pre.props"/>
+  <Import Project="$(ExtDir)gen\gen.pre.props"/>
+  <Import Project="$(ExtDir)xf\xf.pre.props"/>
+  <Import Project="$(ExtDir)publish\publish.pre.props"/>
+  <Import Project="$(ExtDir)id\id.pre.props"/>
+  <Import Project="$(ExtDir)nuget\nuget.pre.props"/>
+
+</Project>

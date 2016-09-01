@@ -11,11 +11,15 @@
   <ItemGroup>
     <None Include="$(MSBuildThisFileDirectory).gitattributes" />
     <None Include="$(MSBuildThisFileDirectory).gitignore" />
+    <None Include="$(MSBuildThisFileDirectory)doc\dryRun.md" />
     <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env.lnk" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\clean\clean.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\root.targets" />
+    <None Include="$(MSBuildThisFileDirectory)ext\root.props" />
+    <None Include="$(MSBuildThisFileDirectory)ext\root.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)ext\debug.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.targets" />
     <None Include="$(MSBuildThisFileDirectory)ext\common.props" />
@@ -102,6 +106,7 @@
     <None Include="$(MSBuildThisFileDirectory)src\ref\Xamarin.UITest.props" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)doc\Platforms.gif" />
     <Content Include="$(MSBuildThisFileDirectory)ext\shell\doskey.txt" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\Properties\AndroidManifest.xml" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.json" />
