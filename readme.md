@@ -597,6 +597,9 @@ Try suppling any of the msbuild variables on the command to see what happens whe
     src\carouselView\lib >msbuild /p:MetaPlatform=dotnet /t:RefreshTemplateExpansions /p:BuildVersion=2.4.0
 
 ### Publishing
+The following command will copy `bld\bin` to sub directories of `drp\number\[BuildNumber]` and make junctions to that directory from `drp\revision\[EnlistmentRevision]` and `drp\version\[BuildVersion]\[BuildNumber]`: 
+
+    >msbuild %publishProj% /v:m
 
 ### Building
 Building `MetaProjects` can be done in the following ways:
