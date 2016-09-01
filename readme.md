@@ -713,10 +713,9 @@ In general, the shell should aspire to do more than simply not depend on Visual 
 A hermetic build environment is most simply achieved by checking all dependencies into source control (e.g. msbuild.exe, C# compiler, nuget packages emulators, SDKs, and all referenced assemblies of .Net framework). So, just like a Docker container, it is fully self-contained. This is not easily achieved with Git as Git  is not designed to manage binaries out of the box. However Git could fairly easily be augmented to support this (see [git lfs nuget proxy](git-lfs-nuget-proxy)).
 
 ## Git Lfs Nuget Shim
-Breifly, `git-fls` works by 
-1. using the git client [smudge][10] filter to intercept binary files before uploading and replaces their content with a pointer to a file server to which the binary file is uploaded and hosted.
-2. using the git client [smudge][10] filter to intercept binary files before uploading and replaces their content with a pointer to a file server to which the binary file is uploaded and hosted.
+Git can be extended to manage nuget packages by taking `git-lfs`, which already enables git to manage binary resources, and shimming it to use nuget.com as the binary store. Breifly, `git-fls` works by using the git client [clean][10] filter to intercept binary files before uploading to githib. The filter and replaces the binary content with a text pointer to a file server to which the binary content is uploaded and hosted. Downloads of the "binary file" containing the text pointer are intercepted by the git client [smudge][10] filter and the text pointer replaced with the binary content from the hosted binary file. 
 
+The shim would essentially augment the text pointer with metadata sufficient to allow downloading from nuget. 
 
 [1]: https://visualstudiogallery.msdn.microsoft.com/b346d9de-8722-4b0e-b50e-9ae9add9fca8
 [2]: src/carouselView/lib/CarouselView.csproj
