@@ -46,4 +46,4 @@ doskey /macrofile=%doskey%
 color 1f
 
 :: use unicode
-chcp 65001 >NUL
+REM chcp 65001 >NUL

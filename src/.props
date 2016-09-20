@@ -36,14 +36,6 @@
     <Compile Include="$(SrcDir)BuildInfo.cs" />
   </ItemGroup>
 
-  <!--AssemblyVersion-->
-  <PropertyGroup>
-    <BuildMajorVersion>2</BuildMajorVersion>
-    <BuildMinorVersion>3</BuildMinorVersion>
-    <BuildPatchVersion>0</BuildPatchVersion>
-    <BuildVersion>$(BuildMajorVersion).$(BuildMinorVersion).$(BuildPatchVersion)</BuildVersion>
-  </PropertyGroup>
-
   <!--nuget-->
   <PropertyGroup>
 

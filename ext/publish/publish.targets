@@ -13,6 +13,8 @@
     <PropertyGroup>
       <BuildNumberDir>$(BuildByNumberDir)$(BuildNumber)\</BuildNumberDir>
       <BuildRevisionDir>$(BuildByRevisionDir)$(EnlistmentRevision)\</BuildRevisionDir>
+      <BuildVersionDir>$(BuildByVersionDir)$(BuildVersion)\</BuildVersionDir>
+      <AssemblyVersionDir>$(BuildVersionDir)$(BuildNumber)\</AssemblyVersionDir>
     </PropertyGroup>
 
     <!--load get status file-->
@@ -30,6 +32,7 @@
       _PublishFailIfDirty;
       _PublishByBuildNumber;
       _PublishByRevisionNumber;
+      _PublishByVersionNumber;
     "
   />
 
@@ -75,5 +78,23 @@
 
     <Message Importance="high" Text="$(BuildRevisionDir) -> $(BuildNumberDir)" />
     <Exec Command="mklink /J $(BuildRevisionDir) $(BuildNumberDir) >NUL" />
+  </Target>
+
+  <!--_PublishByVersionNumber-->
+  <Target
+    Name="_PublishByVersionNumber"
+    DependsOnTargets="_PublishByBuildNumber"
+    Condition="'$(IsEnlistmentClean)'=='true' AND '$(BuildVersion)'!=''"
+  >
+    <MakeDir Directories="$(BuildByVersionDir)" />
+    <MakeDir Directories="$(BuildVersionDir)" />
+
+    <Error
+      Condition="Exists($(AssemblyVersionDir))"
+      Text="Publication directory '$(AssemblyVersionDir)' already exists."
+    />
+
+    <Message Importance="high" Text="$(AssemblyVersionDir) -> $(BuildNumberDir)" />
+    <Exec Command="mklink /J $(AssemblyVersionDir) $(BuildNumberDir) >NUL" />
   </Target>
 </Project>

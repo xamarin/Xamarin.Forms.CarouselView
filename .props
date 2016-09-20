@@ -6,6 +6,14 @@
 >
   <Import Project="$(ExtDir)root.props"/>
 
+  <!--BuildVersion-->
+  <PropertyGroup>
+    <BuildMajorVersion>2</BuildMajorVersion>
+    <BuildMinorVersion>3</BuildMinorVersion>
+    <BuildPatchVersion>0</BuildPatchVersion>
+    <BuildVersion>$(BuildMajorVersion).$(BuildMinorVersion).$(BuildPatchVersion)</BuildVersion>
+  </PropertyGroup>
+
   <!--shim-->
   <PropertyGroup>
     <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
