@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Xamarin.Forms.Xaml.dll
+oid sha256:fd5c7091611545f8ae80578591fc41dfaa6dd32723f34877e7c825f023f6da88
+size 64512
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

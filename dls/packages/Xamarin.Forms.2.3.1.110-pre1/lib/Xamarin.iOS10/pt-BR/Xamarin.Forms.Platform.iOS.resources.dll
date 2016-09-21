@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/Xamarin.iOS10/pt-BR/Xamarin.Forms.Platform.iOS.resources.dll
+oid sha256:42b4a0763eb9595142c6fb424c944f03c653583ea15ef5f464cfca4a72175b18
+size 4096
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

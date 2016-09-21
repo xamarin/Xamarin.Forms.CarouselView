@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/MonoAndroid403/Xamarin.Android.Support.v4.dll
+oid sha256:2a3ba28f20f0f8de96a716925c6d9de981d84e267f0a2b2823611e7860037c4d
+size 1936384
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.v4/23.3.0

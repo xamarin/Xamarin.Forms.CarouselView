@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Mono.Cecil.Mdb.dll
+oid sha256:b8625ace855a3086e2086af418e17daf24a30a4fbffc559c42f329edec52806e
+size 45056
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

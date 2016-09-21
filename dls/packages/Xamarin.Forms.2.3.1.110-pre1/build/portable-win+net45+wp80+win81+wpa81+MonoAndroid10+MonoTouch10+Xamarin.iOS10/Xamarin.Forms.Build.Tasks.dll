@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Xamarin.Forms.Build.Tasks.dll
+oid sha256:132cf5ab246f7101f2d2af67df9a90a682d96aae608fe080a0be02ecf2865f9e
+size 100864
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

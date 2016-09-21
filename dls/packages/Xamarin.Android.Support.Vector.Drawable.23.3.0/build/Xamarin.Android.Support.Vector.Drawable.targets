@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint build/Xamarin.Android.Support.Vector.Drawable.targets
+oid sha256:a8ef5588f8f9480906fbb7310e3ed6a53164efcf286f63a7581b0551150655ca
+size 1752
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.Vector.Drawable/23.3.0

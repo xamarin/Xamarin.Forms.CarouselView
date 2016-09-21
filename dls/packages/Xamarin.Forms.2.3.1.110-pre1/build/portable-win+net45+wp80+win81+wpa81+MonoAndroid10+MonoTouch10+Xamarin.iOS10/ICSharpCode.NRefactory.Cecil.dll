@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/ICSharpCode.NRefactory.Cecil.dll
+oid sha256:e5276ab39cb500369c4710b7cc93b5c2576223b9fc5043cf0bbc9c29bda485cd
+size 53248
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

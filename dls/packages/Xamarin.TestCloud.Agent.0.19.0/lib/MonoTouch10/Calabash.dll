@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/MonoTouch10/Calabash.dll
+oid sha256:7543eac1dcfec9f75e44519c69832fc1212a6581698936268a1ecc737fe4d2cc
+size 35280384
+type archive
+url http://nuget.org/api/v2/package/Xamarin.TestCloud.Agent/0.19.0

@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/uap10.0/Xamarin.Forms.Platform.UAP/PageControl.xbf
+oid sha256:25da25d512744441a028e8170cf95d45641365c7e1094bbd221b28f961090a01
+size 769
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

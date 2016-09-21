@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/uap10.0/Xamarin.Forms.Platform.UAP.dll
+oid sha256:2d3d67705d945419331eebb56b752eb40cbfa172185a9769fd7997838f3a7e16
+size 227328
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

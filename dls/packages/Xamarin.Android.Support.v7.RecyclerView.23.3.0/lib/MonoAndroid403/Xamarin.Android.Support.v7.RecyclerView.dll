@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/MonoAndroid403/Xamarin.Android.Support.v7.RecyclerView.dll
+oid sha256:6e8458631d04b677e708f03383e99869966e95a833579d3a4e13e445875ecf5b
+size 568832
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.v7.RecyclerView/23.3.0

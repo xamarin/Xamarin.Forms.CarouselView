@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/uap10.0/Xamarin.Forms.Platform.UAP/FormsTextBoxStyle.xbf
+oid sha256:2359af03da47985e027a8487ebd7bfb663aeac77d3e30042354748e4b66930c3
+size 6028
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

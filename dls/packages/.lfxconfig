@@ -1,0 +1,5 @@
+[lfx]
+	type = archive
+	url = http://nuget.org/api/v2/package/${id}/${ver}
+	pattern = ^((?<id>.*?)[.])(?=\\d)(?<ver>[^/]*)/(?<path>.*)$
+	archiveHint = ${path}

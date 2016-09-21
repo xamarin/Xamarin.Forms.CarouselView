@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+archiveHint lib/wpa81/Xamarin.Forms.Platform.WinRT/StepperControl.xbf
+oid sha256:16cb63f18e198e6683529569c7c8a508f07853e8e653a879bffa438972e1122f
+size 10104
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1
