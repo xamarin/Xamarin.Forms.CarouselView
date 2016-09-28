@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Circles/Success.jpg
+oid sha256:62519efcb9bbde1dc11bc57fc1b52cfb473bce733e999c1231efcd88dc6ffa04
+size 731
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

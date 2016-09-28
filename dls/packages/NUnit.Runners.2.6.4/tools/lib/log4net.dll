@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/log4net.dll
+oid sha256:e992bd921035e732d86debb148344223ea174d3acb29fa54e8147272b7165d56
+size 258048
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

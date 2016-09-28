@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/nunit-console-runner.dll
+oid sha256:fccd75c66442e8c570f3e9d4f640d05a2d56156c1d137f05d49e0ac9c261d7a7
+size 36864
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

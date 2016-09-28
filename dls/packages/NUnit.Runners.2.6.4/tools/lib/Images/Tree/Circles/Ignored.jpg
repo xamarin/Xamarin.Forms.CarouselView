@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Circles/Ignored.jpg
+oid sha256:61557035cf73fb430b0cee921dd2e591be5b74787fcaf8300017ab347a2823b0
+size 688
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

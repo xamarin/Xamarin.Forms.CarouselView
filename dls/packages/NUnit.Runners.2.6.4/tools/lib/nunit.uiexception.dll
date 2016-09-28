@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/nunit.uiexception.dll
+oid sha256:3424e0eef29719a3e0107bde070930cf5b4b991c6120da6b316822393e1a71fb
+size 90112
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

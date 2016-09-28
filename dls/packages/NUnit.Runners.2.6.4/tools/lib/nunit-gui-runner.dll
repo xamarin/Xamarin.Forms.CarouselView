@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/nunit-gui-runner.dll
+oid sha256:b5e69ffd7c9e6669f2a2280904fab74d3ce6785717b0f0b0be5a97ade5f6a6bf
+size 155648
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

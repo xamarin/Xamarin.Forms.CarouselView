@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/nunit-console.exe
+oid sha256:f383acdbc38128c72fe811bc83767ceeb7fcae686971cdb4f6bca0fb7c58ea34
+size 5120
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

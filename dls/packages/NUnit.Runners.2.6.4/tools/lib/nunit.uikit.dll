@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/nunit.uikit.dll
+oid sha256:5c961676107ef040837c6e105c47743e7530c0dbd79d6b1d7ef86bc166ae4998
+size 241664
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Visual%20Studio/Success.png
+oid sha256:5410f40cd37a5e5e06e11ee2ece001ae1f242aecb9a579fba6e37937a7cb26e4
+size 3386
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/pnunit-launcher.exe
+oid sha256:a9b9328bec599b496d79506fc6713c9cda8e306628f12500cf3309f6e6f85fec
+size 36864
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

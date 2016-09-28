@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Visual%20Studio/SeriousWarning.png
+oid sha256:146e0b75dcf4607faba48fe2afd68c06d086bda6baf18f8afb723492c6e0e794
+size 687
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

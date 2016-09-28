@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/nunit.core.interfaces.dll
+oid sha256:b0197e07e85af0a255b6e3c321c5b11499afd9b144a6390b0ca9e7674d17365b
+size 61440
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

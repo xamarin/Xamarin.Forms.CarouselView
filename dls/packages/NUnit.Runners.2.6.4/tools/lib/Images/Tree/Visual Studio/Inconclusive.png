@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Visual%20Studio/Inconclusive.png
+oid sha256:88800141cd6aafd11358874267afd35aa1dbbee10025e1ca506cf6509b2fab88
+size 782
+type archive
+url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4
