@@ -801,11 +801,11 @@
           $(IosUnifiedLibraryPlatformId);
         </IosUnifiedMobilePlatformIds>
         <IosClassicMobilePlatformIds>
-          $(IosClassicLibraryPlatformId);
+          <!--$(IosClassicLibraryPlatformId);-->
         </IosClassicMobilePlatformIds>
         <IosMobilePlatformIds>
           $(IosUnifiedMobilePlatformIds);
-          $(IosClassicMobilePlatformIds);
+          <!--$(IosClassicMobilePlatformIds);-->
         </IosMobilePlatformIds>
 
         <WindowsUniversalMobilePlatformIds>
@@ -842,7 +842,7 @@
         </IosClassicMobilePlatformIds>
         <IosMobilePlatformIds>
           $(IosUnifiedMobilePlatformIds);
-          $(IosClassicMobilePlatformIds);
+          <!--$(IosClassicMobilePlatformIds);-->
         </IosMobilePlatformIds>
 
         <WindowsUniversalMobilePlatformIds>
