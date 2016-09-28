@@ -26,7 +26,7 @@ set msbuildVar=%msbuildVar%BuildDir;BuildBinDir;BuildTempDir;
 set msbuildVar=%msbuildVar%DlsDir;ExtDir;DropDir;ToolsDir;
 set msbuildVar=%msbuildVar%NugetPackagesDirAbsolute;
 set msbuildVar=%msbuildVar%ShimProj;PublishProj;IdProj;
-msbuild F:\git\xam\cv\ext\shell\shell.proj /nologo /v:m /p:property=^"%msbuildVar%^" > init.bat
+msbuild %~dp0shell.proj /nologo /v:m /p:property=^"%msbuildVar%^" > init.bat
 call init.bat
 erase init.bat
 
