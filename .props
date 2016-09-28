@@ -15,9 +15,6 @@
   </PropertyGroup>
 
   <!--shim-->
-  <PropertyGroup>
-    <ShimReference>$(MSBuildThisFileDirectory)src\</ShimReference>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
     <ShimInitialProject>$(IdProj)</ShimInitialProject>
     <ShimFinalProject>$(PublishProj)</ShimFinalProject>

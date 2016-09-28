@@ -13,11 +13,8 @@
       $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
       $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
     </ShimExclude>
-    <ShimTarget>NugetRestore</ShimTarget>
-    <ShimProperties>SkipNugetImports=true</ShimProperties>
     <ShimInitialProject />
     <ShimFinalProject />
-    <ShimReference>$(MSBuildThisFileDirectory)build\</ShimReference>
   </PropertyGroup>
 
   <!--tasks-->
