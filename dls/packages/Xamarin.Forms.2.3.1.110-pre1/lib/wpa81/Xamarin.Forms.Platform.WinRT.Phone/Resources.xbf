@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-archiveHint lib/wpa81/Xamarin.Forms.Platform.WinRT.Phone/Resources.xbf
-oid sha256:4147938a94af799731db1d0452f46bb59fc8a2784011f70479d112ef9af55878
-size 11560
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

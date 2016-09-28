@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-archiveHint lib/MonoAndroid43/Xamarin.Android.Support.Design.dll
-oid sha256:bd543afe5a535a2b11bf6f1f435d84459e6796784e8c9b157ac82ebde478ec76
-size 364544
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Android.Support.Design/23.3.0

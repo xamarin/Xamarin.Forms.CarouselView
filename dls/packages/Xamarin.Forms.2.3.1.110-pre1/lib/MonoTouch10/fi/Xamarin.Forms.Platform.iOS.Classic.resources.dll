@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-archiveHint lib/MonoTouch10/fi/Xamarin.Forms.Platform.iOS.Classic.resources.dll
-oid sha256:f27406efe4c2fc76c3901eb5a8de11e3788ee31214ea58d77be7ba44aa88dcc1
-size 4096
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-archiveHint build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/ICSharpCode.Decompiler.dll
-oid sha256:911c8af4c3cd71d88a31dfb5d6f47b8e110db08ee0bbdd82db4317430eab3f47
-size 402944
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1
