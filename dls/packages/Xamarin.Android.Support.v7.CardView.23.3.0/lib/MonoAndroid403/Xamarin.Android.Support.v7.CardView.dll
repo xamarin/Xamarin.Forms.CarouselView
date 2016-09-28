@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Android.Support.v7.CardView.23.3.0/lib/MonoAndroid403/Xamarin.Android.Support.v7.CardView.dll
+oid sha256:981bd462525b67116fdbd565eecff1d9bf432eca011c6286d4871c8fbfd7281d
+size 34816
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.v7.CardView/23.3.0

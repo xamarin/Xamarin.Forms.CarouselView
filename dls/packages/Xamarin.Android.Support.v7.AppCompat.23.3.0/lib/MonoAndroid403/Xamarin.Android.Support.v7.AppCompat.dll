@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Android.Support.v7.AppCompat.23.3.0/lib/MonoAndroid403/Xamarin.Android.Support.v7.AppCompat.dll
+oid sha256:fce397ee7d60697697fd1b1b158a105db29d9c460a7673dcd560702408b44f6d
+size 903168
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.v7.AppCompat/23.3.0

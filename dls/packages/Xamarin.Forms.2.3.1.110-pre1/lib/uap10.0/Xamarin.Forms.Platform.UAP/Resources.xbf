@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Forms.2.3.1.110-pre1/lib/uap10.0/Xamarin.Forms.Platform.UAP/Resources.xbf
+oid sha256:21b70cbe513ffa4111ab46767fe6666c5088cfa89eab7b90f691708c6a846dcb
+size 29415
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

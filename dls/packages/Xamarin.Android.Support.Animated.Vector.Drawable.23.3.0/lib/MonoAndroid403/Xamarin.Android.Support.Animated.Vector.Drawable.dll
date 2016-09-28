@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Android.Support.Animated.Vector.Drawable.23.3.0/lib/MonoAndroid403/Xamarin.Android.Support.Animated.Vector.Drawable.dll
+oid sha256:c30efdc44683994b4926be7bdf11b2eec2ef6c051e5b8757d60048b53890123a
+size 40448
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.Animated.Vector.Drawable/23.3.0

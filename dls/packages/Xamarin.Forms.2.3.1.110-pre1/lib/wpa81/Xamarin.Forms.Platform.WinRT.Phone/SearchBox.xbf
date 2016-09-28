@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Forms.2.3.1.110-pre1/lib/wpa81/Xamarin.Forms.Platform.WinRT.Phone/SearchBox.xbf
+oid sha256:421ca782029159b0346fbe30da2d5a2ee3b50d2fe22c8afc7c7b262739585589
+size 26378
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

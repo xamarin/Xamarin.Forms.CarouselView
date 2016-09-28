@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Forms.2.3.1.110-pre1/lib/win81/Xamarin.Forms.Platform.WinRT/PageControl.xbf
+oid sha256:1cd7d142d227d6781eef7615802e4f51344680f5ff8445a8f06b9ee65e7393b3
+size 1207
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

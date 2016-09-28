@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Android.Support.Vector.Drawable.23.3.0/build/Xamarin.Android.Support.Tasks.VectorDrawable.dll
+oid sha256:be61833ac61726cc9900f3095aed941c0b29104b8d3b95603fd8f58a6d82aace
+size 7168
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Android.Support.Vector.Drawable/23.3.0

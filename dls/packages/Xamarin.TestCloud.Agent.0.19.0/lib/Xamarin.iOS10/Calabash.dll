@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.TestCloud.Agent.0.19.0/lib/Xamarin.iOS10/Calabash.dll
+oid sha256:f977e11592c325eef53ceef4b77e501c2ae31f1db09ce2fb142f136534a29674
+size 35280384
+type archive
+url http://nuget.org/api/v2/package/Xamarin.TestCloud.Agent/0.19.0

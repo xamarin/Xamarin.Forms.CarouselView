@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Xamarin.Forms.2.3.1.110-pre1/lib/win81/Xamarin.Forms.Platform.WinRT.Tablet/TabletResources.xbf
+oid sha256:807f0f2e4cb7b8fac1e979edc0df125f1b87b04d47adcfc460b0207646f21a08
+size 78696
+type archive
+url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1
