@@ -16,17 +16,6 @@
     Universal
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' " />
-  <ItemGroup>
-    <Compile Include="..\..\BuildInfo.cs">
-      <DependentUpon>BuildInfo.t.cs</DependentUpon>
-      <Link>Properties\BuildInfo.cs</Link>
-    </Compile>
-    <None Include="..\..\BuildInfo.t.cs">
-      <IsMxbuildTemplate>true</IsMxbuildTemplate>
-      <Link>Properties\BuildInfo.t.cs</Link>
-      <CompileOutput>BuildInfo.cs</CompileOutput>
-    </None>
-  </ItemGroup>
   <PropertyGroup>
     <OutputType>Library</OutputType>
     <LibDir>$(MSBuildThisFileDirectory)lib\</LibDir>
@@ -59,7 +48,23 @@
     <None Include="package.nuspec">
       <CopyTargetName>$(NuspecName)</CopyTargetName>
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Type>xml</Type>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <!--
+  
+    Library
+  -->
+  <ItemGroup Condition="'$(IsLibraryPlatform)'=='$(true)'">
+    <Compile Include="..\..\BuildInfo.cs">
+      <DependentUpon>BuildInfo.t.cs</DependentUpon>
+      <Link>Properties\BuildInfo.cs</Link>
+    </Compile>
+    <None Include="..\..\BuildInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\BuildInfo.t.cs</Link>
+      <CompileOutput>BuildInfo.cs</CompileOutput>
     </None>
   </ItemGroup>
   <!--
