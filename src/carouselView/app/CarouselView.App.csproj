@@ -17,9 +17,6 @@
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' " />
   <ItemGroup>
-    <Compile Include="..\..\AssemblyVersion.cs">
-      <Link>Properties\AssemblyVersion.cs</Link>
-    </Compile>
     <Compile Include="..\..\BuildInfo.cs">
       <DependentUpon>BuildInfo.t.cs</DependentUpon>
       <Link>Properties\BuildInfo.cs</Link>
