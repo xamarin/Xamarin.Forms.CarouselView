@@ -14,6 +14,20 @@
     Universal
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' "/>
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\BuildInfo.cs">
+      <DependentUpon>BuildInfo.t.cs</DependentUpon>
+      <Link>Properties\BuildInfo.cs</Link>
+    </Compile>
+    <None Include="..\..\BuildInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\BuildInfo.t.cs</Link>
+      <CompileOutput>BuildInfo.cs</CompileOutput>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <ProjectGuid>{96F54817-DA0A-4F40-A69C-0040BF5BE95D}</ProjectGuid>
@@ -38,16 +52,6 @@
   <ItemGroup>
     <Compile Include="AppSetup.cs" />
     <Compile Include="CarouselViewUITest.cs" />
-  </ItemGroup>
-  <!--
-  
-    AssemblyVersion
-  -->
-  <ItemGroup>
-    <None Include="Properties\AssemblyVersion.t.cs">
-      <DependentUpon>AssemblyVersion.cs</DependentUpon>
-    </None>
-    <Compile Include="Properties\AssemblyVersion.cs" />
   </ItemGroup>
   <!--
 

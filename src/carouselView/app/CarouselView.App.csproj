@@ -16,6 +16,20 @@
     Universal
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' " />
+  <ItemGroup>
+    <Compile Include="..\..\AssemblyVersion.cs">
+      <Link>Properties\AssemblyVersion.cs</Link>
+    </Compile>
+    <Compile Include="..\..\BuildInfo.cs">
+      <DependentUpon>BuildInfo.t.cs</DependentUpon>
+      <Link>Properties\BuildInfo.cs</Link>
+    </Compile>
+    <None Include="..\..\BuildInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\BuildInfo.t.cs</Link>
+      <CompileOutput>BuildInfo.cs</CompileOutput>
+    </None>
+  </ItemGroup>
   <PropertyGroup>
     <ProjectGuid>{C52084E5-8F52-4786-AF47-F7075FFD7794}</ProjectGuid>
     <NuGetPackageImportStamp />
@@ -44,16 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(RefDir)Xamarin.Forms.props" />
-  <!--
-  
-    AssemblyVersion
-  -->
-  <ItemGroup>
-    <None Include="Properties\AssemblyVersion.t.cs">
-      <DependentUpon>AssemblyVersion.cs</DependentUpon>
-    </None>
-    <Compile Include="Properties\AssemblyVersion.cs" />
-  </ItemGroup>
   <!--
 
     Android

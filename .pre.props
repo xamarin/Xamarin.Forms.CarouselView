@@ -4,9 +4,9 @@
   <!--ext paths-->
   <PropertyGroup>
     <RootDir>$(MSBuildThisFileDirectory)</RootDir>
-    <ExtDir>$(RootDir)ext\</ExtDir>
+    <MxbuildDir>$(RootDir)sub\mxbuild\</MxbuildDir>
   </PropertyGroup>
-  <Import Project="$(ExtDir)root.pre.props"/>
+  <Import Project="$(MxbuildDir)root.pre.props"/>
 
   <!--verbosity-->
   <PropertyGroup>

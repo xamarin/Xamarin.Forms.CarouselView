@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <NugetXamarinAndroidSupportVersion>23.3.0</NugetXamarinAndroidSupportVersion>
+    <NugetXamarinAndroidSupportTargetFramework>monoandroid60</NugetXamarinAndroidSupportTargetFramework>
+
+    <NugetXamarinAndroidSupportImport>$(PkgDir)Xamarin.Android.Support.Vector.Drawable.$(NugetXamarinAndroidSupportVersion)\build\Xamarin.Android.Support.Vector.Drawable.targets</NugetXamarinAndroidSupportImport>
+    <NugetImports>Xamarin.Android.Support.targets;$(NugetImports)</NugetImports>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <NugetReference Include="Xamarin.Android.Support.Animated.Vector.Drawable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.Animated.Vector.Drawable</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.Animated.Vector.Drawable.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.Animated.Vector.Drawable.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.Design, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.Design</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.Design.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid43\Xamarin.Android.Support.Design.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.v4, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.v4</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.v4.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.v4.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.v7.AppCompat, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.v7.AppCompat</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.v7.AppCompat.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.v7.AppCompat.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.v7.CardView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.v7.CardView</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.v7.CardView.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.v7.CardView.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.v7.MediaRouter, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.v7.MediaRouter</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.v7.MediaRouter.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.v7.MediaRouter.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.v7.RecyclerView, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.v7.RecyclerView</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.v7.RecyclerView.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.v7.RecyclerView.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+    <NugetReference Include="Xamarin.Android.Support.Vector.Drawable, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <Package>Xamarin.Android.Support.Vector.Drawable</Package>
+      <Version>$(NugetXamarinAndroidSupportVersion)</Version>
+      <TargetFramework>$(NugetXamarinAndroidSupportTargetFramework)</TargetFramework>
+      <HintPath>$(NugetPackagesDir)Xamarin.Android.Support.Vector.Drawable.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\Xamarin.Android.Support.Vector.Drawable.dll</HintPath>
+      <Private>$(PrivateReference)</Private>
+    </NugetReference>
+  </ItemGroup>
+</Project>

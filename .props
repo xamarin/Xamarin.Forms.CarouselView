@@ -4,18 +4,22 @@
   DefaultTargets="Build" 
   xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
 >
-  <Import Project="$(ExtDir)root.props"/>
-
-  <!--BuildVersion-->
-  <PropertyGroup>
-    <BuildMajorVersion>2</BuildMajorVersion>
-    <BuildMinorVersion>3</BuildMinorVersion>
-    <BuildPatchVersion>0</BuildPatchVersion>
-    <BuildVersion>$(BuildMajorVersion).$(BuildMinorVersion).$(BuildPatchVersion)</BuildVersion>
-  </PropertyGroup>
+  <Import Project="$(MxbuildDir)root.props"/>
 
   <!--shim-->
-  <PropertyGroup Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">
+  <PropertyGroup>
+    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
+    <ShimExclude>
+      $(MSBuildThisFileDirectory)**\xs\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\android\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\ios\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
+      $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
+    </ShimExclude>
+    <IsBuildTargetBuild Condition="'$(BuildTarget)'=='build' OR '$(BuildTarget)'=='rebuild'">true</IsBuildTargetBuild>
+    <IsBuildingFromRoot Condition="'$(StartupDir)'=='$(RootDir)'">true</IsBuildingFromRoot>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(IsBuildTargetBuild)'=='true' AND '$(IsBuildingFromRoot)'=='true'">
     <ShimInitialProject>$(IdProj)</ShimInitialProject>
     <ShimFinalProject>$(PublishProj)</ShimFinalProject>
   </PropertyGroup>

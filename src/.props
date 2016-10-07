@@ -2,37 +2,6 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., .props))\.props" />
 
-  <!--shim-->
-  <PropertyGroup>
-    <ShimName>Core</ShimName>
-    <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>
-    <ShimExclude>
-      $(MSBuildThisFileDirectory)**\build\**\*.csproj;
-      $(MSBuildThisFileDirectory)**\android\**\*.csproj;
-      $(MSBuildThisFileDirectory)**\ios\**\*.csproj;
-      $(MSBuildThisFileDirectory)**\windows\**\*.csproj;
-      $(MSBuildThisFileDirectory)**\unpack\**\*.csproj;
-    </ShimExclude>
-    <ShimInitialProject />
-    <ShimFinalProject />
-  </PropertyGroup>
-
-  <!--tasks-->
-  <PropertyGroup>
-    <!--shim will build task assembly in a separate process-->
-    <TaskAssemblyPath>$(BuildBinConfigDir)build\dev\build\desktop\Xamarin.Forms.Build.dll</TaskAssemblyPath>
-  </PropertyGroup>
-  <Import Project=".tasks" Condition="Exists($(TaskAssemblyPath))" />
-
-  <!--BuildInfo-->
-  <ItemGroup>
-    <Template Include="$(SrcDir)BuildInfo.t.cs">
-      <DependentUpon>BuildInfo.cs</DependentUpon>
-      <SubstituteExpandedResult>true</SubstituteExpandedResult>
-    </Template>
-    <Compile Include="$(SrcDir)BuildInfo.cs" />
-  </ItemGroup>
-
   <!--nuget-->
   <PropertyGroup>
 
@@ -41,14 +10,6 @@
     <NugetV2Feed>https://www.nuget.org/api/v2</NugetV2Feed>
     <NugetV3Feed>https://api.nuget.org/v3/index.json</NugetV3Feed>
     <NugetFeed>$(NugetV3Feed)</NugetFeed>
-
-    <!--packageing-->
-    <NuspecAuthors>Xamarin, Inc.</NuspecAuthors>
-    <NuspecOwners>Xamarin, Inc.</NuspecOwners>
-    <NuspecRequireLicenseAcceptance>false</NuspecRequireLicenseAcceptance>
-    <NuspecCopyright>Copyright 2013-2016</NuspecCopyright>
-    <NuspecLicenseUrl>http://download.xamarin.com/content/licenses/Xamarin.Forms.rtf</NuspecLicenseUrl>
-    <NuspecIconUrl>http://xamarin.com/content/images/nuget/xamarin.png</NuspecIconUrl>
   </PropertyGroup>
   
   <!--shared-->
@@ -90,7 +51,7 @@
   </PropertyGroup>
 
   <!--portable-->
-  <PropertyGroup Condition="'$(LibraryPlatform)' == '$(PortableLibraryPlatformId)'">
+  <PropertyGroup Condition="'$(LibraryPlatform)' == '$(DotNetLibraryPlatformId)'">
   </PropertyGroup>
 
   <!--android-->

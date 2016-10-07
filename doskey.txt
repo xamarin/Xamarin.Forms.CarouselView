@@ -1,0 +1,20 @@
+
+;= carouselView
+cv=pushd %SrcDir%carouselView
+lib=pushd %SrcDir%carouselView\lib
+app=pushd %SrcDir%carouselView\app
+aut=pushd %SrcDir%carouselView\aut
+after=pushd %tstDir%nugetTest\after
+
+;= tools
+diff=p4merge -C utf8 $1 $2
+bc="C:\Program Files\Beyond Compare 4\BCompare.exe" $1 $2
+ts=touch %SrcDir%*.sln
+
+;= killusual
+killusual=taskkill /f /im adb.exe /im msbuild.exe /im nunit-agent.exe
+
+;= todo
+todo=echo $* >> %RootDir%todo.txt
+ltodo=type %RootDir%todo.txt
+ntodo=notepad %RootDir%todo.txt

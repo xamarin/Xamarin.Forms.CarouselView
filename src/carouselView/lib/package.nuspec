@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>$(NuspecId)</id>
+    <version>$(NuspecVersion)</version>
+    <description>$(NuspecDescription)</description>
+    <releaseNotes><![CDATA[$(NuspecReleaseNotes)]]></releaseNotes>
+    <authors>$(NuspecAuthors)</authors>
+    <owners>$(NuspecOwners)</owners>
+    <copyright>$(NuspecCopyright)</copyright>
+    <tags>$(NuspecTags)</tags>
+    <licenseUrl>$(NuspecLicenseUrl)</licenseUrl>
+    <iconUrl>$(NuspecIconUrl)</iconUrl>
+    <projectUrl>$(NuspecProjectUrl)</projectUrl>
+    <requireLicenseAcceptance>$(NuspecRequireLicenseAcceptance)</requireLicenseAcceptance>
+    <dependencies>
+      <group>
+        <!--<dependency id="%(NugetReference.Package)" version="%(Version)" />-->
+      </group>
+    </dependencies>
+    <references>
+      <group targetFramework="%(TargetResult.TargetFramework)">
+        <reference file="%(Filename)%(Extension)" />
+      </group>
+    </references>
+  </metadata>
+  <files>
+    <file src="lib\**\*" target="lib" />
+  </files>
+</package>
