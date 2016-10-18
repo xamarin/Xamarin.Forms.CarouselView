@@ -29,7 +29,6 @@
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.Forms.targets" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.TestCloud.Agent.props" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.UITest.props" />
-    <None Include="$(MSBuildThisFileDirectory)src\BuildInfo.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\.props" />
     <None Include="$(MSBuildThisFileDirectory).props" />
     <None Include="$(MSBuildThisFileDirectory).pre.props" />
@@ -45,7 +44,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj.bak" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
-    <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\package.nuspec" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
@@ -62,6 +60,7 @@
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\empty.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\gen\gen.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\gen\gen.targets" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\id\BuildInfo.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\id\id.git.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\id\id.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\id\id.proj" />
@@ -81,6 +80,7 @@
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\nuget.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuspec.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\PackageInfo.t.cs" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\pack.build.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\pack.post.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\pack.pre.props" />
@@ -118,7 +118,7 @@
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\project.lock.json" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\project.json" />
     <Content Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\project.lock.json" />
-    <Content Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\nuspec.t.xml" />
+    <Content Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\Package.nuspec" />
     <Content Include="$(MSBuildThisFileDirectory)sub\mxbuild\shell\doskey.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -141,7 +141,6 @@
     <Page Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\Resources.xaml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="$(MSBuildThisFileDirectory)src\BuildInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\MainActivity.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\AppDelegate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\Main.cs" />
@@ -170,6 +169,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Portable\SimpleItemsView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\CarouselViewLibrary.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Windows\CarouselViewRenderer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sub\mxbuild\id\BuildInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)sub\mxbuild\pack\PackageInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <AppxManifest Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\phone\Package.appxmanifest" />

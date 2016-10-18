@@ -45,26 +45,36 @@
     <!--
       content
     -->
-    <None Include="package.nuspec">
+    <None Include="$(ExtPackDir)Package.nuspec">
       <CopyTargetName>$(NuspecName)</CopyTargetName>
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
       <Type>xml</Type>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Package.nuspec</Link>
     </None>
   </ItemGroup>
   <!--
   
     Library
   -->
-  <ItemGroup Condition="'$(IsLibraryPlatform)'=='$(true)'">
-    <Compile Include="..\..\BuildInfo.cs">
+  <ItemGroup Condition="'$(IsLibraryPlatform)'=='true'">
+    <Compile Include="$(ExtIdDir)BuildInfo.cs">
       <DependentUpon>BuildInfo.t.cs</DependentUpon>
       <Link>Properties\BuildInfo.cs</Link>
     </Compile>
-    <None Include="..\..\BuildInfo.t.cs">
+    <None Include="$(ExtIdDir)BuildInfo.t.cs">
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
       <Link>Properties\BuildInfo.t.cs</Link>
       <CompileOutput>BuildInfo.cs</CompileOutput>
+    </None>
+    <Compile Include="$(ExtPackDir)PackageInfo.cs">
+      <DependentUpon>PackageInfo.t.cs</DependentUpon>
+      <Link>Properties\PackageInfo.cs</Link>
+    </Compile>
+    <None Include="$(ExtPackDir)PackageInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\PackageInfo.t.cs</Link>
+      <CompileOutput>PackageInfo.cs</CompileOutput>
     </None>
   </ItemGroup>
   <!--

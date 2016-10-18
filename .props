@@ -6,6 +6,13 @@
 >
   <Import Project="$(MxbuildDir)root.props"/>
 
+  <!--version-->
+  <PropertyGroup>
+    <BuildMajorVersion>2</BuildMajorVersion>
+    <BuildMinorVersion>4</BuildMinorVersion>
+    <!--<NuspecPreReleaseVersion>pre</NuspecPreReleaseVersion>-->
+  </PropertyGroup>
+
   <!--shim-->
   <PropertyGroup>
     <ShimInclude>$(ShimDir)**\*.csproj</ShimInclude>

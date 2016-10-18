@@ -15,15 +15,24 @@
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' "/>
   <ItemGroup>
-    <Compile Include="..\..\BuildInfo.cs">
+    <Compile Include="$(ExtIdDir)\BuildInfo.cs">
       <DependentUpon>BuildInfo.t.cs</DependentUpon>
       <Link>Properties\BuildInfo.cs</Link>
     </Compile>
-    <None Include="..\..\BuildInfo.t.cs">
+    <None Include="$(ExtIdDir)\BuildInfo.t.cs">
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
       <Link>Properties\BuildInfo.t.cs</Link>
       <CompileOutput>BuildInfo.cs</CompileOutput>
     </None>
+    <Compile Include="$(ExtPackDir)\PackageInfo.cs">
+      <DependentUpon>PackageInfo.t.cs</DependentUpon>
+      <Link>Properties\PackageInfo.cs</Link>
+    </Compile>
+    <None Include="$(ExtPackDir)\PackageInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\PackageInfo.t.cs</Link>
+      <CompileOutput>PackageInfo.cs</CompileOutput>
+    </None>  
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>
