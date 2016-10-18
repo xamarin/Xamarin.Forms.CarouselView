@@ -41,7 +41,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Entitlements.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\Info.plist" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
-    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj.bak" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />

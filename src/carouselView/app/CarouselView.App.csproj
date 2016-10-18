@@ -103,7 +103,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|xamarin.ios.phone' " />
   <PropertyGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)'">
     <OutputType>Exe</OutputType>
-    <Foo>Bar</Foo>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
     <Import Project="$(RefDir)Xamarin.TestCloud.Agent.props" />

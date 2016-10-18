@@ -118,7 +118,7 @@
   <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosMobilePlatformId)' AND '$(IsMobileAppProject)'=='true'">
     <OutputType>Exe</OutputType>
     <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
-    <MtouchSdkVersion>9.3</MtouchSdkVersion>
+    <MtouchSdkVersion>10.0</MtouchSdkVersion>
     <ConsolePause>false</ConsolePause>
     <OptimizePNGs>True</OptimizePNGs>
     <MtouchFloat32>False</MtouchFloat32>
