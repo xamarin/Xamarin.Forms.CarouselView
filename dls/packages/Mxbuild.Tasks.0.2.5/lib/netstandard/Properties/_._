@@ -1,0 +1,6 @@
+version https://git-lfx.github.com/spec/v1
+hint Mxbuild.Tasks.0.2.5/lib/netstandard/Properties/_._
+oid sha256:88eb65c258c559242cddb6c32f7b5aa88b1a5e499b5aba9f472d5a091892d2e2
+size 64
+type archive
+url http://nuget.org/api/v2/package/Mxbuild.Tasks/0.2.5

@@ -24,9 +24,7 @@
     <None Include="$(MSBuildThisFileDirectory)ref\NUnit.props" />
     <None Include="$(MSBuildThisFileDirectory)ref\WPtoolkit.props" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.Android.Support.props" />
-    <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.Android.Support.targets" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.Forms.props" />
-    <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.Forms.targets" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.TestCloud.Agent.props" />
     <None Include="$(MSBuildThisFileDirectory)ref\Xamarin.UITest.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\.props" />
@@ -74,6 +72,8 @@
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\node\node.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\node\node.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\node\node.targets" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\shim.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\nuget.post.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\nuget.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\nuget\nuget.props" />

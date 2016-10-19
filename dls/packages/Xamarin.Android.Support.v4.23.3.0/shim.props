@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  ToolsVersion="12.0"
+>
+  <PropertyGroup>
+    <!--augment $(NugetDependencyFullNames) for later conversion to @(NugetDependency)-->
+    <_NugetPackageDir>$(MSBuildThisFileDirectory)</_NugetPackageDir>
+    <NugetPackageDirs>$(_NugetPackageDir);$(NugetPackageDirs)</NugetPackageDirs>
+    
+    <!--infer package id and version from current directory-->
+    <_NugetPackageFullName>$([System.IO.Path]::GetFileName( $([System.IO.Path]::GetDirectoryName($(_NugetPackageDir))) ))</_NugetPackageFullName>
+    <_NugetPackageId>$([System.Text.RegularExpressions.Regex]::Match('$(_NugetPackageFullName)','$(NugetPackageIdRegex)'))</_NugetPackageId>
+    <_NugetPackageVersion>$([System.Text.RegularExpressions.Regex]::Match('$(_NugetPackageFullName)','$(NugetPackageVersionRegex)'))</_NugetPackageVersion>
+
+    <!--construct well known nuget directories-->
+    <_NugetBuildDir>$(_NugetPackageDir)build\</_NugetBuildDir>
+  </PropertyGroup>
+
+  <!--import props-->
+  <PropertyGroup>
+    <_NugetPackageProps>$(_NugetBuildDir)$(_NugetPackageId).props</_NugetPackageProps>
+    <_NugetPackageProps Condition="!Exists($(_NugetPackageProps))">$(_NugetBuildDir)$(TargetFramework)\$(_NugetPackageId).props</_NugetPackageProps>
+  </PropertyGroup>
+  <Import Project="$(_NugetPackageProps)" Condition="Exists($(_NugetPackageProps))"/>
+
+  <!--import targets by augmenting NugetPackageTargetsShim and NugetPackageTargets-->
+  <PropertyGroup>
+    <_NugetPackageTargets>$(_NugetBuildDir)$(_NugetPackageId).targets</_NugetPackageTargets>
+    <_NugetPackageTargets Condition="!Exists($(_NugetPackageTargets))">$(_NugetBuildDir)$(TargetFramework)\$(_NugetPackageId).targets</_NugetPackageTargets>
+    <NugetPackageTargetsShim Condition="Exists($(_NugetPackageTargets))">$(_NugetPackageDir)shim.targets;$(NugetPackageTargetsShim)</NugetPackageTargetsShim>
+    <NugetPackageTargets Condition="Exists($(_NugetPackageTargets))">$(_NugetPackageTargets);$(NugetPackageTargets)</NugetPackageTargets>
+  </PropertyGroup>
+</Project>

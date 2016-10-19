@@ -1,20 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-
+<Project 
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+  ToolsVersion="12.0" 
+>
   <PropertyGroup>
     <NugetXamarinTestCloudAgentVersion>0.19.0</NugetXamarinTestCloudAgentVersion>
-    <NugetXamarinTestCloudAgentTargetFramework>xamarinios10</NugetXamarinTestCloudAgentTargetFramework>
-    <NugetXamarinTestCloudAgentLibDir>$(NugetPackagesDir)Xamarin.TestCloud.Agent.$(NugetXamarinTestCloudAgentVersion)\lib\</NugetXamarinTestCloudAgentLibDir>
   </PropertyGroup>
-
-  <ItemGroup>
-    <NugetReference Include="Calabash, Version=19.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065, processorArchitecture=MSIL">
-      <Package>Xamarin.TestCloud.Agent</Package>
-      <Version>$(NugetXamarinTestCloudAgentVersion)</Version>
-      <TargetFramework>$(NugetXamarinTestCloudAgentTargetFramework)</TargetFramework>
-      <HintPath>$(NugetXamarinTestCloudAgentLibDir)Xamarin.iOS10\Calabash.dll</HintPath>
-      <Private>True</Private>
-    </NugetReference>
-  </ItemGroup>
-      
+  <Import Project="$(PkgDir)Xamarin.TestCloud.Agent.$(NugetXamarinTestCloudAgentVersion)\shim.props"/>
 </Project>

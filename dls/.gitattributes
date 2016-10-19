@@ -2,4 +2,5 @@
 .gitattributes filter= diff= merge= text=auto
 .gitignore filter= diff= merge= text=auto
 packages.config filter= diff= merge= text=auto
+shim.*  filter= diff= merge= text=auto
 *.lfxconfig filter= diff= merge= text eol=lf
