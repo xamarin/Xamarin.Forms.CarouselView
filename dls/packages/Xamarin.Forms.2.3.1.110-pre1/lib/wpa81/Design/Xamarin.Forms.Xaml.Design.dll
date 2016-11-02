@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Forms.2.3.1.110-pre1/lib/wpa81/Design/Xamarin.Forms.Xaml.Design.dll
-oid sha256:360414f18ce20fb14c2e574d34125f0ad90c76475c9dabd3966d994ebe8b91ab
-size 15872
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Forms.2.3.1.110-pre1/build/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10/Xamarin.Forms.targets
-oid sha256:c05b4a0ec2404c3d8c258a04d08f3d6549aef2885058b5c17e965c8033bf1ed1
-size 2328
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

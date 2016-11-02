@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/nunit.exe
-oid sha256:a0e9727efab09213cefc6e9b9a56beadaacc312ba78aa886984ed394fca51a39
-size 6656
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Forms.2.3.1.110-pre1/lib/MonoAndroid10/Xamarin.Forms.Xaml.pdb
-oid sha256:daed6dc2c913cb02e36a76ac0e8a254d757621b2c40340bb19512d6754fe781c
-size 185856
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

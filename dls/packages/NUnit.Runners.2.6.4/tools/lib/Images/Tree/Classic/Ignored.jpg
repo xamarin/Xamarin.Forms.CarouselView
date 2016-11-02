@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Classic/Ignored.jpg
-oid sha256:82851a8899ff5e8cfc94a265153abf96f7d4bd7c390ec158ffbe2945d4b5b8ee
-size 789
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

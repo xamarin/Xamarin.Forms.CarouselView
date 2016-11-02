@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Circles/Inconclusive.jpg
-oid sha256:1b85327c6973bfb7e52a955f401679d7126a62d2e1421b5150cef89418f98b44
-size 734
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Classic/Failure.jpg
-oid sha256:6a9ac7c8555f0f6f6bbb0d74c5b5a0224e47d020f96887e025535de8a75e2e8f
-size 808
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

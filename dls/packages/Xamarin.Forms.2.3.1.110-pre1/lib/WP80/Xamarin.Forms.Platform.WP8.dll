@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Forms.2.3.1.110-pre1/lib/WP80/Xamarin.Forms.Platform.WP8.dll
-oid sha256:9c56a4c0bfaae5fc77e30a75c82e6042be979a06304a0d4ba315e277930a9bd6
-size 197632
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

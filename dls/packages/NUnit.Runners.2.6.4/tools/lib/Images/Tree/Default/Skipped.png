@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Default/Skipped.png
-oid sha256:7818e22d64bda2c0e9485c7572ef2267882259f4bdcadd51fe9c51a6b1bdc178
-size 1405
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

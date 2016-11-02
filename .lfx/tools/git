@@ -1,0 +1,7 @@
+Exe
+1
+https://github.com/git-for-windows/git/releases/download/v2.10.1.windows.1/PortableGit-2.10.1-32-bit.7z.exe
+-y -gm2 -InstallPath="{0}"
+3ca6f426e3b2e6675a11b680f719c23affa7e4dc060e315375c6a262ed2658a5
+31060240
+224310101

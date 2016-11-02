@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.2.6.4/license.txt
-oid sha256:a2f4571bba114dd525f8dd5b9b7ffe5b1fd568fced49441f994ae3b947bbb4ca
-size 1131
-type archive
-url http://nuget.org/api/v2/package/NUnit/2.6.4

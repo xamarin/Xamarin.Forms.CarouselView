@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Visual%20Studio/Ignored.png
-oid sha256:8341b709f8a6cd95fd52ef65d152c7ea88b00ba86e30eb9f190826e36d621c5a
-size 773
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

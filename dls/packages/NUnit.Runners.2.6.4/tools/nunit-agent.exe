@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/nunit-agent.exe
-oid sha256:53b2380ff808c6dc96b72eb3bcfa77b594aabce4fecfbbf929e81a085ae43b67
-size 8192
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

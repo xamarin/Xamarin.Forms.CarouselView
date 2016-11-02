@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Forms.2.3.1.110-pre1/lib/wpa81/Xamarin.Forms.Platform.WinRT.dll
-oid sha256:9380837a51aabb507ccf9003917bc5b1f1959c6e2852aac21ca506cc2253b09d
-size 196096
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Forms/2.3.1.110-pre1

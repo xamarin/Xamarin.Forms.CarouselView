@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/lib/Images/Tree/Classic/Success.jpg
-oid sha256:ac9823f6a76d2a63cdbf813ac045995a1dd1a597060f2c3a8c4806b88d35ec90
-size 768
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

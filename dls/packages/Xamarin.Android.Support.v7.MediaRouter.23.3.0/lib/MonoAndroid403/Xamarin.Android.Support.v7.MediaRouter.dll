@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.Android.Support.v7.MediaRouter.23.3.0/lib/MonoAndroid403/Xamarin.Android.Support.v7.MediaRouter.dll
-oid sha256:84c66b77edec9779c4256afa6abc56052d70055655b9b546fd08c1d0c9ee6d97
-size 225280
-type archive
-url http://nuget.org/api/v2/package/Xamarin.Android.Support.v7.MediaRouter/23.3.0

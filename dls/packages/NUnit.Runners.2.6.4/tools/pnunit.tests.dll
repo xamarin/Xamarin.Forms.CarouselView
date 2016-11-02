@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint NUnit.Runners.2.6.4/tools/pnunit.tests.dll
-oid sha256:00a7fe9256fae96b39aaa2a10b3aa199117b9fef78d85ca4491e1eafeabe35c6
-size 8192
-type archive
-url http://nuget.org/api/v2/package/NUnit.Runners/2.6.4

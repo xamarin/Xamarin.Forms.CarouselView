@@ -1,6 +1,0 @@
-version https://git-lfx.github.com/spec/v1
-hint Xamarin.UITest.1.3.7/lib/Xamarin.UITest.dll
-oid sha256:57b0328a59ff69923e32430b9167cc922f5638902621483f8b88572d2b329e41
-size 13166080
-type archive
-url http://nuget.org/api/v2/package/Xamarin.UITest/1.3.7
