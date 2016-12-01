@@ -11,44 +11,47 @@
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .app.hierarchy.props))\.app.hierarchy.props" />
   <!--
 
     Universal
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' " />
-  <ItemGroup>
-    <Compile Include="$(ExtIdDir)\BuildInfo.cs">
+  <PropertyGroup>
+    <ProjectGuid>{C52084E5-8F52-4786-AF47-F7075FFD7794}</ProjectGuid>
+    <RootNamespace>CarouselViewApp</RootNamespace>
+    <AssemblyName>CarouselView.App</AssemblyName>
+  </PropertyGroup>
+  <!--
+  
+    Library
+  -->
+  <ItemGroup Condition="'$(IsLibraryPlatform)'=='true'">
+    <Compile Include="$(SrcDir)\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+    </Compile>
+    <Compile Include="$(ExtIdDir)BuildInfo.cs">
       <DependentUpon>BuildInfo.t.cs</DependentUpon>
       <Link>Properties\BuildInfo.cs</Link>
     </Compile>
-    <None Include="$(ExtIdDir)\BuildInfo.t.cs">
+    <None Include="$(ExtIdDir)BuildInfo.t.cs">
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
       <Link>Properties\BuildInfo.t.cs</Link>
       <CompileOutput>BuildInfo.cs</CompileOutput>
     </None>
-    <Compile Include="$(ExtPackDir)\PackageInfo.cs">
-      <DependentUpon>PackageInfo.t.cs</DependentUpon>
+    <Compile Include="$(ExtPackDir)PackageInfo.cs">
       <Link>Properties\PackageInfo.cs</Link>
     </Compile>
-    <None Include="$(ExtPackDir)\PackageInfo.t.cs">
-      <IsMxbuildTemplate>true</IsMxbuildTemplate>
-      <Link>Properties\PackageInfo.t.cs</Link>
-      <CompileOutput>PackageInfo.cs</CompileOutput>
-    </None>
   </ItemGroup>
-  <PropertyGroup>
-    <ProjectGuid>{C52084E5-8F52-4786-AF47-F7075FFD7794}</ProjectGuid>
-    <NuGetPackageImportStamp />
-    <RootNamespace>CarouselViewApp</RootNamespace>
-    <AssemblyName>CarouselView.App</AssemblyName>
-  </PropertyGroup>
+  <!--
+  
+    Shared
+  -->
   <ItemGroup>
     <ProjectReference Include="..\lib\CarouselView.csproj">
       <Project>{67F9D3A8-F71E-4428-913F-C37AE82CDB24}</Project>
       <Name>Xamarin.Forms.CarouselView</Name>
-      <!--ios-->
-      <IsAppExtension>false</IsAppExtension>
-      <IsWatchApp>false</IsWatchApp>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -63,7 +66,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Xml" />
   </ItemGroup>
-  <Import Project="$(RefDir)Xamarin.Forms.props" />
+  <ImportGroup>
+    <Import Project="$(NugetXamarinFormsPortableShim)" />
+  </ImportGroup>
   <!--
 
     Android
@@ -79,7 +84,15 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
   </PropertyGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
-    <Import Project="$(RefDir)Xamarin.Android.Support.props" />
+    <Import Project="$(NugetXamarinFormsAndroidShim)" />
+    <Import Project="$(NugetAndroidSupportAnimatedVectorDrawableShim)" />
+    <Import Project="$(NugetAndroidSupportDesignShim)" />
+    <Import Project="$(NugetAndroidSupportV4Shim)" />
+    <Import Project="$(NugetAndroidSupportV7AppCompatShim)" />
+    <Import Project="$(NugetAndroidSupportV7CardViewShim)" />
+    <Import Project="$(NugetAndroidSupportV7MediaRouterShim)" />
+    <Import Project="$(NugetAndroidSupportV7RecyclerViewShim)" />
+    <Import Project="$(NugetAndroidSupportVectorDrawableShim)" />
   </ImportGroup>
   <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
     <!--references-->
@@ -106,7 +119,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
-    <Import Project="$(RefDir)Xamarin.TestCloud.Agent.props" />
+    <Import Project="$(NugetXamarinFormsIosShim)" />
+    <Import Project="$(XamarinTestCloudAgentUnifiedShim)" />
   </ImportGroup>
   <PropertyGroup Condition=" '$(Plat)' == 'iPhoneSimulator' ">
     <MtouchArch>i386, x86_64</MtouchArch>
@@ -196,11 +210,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|win.arm' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|win.arm' " />
   <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
-    <TargetPlatformVersion>8.1</TargetPlatformVersion>
-    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
     <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
     <Language>CSharp</Language>
   </PropertyGroup>
+  <ImportGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
+    <Import Project="$(NugetXamarinFormsWinShim)" />
+  </ImportGroup>
   <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)' ">
     <!--appxManifest-->
     <AppxManifest Include="windows\tablet\Package.appxmanifest">
@@ -228,11 +243,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|wpa.32' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|wpa.32' " />
   <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
-    <TargetPlatformIdentifier>WindowsPhoneApp</TargetPlatformIdentifier>
-    <MinimumVisualStudioVersion>12</MinimumVisualStudioVersion>
-    <TargetPlatformVersion>8.1</TargetPlatformVersion>
     <SynthesizeLinkMetadata>true</SynthesizeLinkMetadata>
   </PropertyGroup>
+  <ImportGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
+    <Import Project="$(NugetXamarinFormsWpaShim)" />
+  </ImportGroup>
   <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)' ">
     <!--appxManifest-->
     <AppxManifest Include="windows\phone\Package.appxmanifest">
@@ -262,14 +277,12 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'debug|uap.32' " />
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'release|uap.32' " />
   <PropertyGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
-    <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
-    <VisualStudioVersion>14.0</VisualStudioVersion>
-    <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
-    <TargetPlatformVersion>10.0.10586.0</TargetPlatformVersion>
-    <TargetPlatformMinVersion>10.0.10586.0</TargetPlatformMinVersion>
     <EnableDotNetNativeCompatibleProfile>true</EnableDotNetNativeCompatibleProfile>
     <ProjectLockFile>windows\project.lock.json</ProjectLockFile>
   </PropertyGroup>
+  <ImportGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
+    <Import Project="$(NugetXamarinFormsUapShim)" />
+  </ImportGroup>
   <ItemGroup Condition=" '$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)' ">
     <!--appxManifest-->
     <AppxManifest Include="windows\universal\Package.appxmanifest">

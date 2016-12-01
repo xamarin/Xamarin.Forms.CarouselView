@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+  <!--
+  
+    Hierarchy
+  -->
+  <ItemGroup>
+    <!--all E { pack }-->
+    <PlatformGroup Include="$(AllPlatformId)">
+      <Platforms>$(PackPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--mobile E { portable, android, ios, windows }-->
+    <PlatformGroup Include="$(MobilePlatformId)">
+      <Platforms>$(PortablePlatformId);$(AndroidMobilePlatformId);$(IosMobilePlatformId);$(WindowsMobilePlatformId)</Platforms>
+    </PlatformGroup>
+    <!--windows E { windows.universal, windows.phone, windows.tablet }-->
+    <PlatformGroup Include="$(WindowsMobilePlatformId)">
+      <Platforms>$(WindowsUniversalMobileSubPlatformId);$(WindowsPhoneMobileSubPlatformId);$(WindowsTabletMobileSubPlatformId)</Platforms>
+    </PlatformGroup>
+
+    <!--portable E { dotnet }-->
+    <PlatformGroup Include="$(PortablePlatformId)">
+      <Platforms>$(DotNetLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--dotnet E { dotnet-259 }-->
+    <PlatformGroup Include="$(DotNetLibraryPlatformId)">
+      <Platforms>$(DotNetLibraryPlatformId-259)</Platforms>
+    </PlatformGroup>
+
+    <!--android E { monodroid }-->
+    <PlatformGroup Include="$(AndroidMobilePlatformId)">
+      <Platforms>$(AndroidLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--monodroid E { monodroid-7.0 }-->
+    <PlatformGroup Include="$(AndroidLibraryPlatformId)">
+      <Platforms>$(AndroidLibraryPlatformId-7_0)</Platforms>
+    </PlatformGroup>
+
+    <!--ios E { ios.unified }-->
+    <PlatformGroup Include="$(IosMobilePlatformId)">
+      <Platforms>$(IosUnifiedMobileSubPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--ios.unified E { xamarin.ios }-->
+    <PlatformGroup Include="$(IosUnifiedMobileSubPlatformId)">
+      <Platforms>$(IosUnifiedLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--xamarin.ios E { xamarin.ios-1.0 }-->
+    <PlatformGroup Include="$(IosUnifiedLibraryPlatformId)">
+      <Platforms>$(IosUnifiedLibraryPlatformId-1_0)</Platforms>
+    </PlatformGroup>
+
+    <!--windows.universal E { uap }-->
+    <PlatformGroup Include="$(WindowsUniversalMobileSubPlatformId)">
+      <Platforms>$(WindowsUniversalLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--uap E { uap-10.0.10586.0 }-->
+    <PlatformGroup Include="$(WindowsUniversalLibraryPlatformId)">
+      <Platforms>$(WindowsUniversalLibraryPlatformId-10_0_10586_0)</Platforms>
+    </PlatformGroup>
+
+    <!--windows.phone E { wpa }-->
+    <PlatformGroup Include="$(WindowsPhoneMobileSubPlatformId)">
+      <Platforms>$(WindowsPhoneLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--wpa E { wpa-8.1 }-->
+    <PlatformGroup Include="$(WindowsPhoneLibraryPlatformId)">
+      <Platforms>$(WindowsPhoneLibraryPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+
+    <!--windows.tablet E { win }-->
+    <PlatformGroup Include="$(WindowsTabletMobileSubPlatformId)">
+      <Platforms>$(WindowsTabletLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--win E { win-8.1 }-->
+    <PlatformGroup Include="$(WindowsTabletLibraryPlatformId)">
+      <Platforms>$(WindowsTabletLibraryPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+  </ItemGroup>
+
+  <!--part-->
+  <PropertyGroup Condition=" '$(IsPartPlatform)' == 'true' ">
+    <!--This assembly is only referenced and never executed so there is no need for symbols-->
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
+
+    <!--hide build output-->
+    <CopyBuildOutputToOutputDirectory>false</CopyBuildOutputToOutputDirectory>
+    <!--TODO: if CopyBuildOutputToOutputDirectory why is the following necessary?-->
+    <OutDir>$(IntermediateOutputPath)portable\bin\</OutDir>
+    <OutputPath>$(OutDir)</OutputPath>
+    <AppxPackageDir>$(OutputPath)</AppxPackageDir>
+    <IntermediateOutputPath>$(IntermediateOutputPath)portable\obj\</IntermediateOutputPath>
+  </PropertyGroup>
+
+  <!--mobile part-->
+  <PropertyGroup Condition="'$(IsMobileLibraryPlatform)' == 'true' AND '$(IsPartPlatform)' != 'true' AND '$(IsPrimitivePlatform)'=='true'">
+    <IsCompositePlatform>true</IsCompositePlatform>
+    <DefineConstants>$(DefineConstants)COMPOSITE;</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup Condition="'$(IsMobileLibraryPlatform)' == 'true' AND '$(IsPartPlatform)' == 'true' AND '$(IsPrimitivePlatform)'=='true'">
+    <SelfReference Include="$(DotNetLibraryPlatformId)" />
+  </ItemGroup>
+
+</Project>

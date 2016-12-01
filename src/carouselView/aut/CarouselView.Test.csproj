@@ -10,42 +10,81 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <!--
+  
+    Hierarchy
+  -->
+  <ItemGroup>
+    <!--all E { mobile }-->
+    <PlatformGroup Include="$(AllPlatformId)">
+      <Platforms>$(MobilePlatformId)</Platforms>
+    </PlatformGroup>
+    <!--mobile E { android, ios }-->
+    <PlatformGroup Include="$(MobilePlatformId)">
+      <Platforms>$(AndroidMobilePlatformId);$(IosMobilePlatformId)</Platforms>
+    </PlatformGroup>
+
+    <!--android E { android.aut }-->
+    <PlatformGroup Include="$(AndroidMobilePlatformId)">
+      <Platforms>$(AndroidAutomationLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--android.aut E { android.aut-4.5 }-->
+    <PlatformGroup Include="$(AndroidAutomationLibraryPlatformId)">
+      <Platforms>$(AndroidAutomationLibraryPlatformId-4_5)</Platforms>
+    </PlatformGroup>
+
+    <!--ios E { ios.aut }-->
+    <PlatformGroup Include="$(IosMobilePlatformId)">
+      <Platforms>$(IosAutomationLibraryPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--ios.aut E { ios.aut-4.5 }-->
+    <PlatformGroup Include="$(IosAutomationLibraryPlatformId)">
+      <Platforms>$(IosAutomationLibraryPlatformId-4_5)</Platforms>
+    </PlatformGroup>
+  </ItemGroup>
+  <!--
 
     Universal
   -->
   <PropertyGroup Condition=" '$(Platform)' == '[none]' "/>
-  <ItemGroup>
-    <Compile Include="$(ExtIdDir)\BuildInfo.cs">
-      <DependentUpon>BuildInfo.t.cs</DependentUpon>
-      <Link>Properties\BuildInfo.cs</Link>
-    </Compile>
-    <None Include="$(ExtIdDir)\BuildInfo.t.cs">
-      <IsMxbuildTemplate>true</IsMxbuildTemplate>
-      <Link>Properties\BuildInfo.t.cs</Link>
-      <CompileOutput>BuildInfo.cs</CompileOutput>
-    </None>
-    <Compile Include="$(ExtPackDir)\PackageInfo.cs">
-      <DependentUpon>PackageInfo.t.cs</DependentUpon>
-      <Link>Properties\PackageInfo.cs</Link>
-    </Compile>
-    <None Include="$(ExtPackDir)\PackageInfo.t.cs">
-      <IsMxbuildTemplate>true</IsMxbuildTemplate>
-      <Link>Properties\PackageInfo.t.cs</Link>
-      <CompileOutput>PackageInfo.cs</CompileOutput>
-    </None>  
-  </ItemGroup>
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <ProjectGuid>{96F54817-DA0A-4F40-A69C-0040BF5BE95D}</ProjectGuid>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CarouselGallery.UITest</RootNamespace>
     <AssemblyName>CarouselGallery.UITest</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile />
   </PropertyGroup>
-  <Import Project="$(RefDir)Xamarin.UITest.props" />
-  <Import Project="$(RefDir)NUnit.props" />
+  <!--
+
+    Library
+  -->
+  <ItemGroup Condition="'$(IsLibraryPlatform)'=='true'">
+    <Compile Include="$(SrcDir)\GlobalAssemblyInfo.cs">
+      <Link>Properties\GlobalAssemblyInfo.cs</Link>
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+    </Compile>
+    <Compile Include="$(ExtIdDir)BuildInfo.cs">
+      <DependentUpon>BuildInfo.t.cs</DependentUpon>
+      <Link>Properties\BuildInfo.cs</Link>
+    </Compile>
+    <None Include="$(ExtIdDir)BuildInfo.t.cs">
+      <IsMxbuildTemplate>true</IsMxbuildTemplate>
+      <Link>Properties\BuildInfo.t.cs</Link>
+      <CompileOutput>BuildInfo.cs</CompileOutput>
+    </None>
+    <Compile Include="$(ExtPackDir)PackageInfo.cs">
+      <Link>Properties\PackageInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <!--
+
+    Shared
+  -->
+  <ImportGroup>
+    <Import Project="$(XamarinUITestShim)" />
+    <Import Project="$(NugetNunitShim)" />
+  </ImportGroup>
   <ItemGroup>
+    <!--references-->
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,8 +93,11 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
+    <!--nuget packages-->
+    <NugetPackage Include="NUnit.Runners">
+      <Version>$(NugetNunitVersion)</Version>
+    </NugetPackage>
+    <!--source-->
     <Compile Include="AppSetup.cs" />
     <Compile Include="CarouselViewUITest.cs" />
   </ItemGroup>

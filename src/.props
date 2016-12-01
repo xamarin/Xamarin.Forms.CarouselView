@@ -2,6 +2,27 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory).., .props))\.props" />
 
+  <!--product-->
+  <PropertyGroup>
+    <ProductCopyright>Copyright © Xamarin Inc. 2013-2016</ProductCopyright>
+    <ProductLicenseUrl>http://download.xamarin.com/content/licenses/Xamarin.Forms.rtf</ProductLicenseUrl>
+    <ProductIconUrl>http://xamarin.com/content/images/nuget/xamarin.png</ProductIconUrl>
+    <ProductProjectUrl>https://github.com/xamarin/Xamarin.Forms.CarouselView</ProductProjectUrl>
+    <ProductCompany>Xamarin, Inc.</ProductCompany>
+  </PropertyGroup>
+
+  <!--Nuspec-->
+  <PropertyGroup>
+    <NuspecAuthors>$(ProductCompany)</NuspecAuthors>
+    <NuspecOwners>$(ProductCompany)</NuspecOwners>
+    <NuspecRequireLicenseAcceptance>false</NuspecRequireLicenseAcceptance>
+    <NuspecCopyright>$(ProductCopyright)</NuspecCopyright>
+    <NuspecLicenseUrl>$(ProductLicenseUrl)</NuspecLicenseUrl>
+    <NuspecIconUrl>$(ProductIconUrl)</NuspecIconUrl>
+    <NuspecProjectUrl>$(ProductProjectUrl)</NuspecProjectUrl>
+    <NuspecTags>xamarin forms xamarinforms xamarin.forms </NuspecTags>
+  </PropertyGroup>
+
   <!--nuget-->
   <PropertyGroup>
 
@@ -11,20 +32,51 @@
     <NugetV3Feed>https://api.nuget.org/v3/index.json</NugetV3Feed>
     <NugetFeed>$(NugetV3Feed)</NugetFeed>
   </PropertyGroup>
-  
+
+  <!--nuget versions-->
+  <PropertyGroup>
+    <NugetXamarinFormsVersion>2.3.1.110-pre1</NugetXamarinFormsVersion>
+    <NugetXamarinAndroidSupportVersion>23.3.0</NugetXamarinAndroidSupportVersion>
+    <NugetNunitVersion>2.6.4</NugetNunitVersion>
+    <NugetXamarinUITestVersion>1.3.7</NugetXamarinUITestVersion>
+    <NugetXamarinTestCloudAgentVersion>0.19.0</NugetXamarinTestCloudAgentVersion>
+  </PropertyGroup>
+
+  <!--nuget paths-->
+  <PropertyGroup>
+    <!--Xamarin.Forms-->
+    <NugetXamarinFormsPortableShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10\shim.props</NugetXamarinFormsPortableShim>
+    <NugetXamarinFormsAndroidShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\MonoAndroid10\shim.props</NugetXamarinFormsAndroidShim>
+    <NugetXamarinFormsIosShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\Xamarin.iOS10\shim.props</NugetXamarinFormsIosShim>
+    <NugetXamarinFormsUapShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\uap10.0\shim.props</NugetXamarinFormsUapShim>
+    <NugetXamarinFormsWinShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\win81\shim.props</NugetXamarinFormsWinShim>
+    <NugetXamarinFormsWpaShim>$(PkgDir)Xamarin.Forms.$(NugetXamarinFormsVersion)\lib\wpa81\shim.props</NugetXamarinFormsWpaShim>
+
+    <!--Nunit-->
+    <NugetNunitShim>$(PkgDir)NUnit.$(NugetNunitVersion)\lib\shim.props</NugetNunitShim>
+    
+    <!--Xamarin.UITest-->
+    <XamarinUITestShim>$(PkgDir)Xamarin.UITest.$(NugetXamarinUITestVersion)\lib\shim.props</XamarinUITestShim>
+    
+    <!--Xamarin.TestCloud.Agent-->
+    <XamarinTestCloudAgentUnifiedShim>$(PkgDir)Xamarin.TestCloud.Agent.$(NugetXamarinTestCloudAgentVersion)\lib\Xamarin.iOS10\shim.props</XamarinTestCloudAgentUnifiedShim>
+
+    <!--Xamarin.Android.Support.*-->
+    <NugetAndroidSupportAnimatedVectorDrawableShim>$(PkgDir)Xamarin.Android.Support.Animated.Vector.Drawable.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportAnimatedVectorDrawableShim>
+    <NugetAndroidSupportDesignShim>$(PkgDir)Xamarin.Android.Support.Design.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid43\shim.props</NugetAndroidSupportDesignShim>
+    <NugetAndroidSupportV4Shim>$(PkgDir)Xamarin.Android.Support.v4.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportV4Shim>
+    <NugetAndroidSupportV7AppCompatShim>$(PkgDir)Xamarin.Android.Support.v7.AppCompat.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportV7AppCompatShim>
+    <NugetAndroidSupportV7CardViewShim>$(PkgDir)Xamarin.Android.Support.v7.CardView.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportV7CardViewShim>
+    <NugetAndroidSupportV7MediaRouterShim>$(PkgDir)Xamarin.Android.Support.v7.MediaRouter.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportV7MediaRouterShim>
+    <NugetAndroidSupportV7RecyclerViewShim>$(PkgDir)Xamarin.Android.Support.v7.RecyclerView.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportV7RecyclerViewShim>
+    <NugetAndroidSupportVectorDrawableShim>$(PkgDir)Xamarin.Android.Support.Vector.Drawable.$(NugetXamarinAndroidSupportVersion)\lib\MonoAndroid403\shim.props</NugetAndroidSupportVectorDrawableShim>
+  </PropertyGroup>
+
   <!--shared-->
   <PropertyGroup>
     <!--assemblyName and namespace are functions of project name-->
     <AssemblyName>Xamarin.Forms.$(MSBuildProjectName)</AssemblyName>
     <RootNamespace>$(AssemblyName)</RootNamespace>
-
-    <!--warnings as errors-->
-    <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-
-    <!--debug-->
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <ErrorReport>prompt</ErrorReport>
 
     <!--copyLocal; disable by default as excessive copying slows the build-->
     <PrivateReference>False</PrivateReference>
@@ -33,8 +85,17 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <FileAlignment>512</FileAlignment>
+    <CreateHardLinksForCopyLocalIfPossible>true</CreateHardLinksForCopyLocalIfPossible>
   </PropertyGroup>
-  
+
+  <!--shared platform|config-->
+  <PropertyGroup>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+
   <!--debug-->
   <PropertyGroup Condition="'$(Configuration)'=='debug'">
     <DebugSymbols>true</DebugSymbols>
@@ -50,11 +111,25 @@
     <DefineConstants>$(DefineConstants)</DefineConstants>
   </PropertyGroup>
 
-  <!--portable-->
+  <!--dotnet-->
   <PropertyGroup Condition="'$(LibraryPlatform)' == '$(DotNetLibraryPlatformId)'">
+    <NugetTargetFrameworkVersion>-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10</NugetTargetFrameworkVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProductVersion>12.0.0</ProductVersion>
+
+    <!--This assembly is only referenced and never executed so there is no need for symbols-->
+    <DebugSymbols>false</DebugSymbols>
+    <DebugType>none</DebugType>
   </PropertyGroup>
 
   <!--android-->
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(AndroidMobilePlatformId)'">
+    <NugetTargetFrameworkVersion>4.3</NugetTargetFrameworkVersion>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  
+  <!--android library-->
   <Choose>
     <When Condition="'$(LibraryPlatform)' == '$(AndroidLibraryPlatformId)'">
       <PropertyGroup>
@@ -111,7 +186,10 @@
   </Choose>
 
   <!--ios-->
-  <PropertyGroup Condition="'$(MobilePlatform)' == '$(AndroidMobilePlatformId)'">
+  <PropertyGroup Condition="'$(MobilePlatform)' == '$(IosMobilePlatformId)'">
+    <NugetTargetFrameworkVersion>1.0</NugetTargetFrameworkVersion>
+    <IsAppExtension>false</IsAppExtension>
+    <IsWatchApp>false</IsWatchApp>
   </PropertyGroup>
 
   <!--ios app-->
@@ -139,25 +217,38 @@
   <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(IosClassicMobileSubPlatformId)'">
   </PropertyGroup>
 
-  <!--windows universal-->
-  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)'">
-    <UseDotNetNativeToolchain Condition="'$(Configuration)' == 'Release'">true</UseDotNetNativeToolchain>
-  </PropertyGroup>
-
-  <!--windows phone-->
-  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)'">
-  </PropertyGroup>
-
-  <!--windows tablet-->
-  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)'">
-  </PropertyGroup>
-
-  <!--windows platform-->
-  <PropertyGroup Condition="'$(MobilePlatform)' == '$(WindowsMobilePlatformId)'">
+  <!--windows-->
+  <PropertyGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
+    <DefaultLanguage>en-US</DefaultLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <!--<AppxPrependPriInitialPath>false</AppxPrependPriInitialPath>-->
+    <!--<AppxPriInitialPath>bar</AppxPriInitialPath>-->
+    <!--force all windows output to OutDir-->
+    <AppxPackageDir>$(OutDir)</AppxPackageDir>
+    
     <!--TODO: Remove setting platform; find better/newer way to set platform-->
     <Platform Condition="'$(Plat)'=='AnyCPU' AND '$(IsMobileAppProject)'=='true'">x86</Platform>
     <PlatformTarget>$(Plat)</PlatformTarget>
     <Prefer32Bit Condition="'$(IsMobileAppProject)'=='true'">true</Prefer32Bit>
   </PropertyGroup>
 
+  <!--windows universal-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsUniversalMobileSubPlatformId)'">
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+    <TargetPlatformMinVersion>10.0.10240.0</TargetPlatformMinVersion>
+    <NugetTargetFrameworkVersion>10.0</NugetTargetFrameworkVersion>
+    <UseDotNetNativeToolchain Condition="'$(Configuration)' == 'Release'">true</UseDotNetNativeToolchain>
+  </PropertyGroup>
+
+  <!--windows phone-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsPhoneMobileSubPlatformId)'">
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <NugetTargetFrameworkVersion>8.1</NugetTargetFrameworkVersion>
+  </PropertyGroup>
+
+  <!--windows tablet-->
+  <PropertyGroup Condition="'$(MobileSubPlatform)' == '$(WindowsTabletMobileSubPlatformId)'">
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+    <NugetTargetFrameworkVersion>8.1</NugetTargetFrameworkVersion>
+  </PropertyGroup>
 </Project>

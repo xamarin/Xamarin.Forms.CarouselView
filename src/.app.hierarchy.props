@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" >
+  <!--
+  
+    Hierarchy
+  -->
+  <ItemGroup>
+    <!--all E { mobile }-->
+    <PlatformGroup Include="$(AllPlatformId)">
+      <Platforms>$(MobilePlatformId)</Platforms>
+    </PlatformGroup>
+    <!--mobile E { android, ios, windows }-->
+    <PlatformGroup Include="$(MobilePlatformId)">
+      <Platforms>$(AndroidMobilePlatformId);$(IosMobilePlatformId);$(WindowsMobilePlatformId)</Platforms>
+    </PlatformGroup>
+
+    <!--android E { monodroid.app }-->
+    <PlatformGroup Include="$(AndroidMobilePlatformId)">
+      <Platforms>$(AndroidAppPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--monodroid.app E { monodroid.app-7.0 }-->
+    <PlatformGroup Include="$(AndroidAppPlatformId)">
+      <Platforms>$(AndroidAppPlatformId-7_0)</Platforms>
+    </PlatformGroup>
+
+    <!--ios E { ios.unified }-->
+    <PlatformGroup Include="$(IosMobilePlatformId)">
+      <Platforms>$(IosUnifiedMobileSubPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--ios.unified E { xamarin.ios.sim, xamarin.ios.phone }-->
+    <PlatformGroup Include="$(IosUnifiedMobileSubPlatformId)">
+      <Platforms>$(IosUnifiedSimAppPlatformId);$(IosUnifiedPhoneAppPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--xamarin.ios.sim E { xamarin.ios.sim-1.0 }-->
+    <PlatformGroup Include="$(IosUnifiedSimAppPlatformId)">
+      <Platforms>$(IosUnifiedSimAppPlatformId-1_0)</Platforms>
+    </PlatformGroup>
+    <!--xamarin.ios.phone E { xamarin.ios.phone-1.0 }-->
+    <PlatformGroup Include="$(IosUnifiedPhoneAppPlatformId)">
+      <Platforms>$(IosUnifiedPhoneAppPlatformId-1_0)</Platforms>
+    </PlatformGroup>
+
+    <!--windows E { windows.universal, windows.phone, windows.tablet }-->
+    <PlatformGroup Include="$(WindowsMobilePlatformId)">
+      <Platforms>$(WindowsUniversalMobileSubPlatformId);$(WindowsPhoneMobileSubPlatformId);$(WindowsTabletMobileSubPlatformId)</Platforms>
+    </PlatformGroup>
+    
+    <!--windows.universal E { uap.32 }-->
+    <PlatformGroup Include="$(WindowsUniversalMobileSubPlatformId)">
+      <Platforms>$(WindowsUniversal32AppPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--uap.32 E { uap.32-10.0.10586.0 }-->
+    <PlatformGroup Include="$(WindowsUniversal32AppPlatformId)">
+      <Platforms>$(WindowsUniversal32AppPlatformId-10_0_10586_0)</Platforms>
+    </PlatformGroup>
+
+    <!--windows.phone E { wpa.32 }-->
+    <PlatformGroup Include="$(WindowsPhoneMobileSubPlatformId)">
+      <Platforms>$(WindowsPhone32AppPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--wpa.32 E { wpa.32-8.1 }-->
+    <PlatformGroup Include="$(WindowsPhone32AppPlatformId)">
+      <Platforms>$(WindowsPhone32AppPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+
+    <!--windows.tablet E { win.32, win.64, win.arm }-->
+    <PlatformGroup Include="$(WindowsTabletMobileSubPlatformId)">
+      <Platforms>$(WindowsTablet32AppPlatformId);$(WindowsTablet64AppPlatformId);$(WindowsTabletArmAppPlatformId)</Platforms>
+    </PlatformGroup>
+    <!--win.32 E { win.32-8.1 }-->
+    <PlatformGroup Include="$(WindowsTablet32AppPlatformId)">
+      <Platforms>$(WindowsTablet32AppPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+    <!--win.64 E { win.64-8.1 }-->
+    <PlatformGroup Include="$(WindowsTablet64AppPlatformId)">
+      <Platforms>$(WindowsTablet64AppPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+    <!--win.arm E { win.arm-8.1 }-->
+    <PlatformGroup Include="$(WindowsTabletArmAppPlatformId)">
+      <Platforms>$(WindowsTabletArmAppPlatformId-8_1)</Platforms>
+    </PlatformGroup>
+  </ItemGroup>
+
+</Project>
