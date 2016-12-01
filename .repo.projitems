@@ -31,8 +31,6 @@
     <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env.lnk" />
-    <None Include="$(MSBuildThisFileDirectory)src\.lib.hierarchy.props" />
-    <None Include="$(MSBuildThisFileDirectory)src\.app.hierarchy.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\.gitignore" />
@@ -65,7 +63,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\NugetUpdate\NugetUpdate\NugetUpdate.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\Unpack\NugetUpdate\NugetUpdate\packages.config" />
     <None Include="$(MSBuildThisFileDirectory)src\GlobalAssemblyInfo.cs" />
-    <None Include="$(MSBuildThisFileDirectory)src\carouselView\.props" />
     <None Include="$(MSBuildThisFileDirectory).props" />
     <None Include="$(MSBuildThisFileDirectory).pre.props" />
     <None Include="$(MSBuildThisFileDirectory).targets" />
@@ -79,7 +76,6 @@
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\universal\CarouselView.App.nuget.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\windows\Windows_TemporaryKey.pfx" />
-    <None Include="$(MSBuildThisFileDirectory)src\carouselView\.targets" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\aut\CarouselView.Test.csproj" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\.gitignore" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\.lfx\packages\Mxbuild.Tasks.0.2.12" />
@@ -4977,6 +4973,12 @@
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\part\part.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\part\part.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\part\part.targets" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\ids.platform.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\library.platform.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\meta.platform.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\plat.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\primitive.platform.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\plat\shim.platform.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\proxy.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\publish\publish.git.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\publish\publish.pre.props" />
@@ -4993,12 +4995,10 @@
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\shim\shim.proj" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\shim\shim.targets" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\tasks.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\ids.platform.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\meta.platform.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\library.platform.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\platform.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\primitive.platform.pre.props" />
-    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\shim.platform.pre.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.default.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.aut.hierarchy.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.lib.hierarchy.props" />
+    <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.app.hierarchy.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.pre.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.props" />
     <None Include="$(MSBuildThisFileDirectory)sub\mxbuild\xf\xf.targets" />

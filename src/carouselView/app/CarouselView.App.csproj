@@ -11,7 +11,7 @@
   -->
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory)\, .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
-  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .app.hierarchy.props))\.app.hierarchy.props" />
+  <Import Project="$(ExtXfDir)\xf.app.hierarchy.props" />
   <!--
 
     Universal

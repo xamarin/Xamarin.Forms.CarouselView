@@ -9,38 +9,7 @@
   </PropertyGroup>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .pre.props))\.pre.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
-  <!--
-  
-    Hierarchy
-  -->
-  <ItemGroup>
-    <!--all E { mobile }-->
-    <PlatformGroup Include="$(AllPlatformId)">
-      <Platforms>$(MobilePlatformId)</Platforms>
-    </PlatformGroup>
-    <!--mobile E { android, ios }-->
-    <PlatformGroup Include="$(MobilePlatformId)">
-      <Platforms>$(AndroidMobilePlatformId);$(IosMobilePlatformId)</Platforms>
-    </PlatformGroup>
-
-    <!--android E { android.aut }-->
-    <PlatformGroup Include="$(AndroidMobilePlatformId)">
-      <Platforms>$(AndroidAutomationLibraryPlatformId)</Platforms>
-    </PlatformGroup>
-    <!--android.aut E { android.aut-4.5 }-->
-    <PlatformGroup Include="$(AndroidAutomationLibraryPlatformId)">
-      <Platforms>$(AndroidAutomationLibraryPlatformId-4_5)</Platforms>
-    </PlatformGroup>
-
-    <!--ios E { ios.aut }-->
-    <PlatformGroup Include="$(IosMobilePlatformId)">
-      <Platforms>$(IosAutomationLibraryPlatformId)</Platforms>
-    </PlatformGroup>
-    <!--ios.aut E { ios.aut-4.5 }-->
-    <PlatformGroup Include="$(IosAutomationLibraryPlatformId)">
-      <Platforms>$(IosAutomationLibraryPlatformId-4_5)</Platforms>
-    </PlatformGroup>
-  </ItemGroup>
+  <Import Project="$(ExtXfDir)\xf.aut.hierarchy.props" />
   <!--
 
     Universal
