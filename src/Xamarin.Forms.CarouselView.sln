@@ -21,8 +21,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarouselView.App.Android", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarouselView.App.iOS", "carouselView\app\ios\CarouselView.App.iOS.csproj", "{09BD58E5-80C5-45F5-A506-663DA2FAB178}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "mxbuild", "..\sub\mxbuild\mxbuild.shproj", "{2FDD0418-FA09-4556-B6ED-10E07C1F6DB9}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		..\sub\mxbuild\mxbuild.projitems*{2fdd0418-fa09-4556-b6ed-10e07c1f6db9}*SharedItemsImports = 13
 		..\.repo.projitems*{384c5272-e40d-4849-93c8-e489912b7d1b}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
