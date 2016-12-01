@@ -233,8 +233,14 @@ namespace Xamarin.Forms.Platform
 			if (disposing && !_disposed)
 			{
 				_disposed = true;
-				if (Element != null)
+				if (Element != null) {
 					((ICarouselViewController)Element).CollectionChanged -= OnCollectionChanged;
+					if(_controller != null) {
+						_controller.Dispose();
+					}
+					this.Control.Dispose();
+					this.Dispose();
+				}
 			}
 
 			base.Dispose(disposing);
