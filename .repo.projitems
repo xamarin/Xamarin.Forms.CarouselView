@@ -31,6 +31,8 @@
     <None Include="$(MSBuildThisFileDirectory)doc\ex\RemoveProperty\.proj" />
     <None Include="$(MSBuildThisFileDirectory)doc\Platforms.vsdx" />
     <None Include="$(MSBuildThisFileDirectory)env.lnk" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\CarouselView.App.Android.csproj" />
+    <None Include="$(MSBuildThisFileDirectory)src\carouselView\app\ios\CarouselView.App.iOS.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\CarouselView.csproj" />
     <None Include="$(MSBuildThisFileDirectory)src\carouselView\lib\nuspec.props" />
     <None Include="$(MSBuildThisFileDirectory)src\GlobalAssemblyInfo.cs" />
@@ -48,5 +50,6 @@
     <Content Include="$(MSBuildThisFileDirectory)doc\Platforms.gif" />
     <Content Include="$(MSBuildThisFileDirectory)env.bat" />
     <Content Include="$(MSBuildThisFileDirectory)doskey.txt" />
+    <Content Include="$(MSBuildThisFileDirectory)src\carouselView\app\android\Properties\AndroidManifest.xml" />
   </ItemGroup>
 </Project>
