@@ -12,6 +12,22 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .props))\.props" />
   <Import Project="$(ExtXfDir)\xf.lib.hierarchy.props" />
   <!--
+    ======
+    SOURCE
+    ======
+  -->
+  <ItemGroup>
+    <Compile Include="portable\CarouselView.cs" />
+    <Compile Include="portable\CarouselViewLibrary.cs" />
+    <Compile Include="portable\EnumerableExtensions.cs" />
+    <Compile Include="portable\ICarouselViewController.cs" />
+    <Compile Include="portable\SimpleItemsView.cs" />
+    <Compile Include="android\CarouselViewRenderer.cs" />
+    <Compile Include="ios\CarouselViewRenderer.cs" />
+    <Compile Include="windows\CarouselViewRenderer.cs" />
+    <Compile Include="windows\CarouselViewLibrary.cs" />
+  </ItemGroup>
+  <!--
   
     Universal
   -->
@@ -58,7 +74,7 @@
   
     Library
   -->
-  <ItemGroup Condition="'$(IsLibraryPlatform)'=='true'">
+  <ItemGroup>
     <Compile Include="$(SrcDir)\GlobalAssemblyInfo.cs">
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
       <IsMxbuildTemplate>true</IsMxbuildTemplate>
@@ -86,13 +102,6 @@
   <ImportGroup Condition=" '$(LibraryPlatform)' == '$(DotNetLibraryPlatformId)' ">
     <Import Project="$(NugetXamarinFormsPortableShim)" />
   </ImportGroup>
-  <ItemGroup Condition=" '$(IsPartPlatform)' != 'true' ">
-    <Compile Include="portable\CarouselView.cs" />
-    <Compile Include="portable\CarouselViewLibrary.cs" />
-    <Compile Include="portable\EnumerableExtensions.cs" />
-    <Compile Include="portable\ICarouselViewController.cs" />
-    <Compile Include="portable\SimpleItemsView.cs" />
-  </ItemGroup>
   <!--
   
     Part ([platform].part)
@@ -110,9 +119,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AndroidResgenFile>Resources\Resource.Designer.cs</AndroidResgenFile>
   </PropertyGroup>
-  <ItemGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
-    <Compile Include="android\CarouselViewRenderer.cs" />
-  </ItemGroup>
   <ImportGroup Condition=" '$(MobilePlatform)' == '$(AndroidMobilePlatformId)' ">
     <Import Project="$(NugetXamarinFormsAndroidShim)" />
     <Import Project="$(NugetAndroidSupportAnimatedVectorDrawableShim)" />
@@ -132,9 +138,7 @@
   
     iOS
   -->
-  <ItemGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' ">
-    <Compile Include="ios\CarouselViewRenderer.cs" />
-  </ItemGroup>
+  <ItemGroup Condition=" '$(MobilePlatform)' == '$(IosMobilePlatformId)' "/>
   <!--
   
     iOS Universal
@@ -153,8 +157,6 @@
   -->
   <PropertyGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' "/>
   <ItemGroup Condition=" '$(MobilePlatform)' == '$(WindowsMobilePlatformId)' ">
-    <Compile Include="windows\CarouselViewRenderer.cs" />
-    <Compile Include="windows\CarouselViewLibrary.cs" />
     <Page Include="windows\Resources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -201,5 +203,6 @@
 
     Targets
   -->
+  <Import Project="*\.dir.props" />
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), .targets))\.targets" />
 </Project>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project
+  ToolsVersion="12.0"
+  InitialTargets="_WindowsDirProps"
+  xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+>
+
+  <Target Name="_WindowsDirProps">
+    <ItemGroup Condition="'$(MobilePlatform)' != '$(WindowsMobilePlatformId)'">
+      <Compile Remove="windows\**\*"/>
+      <Page Remove="windows\**\*"/>
+    </ItemGroup>
+  </Target>
+
+  <Import Project="*\.dir.props" />
+</Project>
