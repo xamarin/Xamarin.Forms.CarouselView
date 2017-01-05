@@ -222,6 +222,7 @@ namespace Xamarin.Forms.Platform
 
 				// initialize properties
 				_position = Element.Position;
+				_controller.ReloadData(_position);
 
 				// hook up crud events
 				((ICarouselViewController)newElement).CollectionChanged += OnCollectionChanged;
@@ -255,7 +256,7 @@ namespace Xamarin.Forms.Platform
 
 			base.Control.ReloadData();
 			_lastBounds = Bounds;
-
+			
 			var wasPortrait = _lastBounds.Height > _lastBounds.Width;
 			var nowPortrait = Bounds.Height > Bounds.Width;
 			if (wasPortrait != nowPortrait)
