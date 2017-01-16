@@ -198,11 +198,15 @@ namespace Xamarin.Forms.Platform
 			if (e.PropertyName == nameof(Element.Position) && _position != Element.Position && !Controller.IgnorePositionUpdates)
 				ScrollToPosition(Element.Position, animated: true);
 
-			if (e.PropertyName == nameof(Element.ItemsSource))
-			{
-				_position = Element.Position;
-				_controller.ReloadData(_position);
-			}
+            if (e.PropertyName == nameof(Element.ItemsSource))
+            {
+                _position = Element.Position;
+                _controller.ReloadData(_position);
+            }
+            else if (e.PropertyName == nameof(Element.ScrollEnabled))
+            {
+                Control.ScrollEnabled = Element.ScrollEnabled;
+            }
 
 			base.OnElementPropertyChanged(sender, e);
 		}

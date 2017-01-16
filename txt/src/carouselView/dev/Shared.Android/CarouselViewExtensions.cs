@@ -250,6 +250,20 @@ namespace Xamarin.Forms.Platform
 
 	public class CarouselViewRenderer : ViewRenderer<CarouselView, RecyclerView>
 	{
+
+        private static CarouselView _instance;
+        public static CarouselView Instance
+        {
+            get
+            {
+                return _instance;
+            } set
+            {
+                _instance = value;
+            }
+        }
+
+
 		// http://developer.android.com/reference/android/support/v7/widget/RecyclerView.html
 		// http://developer.android.com/training/material/lists-cards.html
 		// http://wiresareobsolete.com/2014/09/building-a-recyclerview-layoutmanager-part-1/
@@ -467,7 +481,7 @@ namespace Xamarin.Forms.Platform
 				return;
 
 			// cache miss
-			recyclerView = new RecyclerView(Context);
+			recyclerView = new RecyclerView(Context);            
 			SetNativeControl(recyclerView);
 
 			// layoutManager
@@ -592,8 +606,10 @@ namespace Xamarin.Forms.Platform
 				if (Control == null)
 					Initialize();
 
-				// initialize events
-				((ICarouselViewController)e.NewElement).CollectionChanged += OnCollectionChanged;
+                Instance = newElement;
+
+                // initialize events
+                ((ICarouselViewController)e.NewElement).CollectionChanged += OnCollectionChanged;
 			}
 		}
 		protected override void OnElementPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -716,8 +732,24 @@ namespace Xamarin.Forms.Platform
 			internal abstract IntRectangle GetBounds(int positionOrigin, State state);
 		}
 
-		#region Private Defintions
-		enum AdapterChangeType
+        public override bool CanScrollVertically()
+        {
+            if (CarouselViewRenderer.Instance != null && !CarouselViewRenderer.Instance.ScrollEnabled)
+                return false;
+            else
+                return true;
+        }
+
+        public override bool CanScrollHorizontally()
+        {
+            if (CarouselViewRenderer.Instance != null && !CarouselViewRenderer.Instance.ScrollEnabled)
+                return false;
+            else
+                return true;
+        }
+
+        #region Private Defintions
+        enum AdapterChangeType
 		{
 			Removed = 1,
 			Added,
@@ -1002,8 +1034,6 @@ namespace Xamarin.Forms.Platform
 		{
 			ScrollToPosition(adapterPosition);
 		}
-		public override bool CanScrollHorizontally() => _virtualLayout.CanScrollHorizontally;
-		public override bool CanScrollVertically() => _virtualLayout.CanScrollVertically;
 
 		// entry points
 		public override bool SupportsPredictiveItemAnimations() => true;
