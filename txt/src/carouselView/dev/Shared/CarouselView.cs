@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms.Platform;
 
 namespace Xamarin.Forms
@@ -233,7 +234,7 @@ namespace Xamarin.Forms
 			return value < Controller.Count;
 		}
 
-		sealed class CarouselViewItemSource : IReadOnlyList<object>
+        sealed class CarouselViewItemSource : IReadOnlyList<object>
 		{
 			IReadOnlyList<object> _itemsSource;
 

@@ -315,33 +315,44 @@ namespace CarouselGallery
 					CreateButton (">>", "Last", () => _carouselView.Position = _items.Count - 1)
 				}
 			};
-			var loadBar = new StackLayout {
-				Orientation = StackOrientation.Horizontal,
-				HorizontalOptions = LayoutOptions.Start,
-				Children = {
-					CreateButton("Load", "Load", () => {
-						try {
-							_carouselView.ItemsSource = _items = itemsFactory();
-						} catch (ArgumentException) {
-							OnEvent("e");
-						}
-					}),
-					CreateButton("Load0", "Load0", () => {
-						try {
-							_carouselView.ItemsSource = _items = EmptyItems;
-						} catch (ArgumentException) {
-							OnEvent("e");
-						}
-					}),
-					CreateButton("Clear", "Clear", () => {
-						_items = null;
-						_carouselView.ItemsSource = null;
-					}),
-					CreateButton("Add", "Add", () => {
-						_items.Insert (0, new Moo ());
-					})
-				}
-			};
+			var loadBar = new ScrollView()
+            {
+                Orientation = ScrollOrientation.Horizontal,
+                Content = new StackLayout
+                {
+                    Orientation = StackOrientation.Horizontal,
+                    HorizontalOptions = LayoutOptions.Start,
+                    Children = {
+                    CreateButton("Load", "Load", () => {
+                        try {
+                            _carouselView.ItemsSource = _items = itemsFactory();
+                        } catch (ArgumentException) {
+                            OnEvent("e");
+                        }
+                    }),
+                    CreateButton("Load0", "Load0", () => {
+                        try {
+                            _carouselView.ItemsSource = _items = EmptyItems;
+                        } catch (ArgumentException) {
+                            OnEvent("e");
+                        }
+                    }),
+                    CreateButton("Clear", "Clear", () => {
+                        _items = null;
+                        _carouselView.ItemsSource = null;
+                    }),
+                    CreateButton("Add", "Add", () => {
+                        _items.Insert (0, new Moo ());
+                    }),
+                    CreateButton("Lock", "Lock", () => {
+                        _carouselView.IsEnabled = false;
+                    }),
+                    CreateButton("Unlock", "Unlock", () => {
+                        _carouselView.IsEnabled = true;
+                    })
+                }
+            }
+            };
 
 			var statusBar = new StackLayout {
 				Orientation = StackOrientation.Horizontal,
