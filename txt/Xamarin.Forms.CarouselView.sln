@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25402.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "carouselView", "carouselView", "{DA6D8CF1-8A7E-462F-9D7F-7EBB7B418805}"
 	ProjectSection(SolutionItems) = preProject
@@ -62,12 +62,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "uiTests", "uiTests", "{F767
 		src\carouselView\test\uiTests\.props = src\carouselView\test\uiTests\.props
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarouselView.Gallery.UITest.iOS", "src\carouselView\test\uiTests\ios\CarouselView.Gallery.UITest.iOS.csproj", "{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CarouselView.Gallery.UITest.Android", "src\carouselView\test\uiTests\android\CarouselView.Gallery.UITest.Android.csproj", "{96F54817-DA0A-4F40-A69C-0040BF5BE95D}"
-EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "CarouselView.Shared.UITest", "src\carouselView\test\Shared.UITest\CarouselView.Shared.UITest.shproj", "{60AE6B1F-652E-4038-8395-ECA0BAC845E2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget", "nuget", "{40499ADB-243A-4913-A7D9-757B244D24CF}"
 	ProjectSection(SolutionItems) = preProject
 		src\carouselView\nuget\.props = src\carouselView\nuget\.props
@@ -125,15 +119,12 @@ Global
 		src\carouselView\test\Shared.Gallery\CarouselView.Shared.Gallery.projitems*{204b797a-1dc5-44cd-a415-ac62a55bf2b2}*SharedItemsImports = 13
 		src\carouselView\test\Shared.Gallery\CarouselView.Shared.Gallery.projitems*{2c5b0d80-faec-43d1-b17b-909827b65b99}*SharedItemsImports = 4
 		..\.repo.projitems*{384c5272-e40d-4849-93c8-e489912b7d1b}*SharedItemsImports = 13
-		src\carouselView\test\Shared.UITest\CarouselView.Shared.UITest.projitems*{3d26ba02-50f8-4956-94c3-0c0a9cc139a1}*SharedItemsImports = 4
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{4d41275b-0f73-4a92-8ee9-b3c54a82bf08}*SharedItemsImports = 4
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{5b6b47c0-6e5b-41f8-8a89-1b010f7c59aa}*SharedItemsImports = 4
 		src\carouselView\dev\Shared.Windows\CarouselView.Shared.Windows.projitems*{5c58327f-31f3-4de9-924d-e940e9a49609}*SharedItemsImports = 13
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{5cafe153-11c7-4cbd-acff-252458a02bf2}*SharedItemsImports = 4
-		src\carouselView\test\Shared.UITest\CarouselView.Shared.UITest.projitems*{60ae6b1f-652e-4038-8395-eca0bac845e2}*SharedItemsImports = 13
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{67f9d3a8-f71e-4428-913f-c37ae82cdb24}*SharedItemsImports = 4
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{9402494b-b15f-4316-bb67-a6c037fce063}*SharedItemsImports = 4
-		src\carouselView\test\Shared.UITest\CarouselView.Shared.UITest.projitems*{96f54817-da0a-4f40-a69c-0040bf5be95d}*SharedItemsImports = 4
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{bec76a98-b4be-417b-909f-c4b5f545d320}*SharedItemsImports = 4
 		src\carouselView\test\Shared.Gallery\CarouselView.Shared.Gallery.projitems*{c47cbd87-5f08-4123-94b7-051fe68e1525}*SharedItemsImports = 4
 		src\carouselView\dev\Shared\CarouselView.Shared.projitems*{d5f2c2c7-a1a1-4286-a6ac-682177bfaa01}*SharedItemsImports = 4
@@ -347,38 +338,6 @@ Global
 		{EC3EAD5B-1C3D-4DAA-8F6E-52085203BEBB}.Release|x86.ActiveCfg = Release|x86
 		{EC3EAD5B-1C3D-4DAA-8F6E-52085203BEBB}.Release|x86.Build.0 = Release|x86
 		{EC3EAD5B-1C3D-4DAA-8F6E-52085203BEBB}.Release|x86.Deploy.0 = Release|x86
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|AnyCPU.Build.0 = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|ARM.Build.0 = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|x64.Build.0 = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Debug|x86.Build.0 = Debug|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|AnyCPU.ActiveCfg = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|AnyCPU.Build.0 = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|ARM.ActiveCfg = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|ARM.Build.0 = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|x64.ActiveCfg = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|x64.Build.0 = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|x86.ActiveCfg = Release|Any CPU
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1}.Release|x86.Build.0 = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|AnyCPU.ActiveCfg = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|AnyCPU.Build.0 = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|ARM.Build.0 = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|x64.Build.0 = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Debug|x86.Build.0 = Debug|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|AnyCPU.ActiveCfg = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|AnyCPU.Build.0 = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|ARM.ActiveCfg = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|ARM.Build.0 = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|x64.ActiveCfg = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|x64.Build.0 = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|x86.ActiveCfg = Release|Any CPU
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D}.Release|x86.Build.0 = Release|Any CPU
 		{8E9C4286-1AFB-48A6-AB17-180E14F47A9E}.Debug|AnyCPU.ActiveCfg = debug|Any CPU
 		{8E9C4286-1AFB-48A6-AB17-180E14F47A9E}.Debug|AnyCPU.Build.0 = debug|Any CPU
 		{8E9C4286-1AFB-48A6-AB17-180E14F47A9E}.Debug|ARM.ActiveCfg = debug|Any CPU
@@ -445,9 +404,6 @@ Global
 		{C47CBD87-5F08-4123-94B7-051FE68E1525} = {6B030E73-AAA5-4F19-B776-78EC7530B211}
 		{EC3EAD5B-1C3D-4DAA-8F6E-52085203BEBB} = {6B030E73-AAA5-4F19-B776-78EC7530B211}
 		{F767FFEE-84E2-4DC1-BF8A-8F107D09F3AF} = {11213BFA-F001-4116-93A6-E84C0DC6FB95}
-		{3D26BA02-50F8-4956-94C3-0C0A9CC139A1} = {F767FFEE-84E2-4DC1-BF8A-8F107D09F3AF}
-		{96F54817-DA0A-4F40-A69C-0040BF5BE95D} = {F767FFEE-84E2-4DC1-BF8A-8F107D09F3AF}
-		{60AE6B1F-652E-4038-8395-ECA0BAC845E2} = {11213BFA-F001-4116-93A6-E84C0DC6FB95}
 		{40499ADB-243A-4913-A7D9-757B244D24CF} = {DA6D8CF1-8A7E-462F-9D7F-7EBB7B418805}
 		{21D88823-AAF6-4CB3-8938-C5305C5E4026} = {09BEECB2-FB62-4218-AA81-9634713BB90A}
 		{E1AC2116-7860-476E-896E-FEF198B75CF3} = {A8843C3E-8C72-4E32-B0E4-DE702700F5D3}
