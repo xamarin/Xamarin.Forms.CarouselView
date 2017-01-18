@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Runtime.CompilerServices;
 using Xamarin.Forms.Platform;
 
 namespace Xamarin.Forms
@@ -32,9 +33,18 @@ namespace Xamarin.Forms
 				coerceValue: (b, o) => ((CarouselView)b).OnCoerceItem(o)
 			);
 
+        public static readonly BindableProperty ScrollEnabledProperty =
+            BindableProperty.Create(
+                propertyName: nameof(ScrollEnabled),
+                returnType: typeof(bool),
+                declaringType: typeof(CarouselView),
+                defaultValue: true,
+                defaultBindingMode: BindingMode.TwoWay                
+            );
+        
 #pragma warning disable 414
 #if MOBILE
-		static Type s_type = typeof(CarouselViewRenderer); // Force load of renderer assembly
+        static Type s_type = typeof(CarouselViewRenderer); // Force load of renderer assembly
 #endif
 #pragma warning restore 414
 		static object s_defaultItem = new object();
@@ -84,6 +94,7 @@ namespace Xamarin.Forms
 			get { return InternalPosition; }
 			set { InternalPosition = value; }
 		}
+
 		object ICarouselViewController.Item
 		{
 			get { return InternalItem; }
@@ -95,6 +106,13 @@ namespace Xamarin.Forms
 			get { return (int)GetValue(PositionProperty); }
 			set { SetValue(PositionProperty, value); }
 		}
+
+        public bool ScrollEnabled
+        {
+            get { return (bool)GetValue(ScrollEnabledProperty); }
+            set { SetValue(ScrollEnabledProperty, value); }
+        }
+
 		public object Item
 		{
 			get { return GetValue(ItemProperty); }
@@ -233,7 +251,7 @@ namespace Xamarin.Forms
 			return value < Controller.Count;
 		}
 
-		sealed class CarouselViewItemSource : IReadOnlyList<object>
+        sealed class CarouselViewItemSource : IReadOnlyList<object>
 		{
 			IReadOnlyList<object> _itemsSource;
 

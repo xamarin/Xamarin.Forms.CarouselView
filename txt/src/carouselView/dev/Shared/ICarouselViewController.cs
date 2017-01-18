@@ -14,7 +14,7 @@ namespace Xamarin.Forms
 		event NotifyCollectionChangedEventHandler CollectionChanged;
 
 		int Position { get; set; }
-		object Item { get; set; }
+		object Item { get; set; }        
 	}
 
 }
