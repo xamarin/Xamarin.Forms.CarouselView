@@ -1,3 +1,6 @@
+# Latest News
+For updates to the release status of CarouselView, view the [Xamarin.Forms Roadmap](https://forums.xamarin.com/discussion/85747/xamarin-forms-feature-roadmap/p1).
+
 # Build Environment
 Xamarin.Forms.Carousel repo contains an alpha Xamarin Forms build enviroment. Similar to other .NET foundation repos (e.g. coreclr) everything starts in a shell. From there you'll need to build (or at least restore nuget packages) before opening the solution. The next generation build environment is being developed in the xfproj branch. For now the following commands should get you off the ground:
 
