@@ -264,8 +264,9 @@ namespace Xamarin.Forms.Platform
 			#region Private Members
 			int GetPosition(int itemCount, int positionOrigin, int x, bool exclusive = false)
 			{
-				int position = x / _itemSize.Width + positionOrigin;
-				bool hasRemainder = x % _itemSize.Width != 0;
+                int width = ((_itemSize.Width == 0) ? 1 : _itemSize.Width);
+                int position = x / width + positionOrigin;
+                bool hasRemainder = x % width != 0;
 
 				if (hasRemainder && x < 0)
 					position--;
